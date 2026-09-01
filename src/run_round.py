@@ -58,9 +58,19 @@ def build_cells(responses: list[dict], prompts_by_id: dict) -> list[dict]:
         text = r.get("text") or ""
         det = detect_outlets(text, cat)
         scan = theme_persona_scan(text, cat)
-        cites = [{**classify_url(c.get("url") or ""),
-                  "url": c.get("url"), "title": (c.get("title") or "")[:120]}
-                 for c in r.get("citations") or []]
+        cites = []
+        for c in r.get("citations") or []:
+            u = c.get("url") or ""
+            dom = (c.get("domain") or "").strip().lower()
+            # リダイレクタ引用（Gemini vertexaisearch / google goto）は、llm.py が
+            # title等から復元した domain で分類する。URLのままだと全部ノイズ落ちする
+            # （初回実測で Gemini の引用が全滅した実バグ由来の修正）。
+            redirected = any(x in u for x in ("vertexaisearch", "google.com/goto",
+                                              "grounding-api-redirect"))
+            target = ("https://" + dom) if (redirected and dom and "." in dom
+                                            and "/" not in dom) else u
+            cites.append({**classify_url(target), "url": u,
+                          "title": (c.get("title") or "")[:120]})
         cells.append({
             "prompt_id": r["prompt_id"], "surface": r["surface"],
             "family": p.get("family"), "named": bool(p.get("named")),
