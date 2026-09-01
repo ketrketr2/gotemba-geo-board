@@ -64,3 +64,5 @@ noise_patterns:
   - "gstatic.com"
   - "googleusercontent.com"
   - "mapbox.com/legal"
+  - "://google.com/"          # 解決不能だったgotoの残骸（初回実測でmedia扱いに化けたため追加）
+  - "://www.google.com/"
