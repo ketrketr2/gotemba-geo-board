@@ -4,82 +4,1266 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
-<title>御殿場GEOボード — 認証</title>
+<title>御殿場GEOボード</title>
+<!--GOTEMBA_BOARD-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet"></noscript>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23081020'/><path d='M14 74 L38 34 Q42 27 46 34 L50 41 L54 34 Q58 27 62 34 L86 74 Z' fill='none' stroke='%23FF7A59' stroke-width='6' stroke-linejoin='round'/><path d='M38 46 L43 40 L47 45 L52 39 L57 45 L62 46' fill='none' stroke='%23FFC24B' stroke-width='5' stroke-linecap='round'/></svg>">
 <style>
+:root{
+ --bg:#060B15; --bg2:#0A1120; --panel:#0E1626; --panel2:#141F36; --line:#1D2A44; --line2:#2C3E63;
+ --tx:#EAF1FB; --tx2:#9DB0CE; --tx3:#5E7192;
+ --ac:#FF7A59; --ac2:#E85B3F; --gold:#FFC24B;
+ --gpt:#17A469; --gem:#7A64EE; --aio:#0C8FA8; --aim:#C8850A;
+ --gn:#3DDC97; --rd:#FF6B87; --bl:#4E9BE8; --pu:#B48CFF; --cy:#22C7D6;
+ --mono:'JetBrains Mono',ui-monospace,monospace;
+}
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{overflow-x:hidden;max-width:100%;}
-@media(max-width:900px){input{font-size:16px!important;}}
-body{min-height:100vh;display:grid;place-items:center;padding:24px;
- background:radial-gradient(1000px 620px at 50% -8%, #14263E 0%, transparent 58%), #060B15;
- color:#EAF1FB;font-family:'BIZ UDPGothic','BIZ UDGothic','Hiragino Sans',Meiryo,sans-serif;}
-.card{width:100%;max-width:400px;background:linear-gradient(160deg,#141F36,#0E1626 65%);border:1px solid #1D2A44;border-radius:18px;
- padding:34px 30px 28px;box-shadow:0 30px 80px rgba(2,7,16,.6);position:relative;overflow:hidden;}
-.card:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,#FF7A59,#FFC24B 60%,transparent 90%);}
-.mk{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;margin-bottom:16px;background:#0B1424;border:1px solid #2C3E63;}
-h1{font-size:20px;letter-spacing:.05em;} h1 span{background:linear-gradient(92deg,#FF7A59,#FFC24B);-webkit-background-clip:text;background-clip:text;color:transparent;}
-.sub{font-size:11px;color:#5E7192;letter-spacing:.16em;margin-top:3px;margin-bottom:24px;font-family:'JetBrains Mono',monospace;}
-label{display:block;font-size:11px;color:#9DB0CE;margin:14px 0 6px;font-weight:700;}
-input{width:100%;background:#0B1322;border:1px solid #2C3E63;color:#EAF1FB;font-family:inherit;font-size:14px;padding:12px 14px;border-radius:10px;outline:none;transition:.15s;}
-input:focus{border-color:#FF7A59;box-shadow:0 0 0 3px rgba(255,122,89,.16);}
-button{width:100%;margin-top:22px;background:linear-gradient(145deg,#FF7A59,#E85B3F);color:#160803;border:none;font-family:inherit;font-weight:800;font-size:14px;letter-spacing:.05em;padding:13px;border-radius:10px;cursor:pointer;transition:.15s;}
-button:hover{filter:brightness(1.08);} button:disabled{opacity:.6;cursor:wait;}
-.err{color:#FF6B87;font-size:12px;margin-top:14px;min-height:16px;text-align:center;}
-.ft{font-size:10px;color:#5E7192;text-align:center;margin-top:20px;line-height:1.7;}
-.ft a{color:#FF9A6B;text-decoration:none;}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(22,8,3,.35);border-top-color:#160803;border-radius:50%;vertical-align:-2px;margin-right:7px;animation:sp .7s linear infinite;}
-@keyframes sp{to{transform:rotate(360deg);}}
+body{background:var(--bg);color:var(--tx);font-family:'BIZ UDPGothic','BIZ UDGothic','Hiragino Sans',Meiryo,sans-serif;font-size:14px;min-height:100vh;position:relative;}
+a{color:var(--cy);text-decoration:none;} a:hover{text-decoration:underline;}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+mark{background:linear-gradient(transparent 55%, rgba(255,194,75,.38) 55%);color:inherit;padding:0 2px;border-radius:2px;font-weight:700;}
+mark.r{background:linear-gradient(transparent 55%, rgba(255,107,135,.32) 55%);}
+mark.g{background:linear-gradient(transparent 55%, rgba(61,220,151,.30) 55%);}
+:focus-visible{outline:2px solid var(--cy);outline-offset:2px;border-radius:6px;}
+::selection{background:rgba(255,122,89,.35);}
+::-webkit-scrollbar{width:9px;height:9px;} ::-webkit-scrollbar-thumb{background:#22314E;border-radius:99px;} ::-webkit-scrollbar-track{background:transparent;}
+
+/* ===== ambient layers ===== */
+#fx{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.8;}
+.aur{position:fixed;border-radius:50%;filter:blur(90px);z-index:0;pointer-events:none;opacity:.5;mix-blend-mode:screen;animation:drift 26s ease-in-out infinite alternate;}
+.a1{width:640px;height:520px;top:-190px;right:-120px;background:radial-gradient(circle at 40% 40%, rgba(255,122,89,.34), transparent 65%);}
+.a2{width:560px;height:560px;bottom:-230px;left:16%;background:radial-gradient(circle at 50% 50%, rgba(76,110,245,.20), transparent 65%);animation-duration:32s;animation-delay:-8s;}
+.a3{width:420px;height:420px;top:32%;left:-160px;background:radial-gradient(circle at 50% 50%, rgba(255,194,75,.16), transparent 65%);animation-duration:38s;animation-delay:-16s;}
+@keyframes drift{from{transform:translate3d(0,0,0) scale(1);}to{transform:translate3d(-50px,36px,0) scale(1.12);}}
+body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:
+ radial-gradient(1300px 760px at 74% -12%, #142640 0%, transparent 58%),
+ radial-gradient(900px 600px at -8% 108%, #101B31 0%, transparent 55%);}
+
+/* ===== splash ===== */
+#splash{position:fixed;inset:0;z-index:200;background:radial-gradient(900px 600px at 50% 42%, #0E1B30 0%, var(--bg) 70%);display:grid;place-items:center;transition:opacity .5s ease .06s;}
+#splash.off{opacity:0;pointer-events:none;}
+#splash .in{text-align:center;}
+#splash svg{display:block;margin:0 auto 14px;}
+#splash .fj{stroke-dasharray:1;stroke-dashoffset:1;animation:dr 1s cubic-bezier(.5,0,.2,1) .05s forwards;}
+#splash .fj2{stroke-dasharray:1;stroke-dashoffset:1;animation:dr .7s ease .6s forwards;}
+@keyframes dr{to{stroke-dashoffset:0;}}
+#splash h1{font-size:15px;letter-spacing:.34em;color:var(--tx2);font-weight:700;opacity:0;animation:fu .6s ease .55s forwards;}
+#splash p{font-size:9.5px;letter-spacing:.5em;color:var(--tx3);margin-top:8px;opacity:0;animation:fu .6s ease .8s forwards;font-family:var(--mono);}
+@keyframes fu{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* ===== sample ribbon ===== */
+.ribbon{position:sticky;top:0;z-index:90;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;padding:7px 14px;font-size:11px;letter-spacing:.05em;background:linear-gradient(90deg, rgba(255,122,89,.16), rgba(255,194,75,.14) 50%, rgba(255,122,89,.16));border-bottom:1px solid rgba(255,178,32,.35);backdrop-filter:blur(8px);color:#FFD9A8;}
+.ribbon b{color:#FFC24B;}
+.ribbon .dot{width:7px;height:7px;border-radius:99px;background:var(--gold);animation:pulse 1.8s ease infinite;flex:none;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,194,75,.55);}55%{box-shadow:0 0 0 7px rgba(255,194,75,0);}}
+
+/* ===== layout ===== */
+.layout{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh;position:relative;z-index:1;}
+.side{background:linear-gradient(180deg, rgba(13,22,38,.92), rgba(9,15,28,.92));backdrop-filter:blur(10px);border-right:1px solid var(--line);padding:20px 13px 16px;position:sticky;top:0;height:100vh;overflow-y:auto;scrollbar-width:thin;}
+.logo{display:flex;gap:11px;align-items:center;padding:0 8px;}
+.logo .mk{width:42px;height:42px;border-radius:13px;background:linear-gradient(148deg,#101B30,#0B1424);border:1px solid var(--line2);display:grid;place-items:center;flex:none;box-shadow:0 8px 22px rgba(0,0,0,.45), inset 0 0 18px rgba(255,122,89,.08);}
+.logo h1{font-size:14.5px;line-height:1.3;letter-spacing:.02em;}
+.logo h1 b{background:linear-gradient(92deg,var(--ac),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.logo .sub{font-size:8.5px;color:var(--tx3);letter-spacing:.22em;font-family:var(--mono);margin-top:2px;}
+.rsel{margin:14px 6px 2px;display:flex;gap:8px;align-items:center;background:#0B1322;border:1px solid var(--line);border-radius:11px;padding:8px 10px;}
+.rsel .lbl{font-size:9px;color:var(--tx3);letter-spacing:.14em;flex:none;}
+.rsel select{flex:1;min-width:0;background:transparent;border:none;color:var(--tx);font-family:inherit;font-size:11.5px;outline:none;}
+.rsel select option{background:#0E1626;}
+.nav{margin-top:12px;}
+.nav .sec{font-size:8.5px;color:var(--tx3);letter-spacing:.24em;margin:15px 9px 6px;font-weight:700;font-family:var(--mono);}
+.nv{display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;border-radius:11px;border:1px solid transparent;background:none;color:var(--tx2);font-family:inherit;font-size:12.5px;cursor:pointer;text-align:left;transition:.16s;position:relative;overflow:hidden;}
+.nv:hover{background:#111C31;color:var(--tx);transform:translateX(2px);}
+.nv.on{background:linear-gradient(115deg, rgba(255,122,89,.16), rgba(255,122,89,.04) 70%);border-color:rgba(255,122,89,.45);color:var(--tx);font-weight:700;}
+.nv.on:before{content:"";position:absolute;left:0;top:18%;bottom:18%;width:3px;border-radius:3px;background:linear-gradient(180deg,var(--ac),var(--gold));}
+.nv .ic{width:18px;text-align:center;flex:none;opacity:.9;}
+.nv .bd{margin-left:auto;font-family:var(--mono);font-size:9.5px;padding:2px 7px;border-radius:99px;background:#0B1424;border:1px solid var(--line2);color:var(--tx2);flex:none;}
+.nv .bd.smp{color:var(--gold);border-color:rgba(255,194,75,.4);}
+.nv .bd.real{color:var(--gn);border-color:rgba(61,220,151,.45);}
+.nv .bd.prop{color:var(--cy);border-color:rgba(34,199,214,.45);}
+.sfoot{margin-top:20px;padding:12px 10px 4px;border-top:1px dashed var(--line);font-size:9.5px;color:var(--tx3);line-height:1.95;}
+.sfoot b{color:var(--tx2);font-family:var(--mono);}
+
+/* ===== main ===== */
+.main{padding:18px 26px 70px;min-width:0;position:relative;}
+.ticker{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg, rgba(14,22,38,.9), rgba(14,22,38,.55));border:1px solid var(--line);border-radius:12px;padding:8px 13px;margin-bottom:16px;overflow:hidden;}
+.ticker .live{flex:none;display:flex;align-items:center;gap:6px;font-size:9px;letter-spacing:.18em;color:var(--rd);font-family:var(--mono);font-weight:800;}
+.ticker .live i{width:7px;height:7px;border-radius:99px;background:var(--rd);animation:pulse 1.6s ease infinite;}
+.ticker .tk{flex:1;min-width:0;font-size:11.5px;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:1;transition:opacity .35s ease;}
+.ticker .tk.sw{opacity:0;}
+.ticker .tk b{color:var(--tx);}
+.ticker .n{flex:none;font-family:var(--mono);font-size:9.5px;color:var(--tx3);}
+.crumb{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+.crumb h2{font-size:21px;letter-spacing:.02em;}
+.crumb h2 small{font-size:10.5px;color:var(--tx3);font-weight:400;margin-left:10px;letter-spacing:.12em;font-family:var(--mono);}
+.chip{font-size:10.5px;color:var(--tx2);background:rgba(14,22,38,.8);border:1px solid var(--line);padding:4px 11px;border-radius:99px;}
+.chip b{color:var(--ac);font-family:var(--mono);}
+.hbtn{margin-left:auto;background:var(--panel);border:1px solid var(--line2);color:var(--cy);border-radius:99px;width:30px;height:30px;font-weight:800;cursor:pointer;font-family:inherit;transition:.15s;flex:none;}
+.hbtn:hover{background:#16233B;transform:scale(1.08) rotate(8deg);}
+
+/* ===== cards ===== */
+.g{display:grid;gap:14px;}
+.card{background:linear-gradient(168deg, rgba(20,31,54,.86), rgba(14,22,38,.86) 70%);border:1px solid var(--line);border-radius:16px;padding:16px 18px;position:relative;min-width:0;backdrop-filter:blur(6px);overflow:hidden;}
+.card:after{content:"";position:absolute;top:0;left:-70%;width:50%;height:100%;background:linear-gradient(100deg, transparent, rgba(255,255,255,.045), transparent);transform:skewX(-18deg);transition:left .7s ease;pointer-events:none;}
+.card:hover:after{left:130%;}
+.card:hover{border-color:var(--line2);}
+.card.hl:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;border-radius:3px 0 0 3px;background:linear-gradient(180deg,var(--ac),transparent);}
+.ct{font-size:12px;font-weight:700;color:var(--tx2);letter-spacing:.05em;display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.ct .q{cursor:pointer;color:var(--cy);border:1px solid var(--line2);border-radius:99px;width:17px;height:17px;display:inline-grid;place-items:center;font-size:10px;flex:none;background:none;font-family:inherit;}
+.ct .q:hover{background:#16233B;}
+.tag{display:inline-block;font-size:8.5px;padding:2px 8px;border-radius:99px;letter-spacing:.1em;font-family:var(--mono);font-weight:800;flex:none;}
+.tag.smp{color:#0B0E05;background:linear-gradient(92deg,var(--gold),#F0A518);}
+.tag.real{color:#04120C;background:linear-gradient(92deg,var(--gn),#17A469);}
+.tag.prop{color:#03141A;background:linear-gradient(92deg,#5FD9E8,var(--cy));}
+.src{font-size:9px;color:var(--tx3);margin-top:10px;line-height:1.8;}
+.src a{color:#7FA3C8;}
+.kpi{font-family:var(--mono);font-size:27px;font-weight:800;letter-spacing:-.01em;}
+.kpi small{font-size:12px;color:var(--tx3);font-weight:600;margin-left:3px;}
+.sub2{font-size:10.5px;color:var(--tx3);margin-top:5px;line-height:1.7;}
+.delta{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:99px;border:1px solid;margin-left:8px;vertical-align:3px;}
+.delta.up{color:var(--gn);border-color:rgba(61,220,151,.4);} .delta.dn{color:var(--rd);border-color:rgba(255,107,135,.4);} .delta.fl{color:var(--tx3);border-color:var(--line2);}
+.up{color:var(--gn);} .dn{color:var(--rd);} .act{color:var(--ac);} .cyt{color:var(--cy);} .glt{color:var(--gold);}
+.rv{opacity:0;transform:translateY(16px) scale(.995);}
+.rv.on{opacity:1;transform:none;transition:opacity .6s cubic-bezier(.16,.84,.28,1), transform .6s cubic-bezier(.16,.84,.28,1);}
+/* ===== hero ===== */
+.hero{display:grid;grid-template-columns:330px minmax(0,1fr);gap:14px;}
+.ring{position:relative;width:196px;height:196px;margin:6px auto 2px;}
+.ring svg{transform:rotate(-90deg);}
+.ringbg{fill:none;stroke:#0B1424;stroke-width:13;}
+.ringfg{fill:none;stroke:url(#gAc);stroke-width:13;stroke-linecap:round;transition:stroke-dashoffset 1.3s cubic-bezier(.2,.8,.25,1);filter:drop-shadow(0 0 8px rgba(255,122,89,.5));}
+.ring .mid{position:absolute;inset:0;display:grid;place-items:center;text-align:center;}
+.ring .mid .v{font-family:var(--mono);font-size:46px;font-weight:800;line-height:1;background:linear-gradient(180deg,#FFF2E8,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.ring .mid .l{font-size:10px;color:var(--tx2);margin-top:6px;letter-spacing:.14em;}
+.fuji-wm{position:absolute;right:-12px;bottom:-16px;opacity:.12;pointer-events:none;}
+.ktiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;}
+.kt{background:rgba(10,17,31,.7);border:1px solid var(--line);border-radius:13px;padding:12px 14px;position:relative;transition:.18s;min-width:0;}
+.kt:hover{transform:translateY(-3px);border-color:var(--line2);box-shadow:0 14px 34px rgba(0,0,0,.4);}
+.kt .t{font-size:9.5px;color:var(--tx3);letter-spacing:.1em;display:flex;gap:6px;align-items:center;}
+.kt .t i{width:8px;height:8px;border-radius:3px;flex:none;}
+.kt .v{font-family:var(--mono);font-size:22px;font-weight:800;margin-top:5px;}
+.kt .v small{font-size:10.5px;color:var(--tx3);font-weight:600;}
+.kt .s{font-size:9px;color:var(--tx3);margin-top:3px;line-height:1.6;}
+.kt svg{position:absolute;right:10px;bottom:9px;opacity:.85;}
+
+/* ===== alerts ===== */
+.alert{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;background:rgba(10,17,31,.7);border:1px solid var(--line);border-left:3px solid var(--rd);border-radius:12px;padding:11px 14px;transition:.18s;}
+.alert:hover{transform:translateX(3px);border-color:var(--line2);}
+.alert.mid{border-left-color:var(--gold);}
+.alert .sev{font-family:var(--mono);font-size:8.5px;font-weight:800;letter-spacing:.14em;color:var(--rd);border:1px solid rgba(255,107,135,.45);padding:3px 8px;border-radius:99px;flex:none;}
+.alert.mid .sev{color:var(--gold);border-color:rgba(255,194,75,.4);}
+.alert .tx{font-size:12px;line-height:1.7;color:var(--tx);}
+.alert .tx small{display:block;font-size:9.5px;color:var(--tx3);margin-top:2px;}
+.qchip{display:inline-flex;align-items:center;gap:7px;background:rgba(10,17,31,.75);border:1px solid var(--line);border-radius:99px;padding:5px 12px;font-size:11px;color:var(--tx);margin:3px 4px 3px 0;transition:.15s;}
+.qchip:hover{border-color:var(--line2);transform:translateY(-2px);}
+.qchip .ar{font-family:var(--mono);font-weight:800;}
+.qchip .dm{font-family:var(--mono);font-size:9px;color:var(--tx3);}
+
+/* ===== bars & charts ===== */
+.gbar{height:9px;border-radius:99px;background:#0A1322;overflow:hidden;position:relative;}
+.gbar i{display:block;height:100%;border-radius:99px;width:0;transition:width 1s cubic-bezier(.16,.84,.28,1);background:linear-gradient(90deg,var(--ac2),var(--ac));position:relative;}
+.gbar i:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 40%,rgba(255,255,255,.28) 92%,transparent);opacity:.55;}
+.brow{display:grid;grid-template-columns:112px minmax(0,1fr) 58px;gap:10px;align-items:center;padding:6px 0;}
+.brow .bl2{font-size:11px;color:var(--tx2);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.brow.me .bl2{color:var(--tx);font-weight:700;}
+.brow .bv{font-family:var(--mono);font-size:11.5px;font-weight:700;text-align:right;}
+path.draw{stroke-dasharray:1;stroke-dashoffset:1;}
+path.draw.go{stroke-dashoffset:0;transition:stroke-dashoffset 1.25s cubic-bezier(.4,0,.2,1);}
+.afill{opacity:0;transition:opacity .8s ease .55s;}
+.afill.go{opacity:1;}
+svg text{font-family:'BIZ UDPGothic',sans-serif;}
+svg .mono, svg text.mn{font-family:'JetBrains Mono',monospace;}
+.legend{display:flex;gap:13px;flex-wrap:wrap;font-size:9.5px;color:var(--tx3);margin-top:9px;}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;vertical-align:-1px;}
+.hovrect{cursor:crosshair;}
+
+/* ===== faces ===== */
+.face{background:rgba(10,17,31,.7);border:1px solid var(--line);border-radius:14px;padding:13px 15px;position:relative;overflow:hidden;transition:.2s;min-width:0;}
+.face:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.42);}
+.face:before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--fc,var(--ac));opacity:.85;}
+.face .nm{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;}
+.face .nm i{width:9px;height:9px;border-radius:99px;background:var(--fc);box-shadow:0 0 10px var(--fc);flex:none;}
+.face .met{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:11px;}
+.face .met .m .a{font-size:8.5px;color:var(--tx3);letter-spacing:.08em;}
+.face .met .m .b{font-family:var(--mono);font-size:16.5px;font-weight:800;margin-top:2px;}
+.face .met .m .b small{font-size:9px;color:var(--tx3);}
+.face .nt{font-size:9px;color:var(--tx3);margin-top:9px;border-top:1px dashed var(--line);padding-top:7px;line-height:1.7;}
+
+/* ===== matrix ===== */
+.mwrap{overflow-x:auto;padding-bottom:6px;}
+.mx{border-collapse:separate;border-spacing:3px;min-width:660px;width:100%;}
+.mx th{font-size:9.5px;color:var(--tx3);font-weight:700;padding:4px 6px;white-space:nowrap;}
+.mx th.rowh{text-align:right;font-size:10.5px;color:var(--tx2);padding-right:10px;}
+.hcell{width:56px;height:34px;border-radius:8px;text-align:center;font-family:var(--mono);font-size:11px;font-weight:800;cursor:pointer;opacity:0;transform:scale(.6);border:1px solid transparent;}
+.hcell.on{opacity:1;transform:scale(1);transition:opacity .45s ease, transform .45s cubic-bezier(.34,1.4,.5,1);}
+.hcell:hover{border-color:rgba(255,255,255,.4);box-shadow:0 0 0 2px rgba(255,255,255,.12);}
+.mx td.non{color:var(--tx3);text-align:center;font-size:10px;}
+
+/* ===== radar & donut ===== */
+.rpoly{transform-origin:50% 50%;transform:scale(.5);opacity:0;transform-box:fill-box;}
+.rpoly.on{transform:scale(1);opacity:1;transition:transform .9s cubic-bezier(.2,.9,.3,1.1), opacity .6s ease;}
+.dseg{opacity:0;}
+.dseg.on{opacity:1;transition:opacity .5s ease;}
+.gbr{transform:scaleY(0);transform-origin:center bottom;transform-box:fill-box;}
+.gbr.go{transform:scaleY(1);transition:transform .75s cubic-bezier(.2,.85,.3,1);}
+.gbl{opacity:0;}
+.gbl.go{opacity:1;transition:opacity .45s ease;}
+.seg{display:inline-flex;background:#0B1322;border:1px solid var(--line);border-radius:99px;padding:3px;gap:2px;}
+.seg button{border:none;background:none;color:var(--tx2);font-family:inherit;font-size:10.5px;padding:5px 13px;border-radius:99px;cursor:pointer;transition:.16s;white-space:nowrap;}
+.seg button:hover{color:var(--tx);}
+.seg button.on{background:linear-gradient(92deg,var(--ac2),var(--ac));color:#160803;font-weight:700;box-shadow:0 4px 14px rgba(255,122,89,.35);}
+.gstat{display:inline-flex;gap:6px;align-items:center;background:rgba(10,17,31,.75);border:1px solid var(--line);border-radius:99px;padding:4px 12px;font-size:10px;color:var(--tx3);}
+.gstat b{font-family:var(--mono);font-size:12px;color:var(--tx);}
+/* ===== 連携（工事中）ゴースト ===== */
+.nv.ghost{opacity:.58;}
+.nv.ghost:hover{opacity:.95;}
+.bd.lock{color:#C9A96A;border-style:dashed;border-color:rgba(255,194,75,.4);}
+.lockwrap{position:relative;min-height:300px;}
+.ghosted{opacity:.38;filter:saturate(.45) brightness(.9);pointer-events:none;user-select:none;}
+.lockover{position:absolute;inset:0;display:grid;place-items:center;z-index:5;padding:18px;}
+.lockcard{background:linear-gradient(168deg,rgba(24,36,62,.94),rgba(13,21,37,.96));border:1.5px dashed rgba(255,194,75,.55);border-radius:18px;padding:22px 26px;max-width:560px;width:100%;box-shadow:0 26px 80px rgba(0,0,0,.6);backdrop-filter:blur(4px);text-align:left;}
+.lockcard .lh{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.lockcard .lk{width:38px;height:38px;border-radius:11px;background:rgba(255,194,75,.12);border:1px solid rgba(255,194,75,.4);display:grid;place-items:center;font-size:17px;flex:none;}
+.lockcard h3{font-size:15px;color:var(--gold);}
+.lockcard h3 small{display:block;font-size:9px;color:var(--tx3);letter-spacing:.14em;font-family:var(--mono);margin-top:2px;}
+.lockcard ul{list-style:none;margin:10px 0 0;display:grid;gap:7px;}
+.lockcard li{font-size:11.5px;color:var(--tx2);line-height:1.75;padding-left:15px;position:relative;}
+.lockcard li:before{content:"◆";position:absolute;left:0;top:0;font-size:8px;color:var(--gold);}
+.lockcard .req{margin-top:12px;border-top:1px dashed var(--line2);padding-top:10px;font-size:10.5px;color:var(--tx3);line-height:1.8;}
+.lockcard .req b{color:var(--tx);}
+.consband{background:repeating-linear-gradient(-45deg, rgba(255,194,75,.09) 0 9px, rgba(255,194,75,.015) 9px 18px);border:1px dashed rgba(255,194,75,.35);border-radius:12px;padding:8px 14px;font-size:10.5px;color:#FFD9A8;display:flex;gap:9px;align-items:center;flex-wrap:wrap;}
+.lockchip{display:flex;align-items:center;gap:10px;background:rgba(10,17,31,.7);border:1px dashed rgba(255,194,75,.35);border-radius:13px;padding:11px 14px;cursor:pointer;transition:.16s;min-width:0;}
+.lockchip:hover{transform:translateY(-3px);border-color:rgba(255,194,75,.7);background:rgba(20,30,52,.8);}
+.lockchip .ic2{font-size:16px;flex:none;opacity:.85;}
+.lockchip .t2{font-size:11.5px;font-weight:700;color:var(--tx);}
+.lockchip .t2 small{display:block;font-size:9px;color:var(--tx3);font-weight:400;margin-top:2px;line-height:1.5;}
+.skrow{height:11px;border-radius:99px;background:#1B2946;margin:8px 0;}
+
+
+/* ===== tiles map ===== */
+.tmap{display:grid;grid-template-columns:repeat(4,minmax(72px,1fr));gap:8px;max-width:480px;}
+.tile{border-radius:12px;padding:10px 10px 9px;border:1px solid var(--line);position:relative;opacity:0;transform:translateY(10px) scale(.94);cursor:default;min-height:74px;}
+.tile.on{opacity:1;transform:none;transition:.5s cubic-bezier(.2,.85,.3,1.05);}
+.tile:hover{border-color:rgba(255,255,255,.35);}
+.tile .p{font-size:10.5px;font-weight:700;color:var(--tx);}
+.tile .v{font-family:var(--mono);font-size:17px;font-weight:800;margin-top:4px;}
+.tile .d{font-size:8.5px;color:var(--tx3);margin-top:1px;font-family:var(--mono);}
+.tile .st{position:absolute;top:7px;right:8px;font-size:10px;}
+.tile.ghost{border-style:dashed;opacity:0;background:transparent;pointer-events:none;}
+.tile.ghost.on{opacity:.28;}
+
+/* ===== voices ===== */
+.quote{background:rgba(10,17,31,.7);border:1px solid var(--line);border-radius:14px;padding:13px 15px;position:relative;transition:.18s;display:flex;flex-direction:column;gap:8px;min-width:0;}
+.quote:hover{transform:translateY(-3px);border-color:var(--line2);}
+.quote .qq{font-size:12.5px;line-height:1.9;color:var(--tx);}
+.quote .qq:before{content:"“";color:var(--ac);font-size:20px;font-family:var(--mono);margin-right:2px;}
+.quote .meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap;font-size:9px;color:var(--tx3);margin-top:auto;}
+.pill{display:inline-block;font-size:9px;padding:2.5px 9px;border-radius:99px;border:1px solid var(--line2);color:var(--tx2);white-space:nowrap;}
+.pill.pos{color:var(--gn);border-color:rgba(61,220,151,.45);}
+.pill.neg{color:var(--rd);border-color:rgba(255,107,135,.45);}
+.pill.fac{color:var(--gold);border-color:rgba(255,194,75,.4);}
+.starbig{font-family:var(--mono);font-size:30px;font-weight:800;}
+.stars{color:var(--gold);letter-spacing:2px;font-size:13px;}
+
+/* ===== kpi tree ===== */
+.ktree{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;align-items:stretch;}
+.knode{background:rgba(10,17,31,.75);border:1px solid var(--line);border-radius:14px;padding:13px 14px;position:relative;min-width:0;}
+.knode .h{font-size:12px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.knode .h .no{font-family:var(--mono);font-size:9px;color:var(--tx3);border:1px solid var(--line2);border-radius:99px;padding:2px 7px;}
+.knode ul{list-style:none;margin-top:9px;display:grid;gap:6px;}
+.knode li{font-size:10.5px;color:var(--tx2);line-height:1.65;padding-left:13px;position:relative;}
+.knode li:before{content:"";position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:2px;background:var(--kc,var(--ac));}
+.knode .dsrc{margin-top:9px;border-top:1px dashed var(--line);padding-top:7px;font-size:9px;color:var(--tx3);line-height:1.7;}
+.karr{display:grid;place-items:center;color:var(--tx3);font-size:16px;padding:0 2px;}
+.kwrapx{display:grid;grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr);gap:6px;align-items:stretch;}
+
+/* ===== ibox ===== */
+.ibox{border-left:3px solid var(--ac);background:rgba(10,17,31,.72);border-radius:0 13px 13px 0;padding:12px 16px;margin-top:10px;}
+.ibox h4{font-size:11px;color:var(--ac);letter-spacing:.1em;margin-bottom:6px;}
+.ibox p{font-size:12.5px;line-height:2;color:var(--tx);}
+.ibox.is2{border-color:var(--rd);} .ibox.is2 h4{color:var(--rd);}
+.ibox.is3{border-color:var(--gn);} .ibox.is3 h4{color:var(--gn);}
+.ibox.is4{border-color:var(--cy);} .ibox.is4 h4{color:var(--cy);}
+
+/* ===== tables ===== */
+.tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.tbl th{font-size:9.5px;color:var(--tx3);text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);letter-spacing:.07em;white-space:nowrap;cursor:pointer;user-select:none;}
+.tbl th:hover{color:var(--cy);}
+.tbl td{padding:8px;border-bottom:1px solid rgba(20,32,54,.5);vertical-align:middle;word-break:break-word;}
+.tbl tr:hover td{background:rgba(18,32,54,.35);}
+.tblwrap{overflow-x:auto;}
+.ibar{display:inline-block;height:7px;border-radius:99px;background:linear-gradient(90deg,var(--ac2),var(--ac));vertical-align:2px;margin-right:8px;}
+
+/* ===== timeline ===== */
+.tl{position:relative;padding-left:26px;display:grid;gap:13px;}
+.tl:before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--ac),var(--line) 80%);border-radius:2px;}
+.tle{position:relative;}
+.tle:before{content:"";position:absolute;left:-24px;top:4px;width:12px;height:12px;border-radius:99px;background:#0B1424;border:2.5px solid var(--ac);}
+.tle.riv:before{border-color:var(--bl);}
+.tle .y{font-family:var(--mono);font-size:11px;font-weight:800;color:var(--gold);}
+.tle .t{font-size:12.5px;color:var(--tx);line-height:1.8;}
+.tle .t small{color:var(--tx3);font-size:9.5px;}
+
+/* ===== modal / tip ===== */
+.mback{position:fixed;inset:0;background:rgba(3,7,14,.74);backdrop-filter:blur(4px);display:none;place-items:center;z-index:120;padding:20px;}
+.mback.on{display:grid;}
+.modal{width:100%;max-width:660px;max-height:82vh;overflow-y:auto;background:linear-gradient(168deg,#17233C,#101A2E);border:1px solid var(--line2);border-radius:17px;padding:24px 26px;box-shadow:0 40px 110px rgba(0,0,0,.65);animation:mdl .3s cubic-bezier(.2,.9,.3,1.05);}
+@keyframes mdl{from{opacity:0;transform:translateY(18px) scale(.97);}to{opacity:1;transform:none;}}
+.modal h3{font-size:16px;margin-bottom:12px;color:var(--gold);}
+.modal p,.modal li{font-size:12.5px;line-height:2.05;color:var(--tx2);}
+.modal b{color:var(--tx);}
+.modal .x{float:right;background:none;border:1px solid var(--line2);color:var(--tx2);border-radius:9px;padding:4px 12px;cursor:pointer;font-family:inherit;}
+.modal .x:hover{color:var(--tx);background:#16233B;}
+.tip{position:fixed;z-index:140;background:#1A2740;border:1px solid var(--line2);border-radius:10px;padding:9px 12px;font-size:11px;line-height:1.85;color:var(--tx);max-width:300px;pointer-events:none;display:none;box-shadow:0 16px 44px rgba(0,0,0,.55);}
+.tip b{color:var(--gold);}
+
+/* ===== footer ===== */
+.foot{margin-top:26px;border-top:1px dashed var(--line);padding-top:14px;font-size:9px;color:var(--tx3);line-height:2;}
+.foot a{color:#7FA3C8;}
+
+/* ===== responsive ===== */
+@media(max-width:1080px){ .hero{grid-template-columns:1fr;} .kwrapx{grid-template-columns:1fr;} .karr{transform:rotate(90deg);padding:2px 0;} }
+@media(max-width:980px){
+ .layout{grid-template-columns:1fr;}
+ .side{position:relative;height:auto;padding:12px;}
+ .nav{display:flex;overflow-x:auto;gap:6px;padding-bottom:6px;scrollbar-width:none;}
+ .nav .sec{display:none;} .nv{white-space:nowrap;flex:none;width:auto;}
+ .sfoot,.rsel{display:none;}
+ .main{padding:14px 13px 56px;}
+ .g2c,.g3c,.g4c{grid-template-columns:1fr !important;}
+ .tmap{max-width:100%;}
+}
+@media (prefers-reduced-motion: reduce){
+ *,:before,:after{animation-duration:.001s !important;animation-iteration-count:1 !important;transition-duration:.001s !important;}
+ #splash{display:none;}
+ .rv{opacity:1;transform:none;}
+}
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="mk"><svg width="30" height="30" viewBox="0 0 100 100" fill="none"><path d="M12 76 L38 32 Q43 24 48 32 L52 39 L56 32 Q61 24 66 32 L88 76" stroke="#FF7A59" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M36 45 L43 38 L48 44 L54 37 L60 44 L65 45" stroke="#FFC24B" stroke-width="5.5" stroke-linecap="round"/></svg></div>
-  <h1>御殿場<span>GEOボード</span></h1>
-  <div class="sub">GOTEMBA × AI × VOICE</div>
-  <form id="f" autocomplete="off">
-    <label for="u">ID</label>
-    <input id="u" type="text" autocomplete="username" spellcheck="false" autocapitalize="none">
-    <label for="p">パスワード</label>
-    <input id="p" type="password" autocomplete="current-password">
-    <button id="b" type="submit">ログイン</button>
-    <div class="err" id="e"></div>
-  </form>
-  <div class="ft">認証済みユーザー専用。データは暗号化されています。<br>不明な場合は管理者（<a href="mailto:nakai@slashslash.jp">nakai@slashslash.jp</a>）へお問い合わせください。</div>
+<canvas id="fx"></canvas>
+<div class="aur a1"></div><div class="aur a2"></div><div class="aur a3"></div>
+
+<div id="splash" aria-hidden="true"><div class="in">
+ <svg width="150" height="86" viewBox="0 0 150 86" fill="none">
+  <defs><linearGradient id="gFj" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FF7A59"/><stop offset="1" stop-color="#FFC24B"/></linearGradient></defs>
+  <path class="fj" pathLength="1" d="M8 78 L52 16 Q57 8 63 16 L69 25 L75 16 Q81 8 86 16 L142 78" stroke="url(#gFj)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="fj2" pathLength="1" d="M47 30 L56 22 L63 29 L71 21 L79 29 L87 30" stroke="#EAF1FB" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>
+ </svg>
+ <h1>御殿場プレミアム・アウトレット</h1>
+ <p>KATARARE-KATA BOARD</p>
+</div></div>
+
+<div class="ribbon"><span class="dot"></span><span><b>R0 デザインプレビュー</b>｜AI計測系の数値は<b>サンプル</b>（実測パイプライン接続前）｜<b>実測</b>タグの付いたカードは出典付きの実データ</span></div>
+
+<div class="layout">
+ <aside class="side">
+  <div class="logo">
+   <div class="mk"><svg width="26" height="26" viewBox="0 0 100 100" fill="none"><path d="M12 76 L38 32 Q43 24 48 32 L52 39 L56 32 Q61 24 66 32 L88 76" stroke="#FF7A59" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M36 45 L43 38 L48 44 L54 37 L60 44 L65 45" stroke="#FFC24B" stroke-width="5.5" stroke-linecap="round"/></svg></div>
+   <h1>御殿場<b>GEOボード</b><div class="sub">GOTEMBA × AI × VOICE</div></h1>
+  </div>
+  <div class="rsel"><span class="lbl">ROUND</span>
+   <select id="rsel" aria-label="計測ラウンド">
+    <option>R0｜設計プレビュー（9/1週）</option>
+    <option disabled>R1｜テスト計測（未実施）</option>
+    <option disabled>R2〜｜週次定点（未実施）</option>
+   </select>
+  </div>
+  <nav class="nav" id="nav" aria-label="ビュー切替"></nav>
+  <div class="sfoot">
+   計測設計: <b>約120</b>クエリ × <b>4</b>面/週<br>
+   想定コスト: <b>$12–15</b>/周（実測単価より試算）<br>
+   実データ取得: <b>2026-09-01</b> JST<br>
+   ゲート: 暗号化認証（実装時に適用）
+  </div>
+ </aside>
+
+ <main class="main">
+  <div class="ticker" id="ticker"><span class="live"><i></i>FEED</span><span class="tk" id="tk">読み込み中…</span><span class="n" id="tkn"></span></div>
+  <div id="main"></div>
+ </main>
 </div>
+
+<div class="mback" id="mback"><div class="modal" id="modal"></div></div>
+<div class="tip" id="tip"></div>
+
 <script>
-const BLOB="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";
-const ITER=200000;
-function b64d(s){const bin=atob(s);const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a;}
-async function decrypt(u,p){
- const data=b64d(BLOB);
- const salt=data.slice(0,16), iv=data.slice(16,28), ct=data.slice(28);
- const enc=new TextEncoder();
- const km=await crypto.subtle.importKey('raw',enc.encode(u+':'+p),{name:'PBKDF2'},false,['deriveKey']);
- const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:ITER,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
- const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,ct);
- const ds=new DecompressionStream('gzip');
- const stream=new Blob([plain]).stream().pipeThrough(ds);
- return await new Response(stream).text();
-}
-const f=document.getElementById('f'),e=document.getElementById('e'),b=document.getElementById('b');
-f.addEventListener('submit',async ev=>{
- ev.preventDefault();
- const u=document.getElementById('u').value.trim(), p=document.getElementById('p').value;
- if(!u||!p){e.textContent='IDとパスワードを入力してください';return;}
- b.disabled=true;b.innerHTML='<span class="spin"></span>復号中…';e.textContent='';
- try{
-   const html=await decrypt(u,p);
-   if(html.indexOf('GOTEMBA_BOARD')===-1) throw new Error('bad');
-   document.open();document.write(html);document.close();
- }catch(err){
-   e.textContent='IDまたはパスワードが正しくありません';
-   b.disabled=false;b.textContent='ログイン';
+window.BOARD_DATA={"real":{"asof":"2026-09-01","sales":{"y2011":586,"y2024":1409,"rank":"国内商業施設トップクラス"},"cum":"2.3億人","stores":{"gotemba":290,"kisarazu":330},"renewal":{"new25":27,"refit25":"30以上"},"kanko":{"years":[2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"vals":[1322,1287,1332,1412,1443,1421,1426,1425,1425,1029,1199,1378,1512,1538]},"share":"約7割","stayDay":3.6,"stayPref":"9時間32分","weekdayOp":66,"lodgers":{"y2019":96.8,"y2024":122.2},"inbound":{"v":248690,"note":"2019年比 約2.2倍"},"maps":{"gotemba":{"n":"御殿場","star":4.2,"cnt":29126,"tags":[["富士山",1314],["渋滞",171],["橋",110],["シャトルバス",89]],"url":"https://www.google.com/maps/search/御殿場プレミアム・アウトレット"},"kisarazu":{"n":"木更津","star":4,"cnt":17201,"tags":[["フードコート",570],["渋滞",306],["平日",209],["休日",105]],"url":"https://www.google.com/maps/search/三井アウトレットパーク木更津"},"karuizawa":{"n":"軽井沢","star":4.1,"cnt":20584,"tags":[["芝生",251],["敷地",161],["新幹線",112],["ドッグラン",97]],"url":"https://www.google.com/maps/search/軽井沢・プリンスショッピングプラザ"}},"quotes":[{"f":"gotemba","s":"pos","th":"景観（富士山）","t":"富士山を眺めながら大自然の中でショッピングは身体と心を癒してくれます","w":"Googleマップ クチコミ"},{"f":"gotemba","s":"pos","th":"インバウンド","t":"来場者も多く、海外からの観光客も目立ちました","w":"Googleマップ クチコミ・8か月前"},{"f":"gotemba","s":"neg","th":"アクセス運用","t":"少し遅れると遠くの駐車場を案内されシャトルバスコースになる","w":"Googleマップ クチコミ・4か月前"},{"f":"gotemba","s":"neg","th":"混雑・駐車","t":"日曜15時頃、第7駐車場は1階満車。空きスペースは少ない状況","w":"Googleマップ クチコミ・6か月前"},{"f":"kisarazu","s":"pos","th":"アクセス","t":"東京から1時間かからずに行けるアクセスの良さが魅力","w":"Googleマップ クチコミ・4か月前"},{"f":"kisarazu","s":"pos","th":"品揃え","t":"ひと通り見て回ろうとすると丸一日かかるほどの充実度","w":"Googleマップ クチコミ・4か月前"},{"f":"karuizawa","s":"pos","th":"滞在体験","t":"自然豊かで広大な敷地。ドッグランや子供が遊べるエリアもあり買い物以外でも楽しめます","w":"Googleマップ クチコミ・1か月前"},{"f":"karuizawa","s":"neg","th":"品揃え","t":"ハイブランドなどの店舗数は他のアウトレットと比べると少なく感じます","w":"Googleマップ クチコミ・1か月前"}],"timeline":[{"y":"2000.07","t":"御殿場プレミアム・アウトレット開業（三菱地所・サイモン）","me":1,"src":"prtimes"},{"y":"2011年度","t":"売上高586億円 — 国内アウトレットモール首位","me":1,"src":"wiki"},{"y":"2012.04","t":"三井アウトレットパーク木更津 開業（アクアライン圏の直接競合が出現）","me":0,"src":"wikik"},{"y":"2019.12","t":"HOTEL CLAD・日帰り温泉「木の花の湯」開業 — 滞在型へ布石","me":1,"src":"odakyu"},{"y":"2020.06","t":"御殿場 第4期増床（+88店 → 約290店）","me":1,"src":"wiki"},{"y":"2024年度","t":"御殿場 売上高1,409億円で過去最高・国内商業施設トップクラス／御殿場市観光交流客数1,538万人","me":1,"src":"ats"},{"y":"2025.06","t":"木更津 増床で約330店 —「店舗数日本一」が御殿場から木更津へ","me":0,"src":"impress"},{"y":"2025.07","t":"御殿場 開業25周年 — 1年で新規27店・30店以上を改装しラインナップ刷新","me":1,"src":"prtimes"}],"srcs":{"ats":["静岡新聞DIGITAL 2025/7/27","https://news.at-s.com/article/1771327"],"prtimes":["三菱地所・サイモン プレスリリース 2025/7","https://prtimes.jp/main/html/rd/p/000000587.000009047.html"],"plan":["御殿場市観光戦略プラン（最新版）","https://www.city.gotemba.lg.jp/gyousei/kanri/assets/uploads/2026/01/fc177ff09da3f710201c48430ec773d7-1.pdf"],"planR4":["御殿場市観光戦略プラン（R4案）","https://www.city.gotemba.lg.jp/gyousei/kanri/assets/uploads/2022/01/gotembacity_kankousenryakuplansoan2_R4_7.pdf"],"impress":["Impress Watch 2024/3/14","https://www.watch.impress.co.jp/docs/news/1576363.html"],"wiki":["Wikipedia 御殿場プレミアム・アウトレット","https://ja.wikipedia.org/wiki/%E5%BE%A1%E6%AE%BF%E5%A0%B4%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E3%83%A0%E3%83%BB%E3%82%A2%E3%82%A6%E3%83%88%E3%83%AC%E3%83%83%E3%83%88"],"wikik":["Wikipedia 三井アウトレットパーク木更津","https://ja.wikipedia.org/wiki/%E4%B8%89%E4%BA%95%E3%82%A2%E3%82%A6%E3%83%88%E3%83%AC%E3%83%83%E3%83%88%E3%83%91%E3%83%BC%E3%82%AF_%E6%9C%A8%E6%9B%B4%E6%B4%A5"],"odakyu":["小田急ホテル プレスリリース 2019/12","https://www.odakyu-hotel.co.jp/news/press/2019/1213093048/"],"gmap":["Googleマップ（2026/9/1 実査）","https://www.google.com/maps/search/御殿場プレミアム・アウトレット"]},"trends":{"asof":"2026-09-01","prefs":{"JP-22":29.3,"JP-19":30.1,"JP-13":30.0,"JP-14":29.8,"JP-11":31.3,"JP-12":32.8,"JP-08":24.7,"JP-09":17.3,"JP-10":11.7}}},"s":{"g1":5.8,"g1sub":"回答が返る率 100% × 回答あたり引用 5.8本","g2":61.1,"g2n":"22/36セル","g3":69.5,"g3n":"15/22回答","g4":100,"g4d":"+6","idx":116,"idxPrev":112,"aiShare":24.1,"demShare":20.8,"calls":{"queries":9,"faces":4,"answers":52,"mentions":22,"first":15},"faces":[{"id":"gpt","n":"ChatGPT","c":"var(--gpt)","hex":"#17A469","gen":100.0,"cite":5.77,"g2":66.7,"g3":66.7,"note":"web_search: JP指定。ノイズ引用は除外して集計"},{"id":"gem","n":"Gemini","c":"var(--gem)","hex":"#7A64EE","gen":100.0,"cite":9.85,"g2":55.6,"g3":40.0,"note":"リダイレクタ引用はtitleからドメイン復元（トヨタ実測で73%が該当）"},{"id":"aio","n":"AI Overview","c":"var(--aio)","hex":"#0C8FA8","gen":100.0,"cite":5.31,"g2":44.4,"g3":100.0,"note":"AIO出現率=生成率として扱う。location:Japan"},{"id":"aim","n":"AIモード","c":"var(--aim)","hex":"#C8850A","gen":100.0,"cite":2.46,"g2":77.8,"g3":71.4,"note":"4面中で言及率が最も高い（回答が長く網羅的なため）"}],"firstBar":[["御殿場",15,1],["木更津",9,0],["横浜BS",3,0],["軽井沢",1,0],["幕張",1,0]],"domains":[["premiumoutlets.co.jp",14.5,"自社公式"],["jalan.net",3.9,"旅行メディア"],["mitsui-shopping-park.com",3.3,"競合公式"],["iko-yo.net",2.0,"メディア"],["tour.ne.jp",1.6,"メディア"],["youtube.com",1.6,"UGC"],["kkday.com",1.3,"メディア"],["mitsuifudosan.co.jp",1.3,"メディア"],["jrbuskanto.co.jp",1.3,"メディア"],["rurubu.jp",1.3,"旅行メディア"]],"ugc":6.9,"official":14.8,"themes":["景観(富士山)","品揃え","インバウンド","食事","価格感","雨天対応","子連れ","アクセス","混雑・渋滞"],"radar":{"gotemba":[92,84,81,66,62,44,58,38,31],"kisarazu":[41,78,55,61,70,52,76,62,45],"karuizawa":[88,72,68,70,55,38,64,48,52]},"rivals":["木更津","入間","幕張","横浜BS","多摩","軽井沢","佐野","酒々井","あみ"],"mx":[[0.8,0.9,0.9,0.7,0.9,0.2,0.8,0.9,0.9],[0.2,0.5,0.4,0.3,0.6,0.3,0.5,0.4,0.6],[0.5,0.7,0.6,0.4,0.8,0.3,0.7,0.7,0.8],[0.1,0.3,0.2,0,0.4,-0.2,0.3,0.2,null],[-0.2,0.1,0,-0.1,0.2,0.2,0.1,0,0.1],[-0.2,0.1,0.1,-0.3,null,0.2,0,0.1,0.1],[-0.5,0.1,-0.1,-0.2,0.2,-0.1,0.2,0.1,0.3],[-0.6,-0.5,-0.4,-0.7,-0.5,-0.3,0.2,-0.1,0.1],[-0.4,-0.2,-0.1,-0.3,0.1,0.3,0.2,0.1,0.2]],"mxsnip":{"景観(富士山)":{"t":"「富士山を一望できる開放的なロケーションはここならでは」","f":"ChatGPT"},"アクセス":{"t":"「都心からはアクアライン経由の木更津の方が短時間で行きやすい」","f":"AIモード"},"子連れ":{"t":"「木更津は子ども向け遊び場が充実しており家族連れに人気」","f":"Gemini"},"混雑・渋滞":{"t":"「連休は周辺道路の渋滞が発生しやすく時間に余裕を」","f":"AI Overview"},"def":{"t":"該当テーマの根拠スニペット（回答全文から抽出）を表示します","f":"—"}},"personas":[{"n":"家族連れ","v":31,"d":"+2","c":"#4E9BE8","q":"子ども連れでも1日過ごせる規模と施設","s":"雨天時の回遊・キッズ導線が課題として言及されがち"},{"n":"インバウンド","v":24,"d":"+3","c":"#3DDC97","q":"Mt.Fuji viewと免税・ブランドの組み合わせで推奨","s":"英語圏クエリでは第一想起67%と国内比+9pt"},{"n":"カップル","v":18,"d":"-1","c":"#E27FA6","q":"日帰りドライブ+買い物の定番として言及","s":"「軽井沢=特別感」との比較で言及を分け合う"},{"n":"ブランド目的","v":15,"d":"0","c":"#B48CFF","q":"ラグジュアリー系の店舗網羅性で優位","s":"25周年刷新の新規店舗はまだAI回答に反映薄"},{"n":"シニア","v":7,"d":"-1","c":"#22C7D6","q":"温泉・ホテル併設の滞在型として言及","s":"休憩動線・坂の言及がネガ側で出現"},{"n":"その他","v":5,"d":"—","c":"#55647F","q":"—","s":"—"}],"pmix":{"gpt":[34,20,19,16,7,4],"gem":[28,27,17,16,7,5],"aio":[33,22,18,14,8,5],"aim":[29,26,18,15,7,5]},"tiles":[{"p":"群馬","v":24,"r":1,"c":2},{"p":"栃木","v":19,"r":1,"c":3},{"p":"茨城","v":15,"r":1,"c":4},{"p":"山梨","v":84,"r":2,"c":1},{"p":"埼玉","v":38,"r":2,"c":2},{"p":"千葉","v":29,"r":2,"c":4,"note":"木更津の地元圏"},{"p":"静岡","v":128,"r":3,"c":1,"star":1,"note":"御殿場の地元圏"},{"p":"東京","v":71,"r":3,"c":2},{"p":"神奈川","v":96,"r":3,"c":3}],"themeDiff":[["アクセス",18],["混雑・渋滞",9],["価格感",6],["子連れ",4],["雨天対応",3],["食事",2],["品揃え",-2],["インバウンド",-11],["景観(富士山)",-14]],"askJp":{"gotemba":3,"karuizawa":1},"askKanto":{"gotemba":2,"kisarazu":2},"ts":{"w":["6/15","6/22","6/29","7/6","7/13","7/20","7/27","8/3","8/10","8/17","8/24","8/31"],"g2":[52.1,53,52.4,54.2,55.1,54.8,56.3,55.9,57.2,56.8,57.6,58.3],"idx":[104,106,103,108,110,109,112,111,114,112,112,116],"dem":[62,64,68,71,78,83,88,92,96,90,94,100],"ev":[{"i":3,"t":"昇格2 / 降格1"},{"i":7,"t":"昇格3 / 降格2"},{"i":11,"t":"昇格2 / 降格1"}]},"tsD":{"w":["8/4","8/5","8/6","8/7","8/8","8/9","8/10","8/11","8/12","8/13","8/14","8/15","8/16","8/17","8/18","8/19","8/20","8/21","8/22","8/23","8/24","8/25","8/26","8/27","8/28","8/29","8/30","8/31"],"g2":[55.9,56.9,55.8,55.3,57.2,57.6,55.8,56,57.4,57.1,55.9,57.2,58.4,57,56.3,57.6,58.1,56.9,57.3,58.8,58.2,56.9,57.6,58.8,58.1,57.7,58.9,58.3],"idx":[111,113,112,111,108,110,114,113,111,112,113,112,111,112,113,115,115,114,111,112,116,116,115,114,115,113,114,116],"dem":[86,89,90,89,103,102,87,90,93,94,92,106,105,90,93,96,97,96,110,109,94,97,100,101,100,114,113,100],"ev":[]},"tsM":{"w":["25/9","25/10","25/11","25/12","26/1","26/2","26/3","26/4","26/5","26/6","26/7","26/8"],"g2":[49.2,50.1,50.8,51.5,52,52.6,53.4,54,54.7,55.3,56.2,57.1],"idx":[100,102,103,101,97,105,107,108,106,110,112,114],"dem":[60,63,66,78,96,70,68,72,80,71,84,95],"ev":[]},"alerts":[{"sev":"high","f":"AIモード","t":"「雨の日」文脈でG2言及率が-9pt（52→43）","s":"雨天対応テーマの根拠引用が競合記事に置き換わり"},{"sev":"mid","f":"Gemini","t":"引用にクーポン系アグリゲータ2ドメインが新規浮上","s":"価格文脈の引用元が非公式サイトへ流出"},{"sev":"mid","f":"全面","t":"「子連れ」第一想起を木更津が3件獲得（前週+3）","s":"家族文脈の負けが2週連続で拡大"}],"promo":[["富士山 観光 モデルコース",78],["アウトレット 福袋 いつ",64]],"demo":[["雨の日 大型 買い物 施設",31],["アウトレット 疲れる",18]]},"meta":{"seed":true,"sample_ai":true,"built_at":"2026-09-01","measured":true,"round_date":"2026-09-01","round_cost":1.1869,"n_cells":52}};
+</script>
+<script>
+
+/* ================================================================
+   DATA — REAL: 出典付き実データ（2026-09-01取得） / S: サンプル（設計値）
+   実測パイプライン接続後は board_data.json がこの構造を上書きする
+================================================================ */
+/* データは build.py が window.BOARD_DATA として注入する（board_data.json）。
+   R0はboard_seed.json（実データ＋設計サンプル）、計測開始後は実測で上書き。 */
+const BD=window.BOARD_DATA||{};
+const REAL=BD.real, S=BD.s, META=BD.meta||{};
+/* ================= helpers ================= */
+const $=s=>document.querySelector(s);
+const fmt=n=>n==null?'—':(typeof n==='number'?n.toLocaleString('ja-JP'):n);
+const esc=s=>String(s==null?'—':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const srcA=(...keys)=>keys.map(k=>{const s=REAL.srcs[k];return `<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`;}).join(' ／ ');
+const tagS='<span class="tag smp">サンプル</span>', tagR='<span class="tag real">実測</span>', tagP='<span class="tag prop">提案</span>';
+let TMRS=[];
+const later=(fn,ms)=>TMRS.push(setTimeout(fn,ms));
+const clearT=()=>{TMRS.forEach(clearTimeout);TMRS=[];};
+const easeO=t=>1-Math.pow(1-t,4);
+
+/* ---- count up ---- */
+function countUp(el){
+ const to=parseFloat(el.dataset.cnt), dec=+(el.dataset.dec||0), suf=el.dataset.suf||'', pre=el.dataset.pre||'';
+ const dur=950, t0=performance.now();
+ function step(t){
+  const p=Math.min(1,(t-t0)/dur), v=to*easeO(p);
+  el.textContent=pre+(dec?v.toFixed(dec):Math.round(v).toLocaleString('ja-JP'))+suf;
+  if(p<1)requestAnimationFrame(step);
  }
-});
-document.getElementById('u').focus();
+ requestAnimationFrame(step);
+}
+
+/* ---- SVG chart builders ---- */
+function spark(vals,w,h,color,fill){
+ if(!vals||!vals.length)return '';
+ const mx=Math.max(...vals),mn=Math.min(...vals);
+ const pts=vals.map((v,i)=>[(i/(vals.length-1))*(w-4)+2, h-3-((v-mn)/(mx-mn||1))*(h-8)]);
+ const d='M'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join('L');
+ const area=d+`L${pts[pts.length-1][0].toFixed(1)},${h-1}L${pts[0][0].toFixed(1)},${h-1}Z`;
+ return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">${fill?`<path d="${area}" fill="${color}" opacity=".13"/>`:''}<path pathLength="1" class="draw" d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round"/><circle cx="${pts[pts.length-1][0]}" cy="${pts[pts.length-1][1]}" r="2.6" fill="${color}"/></svg>`;
+}
+function smoothD(pts){
+ if(pts.length<3)return 'M'+pts.map(p=>p.join(',')).join('L');
+ let d=`M${pts[0][0]},${pts[0][1]}`;
+ for(let i=0;i<pts.length-1;i++){
+  const p0=pts[Math.max(0,i-1)],p1=pts[i],p2=pts[i+1],p3=pts[Math.min(pts.length-1,i+2)];
+  const c1=[p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6], c2=[p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6];
+  d+=`C${c1[0].toFixed(1)},${c1[1].toFixed(1)} ${c2[0].toFixed(1)},${c2[1].toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+ }
+ return d;
+}
+function lineChart(id,labels,series,w,h,opts){
+ const o=opts||{}, pad={l:o.padl||40,r:12,t:14,b:22};
+ const all=series.flatMap(s=>s.vals).filter(v=>v!=null);
+ const mx=o.max!=null?o.max:Math.max(...all)*1.06, mn=o.min!=null?o.min:Math.min(...all)*0.94;
+ const X=i=>pad.l+(i/(labels.length-1||1))*(w-pad.l-pad.r);
+ const Y=v=>pad.t+(1-(v-mn)/(mx-mn||1))*(h-pad.t-pad.b);
+ let g='';
+ for(let k=0;k<=3;k++){const v=mn+(mx-mn)*k/3,y=Y(v);
+  g+=`<line x1="${pad.l}" y1="${y.toFixed(1)}" x2="${w-pad.r}" y2="${y.toFixed(1)}" stroke="#1D2A44" stroke-dasharray="3 5"/><text x="${pad.l-7}" y="${(y+3.5).toFixed(1)}" font-size="9" fill="#5E7192" text-anchor="end" class="mn">${o.fmt?o.fmt(v):Math.round(v)}</text>`;}
+ const st=Math.max(1,Math.round(labels.length/6));
+ labels.forEach((d,i)=>{if(i%st===0||i===labels.length-1)g+=`<text x="${X(i).toFixed(1)}" y="${h-6}" font-size="8.5" fill="#5E7192" text-anchor="middle" class="mn">${esc(d)}</text>`;});
+ (o.marks||[]).forEach(m=>{const x=X(m.i);
+  g+=`<line x1="${x.toFixed(1)}" y1="${pad.t}" x2="${x.toFixed(1)}" y2="${h-pad.b}" stroke="rgba(255,194,75,.45)" stroke-dasharray="2 4"/><text x="${x.toFixed(1)}" y="${pad.t-3}" font-size="8" fill="#FFC24B" text-anchor="middle">▼</text>`;});
+ series.forEach((s,si)=>{
+  const pts=s.vals.map((v,i)=>[X(i),Y(v)]);
+  const d=o.smooth?smoothD(pts):('M'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join('L'));
+  if(s.fill)g+=`<path class="afill" d="${d}L${pts[pts.length-1][0].toFixed(1)},${h-pad.b}L${pts[0][0].toFixed(1)},${h-pad.b}Z" fill="${s.color}" opacity="0" data-op=".10"/>`;
+  g+=`<path pathLength="1" class="draw" d="${d}" fill="none" stroke="${s.color}" stroke-width="2.3" stroke-linejoin="round"/>`;
+  const lp=pts[pts.length-1];
+  g+=`<circle cx="${lp[0].toFixed(1)}" cy="${lp[1].toFixed(1)}" r="3.4" fill="${s.color}" stroke="#0E1626" stroke-width="2"/>`;
+  if(s.lbl!==false)g+=`<text x="${(lp[0]-4).toFixed(1)}" y="${(lp[1]-9).toFixed(1)}" font-size="9.5" font-weight="700" fill="#EAF1FB" text-anchor="end">${esc(s.label)}</text>`;
+ });
+ g+=`<line id="${id}_gd" y1="${pad.t}" y2="${h-pad.b}" stroke="rgba(234,241,251,.35)" visibility="hidden"/>`;
+ g+=`<rect class="hovrect" x="${pad.l}" y="${pad.t}" width="${w-pad.l-pad.r}" height="${h-pad.t-pad.b}" fill="transparent"
+     onmousemove="lcHover(event,'${id}',${pad.l},${w-pad.l-pad.r},${labels.length})" onmouseleave="lcOut('${id}')"/>`;
+ return `<svg id="${id}" width="100%" viewBox="0 0 ${w} ${h}" style="display:block" data-labels='${JSON.stringify(labels)}' data-series='${JSON.stringify(series.map(s=>({label:s.label,vals:s.vals,color:s.hex||s.color})))}'>${g}</svg>`;
+}
+function lcHover(ev,id,pl,pw,n){
+ const svg=document.getElementById(id); if(!svg)return;
+ const r=svg.getBoundingClientRect(), sx=svg.viewBox.baseVal.width/r.width;
+ const vx=(ev.clientX-r.left)*sx;
+ const i=Math.max(0,Math.min(n-1,Math.round((vx-pl)/(pw/(n-1)))));
+ const labels=JSON.parse(svg.dataset.labels), series=JSON.parse(svg.dataset.series);
+ const gd=document.getElementById(id+'_gd'); const x=pl+i*(pw/(n-1));
+ gd.setAttribute('x1',x);gd.setAttribute('x2',x);gd.setAttribute('visibility','visible');
+ tip(`<b>${esc(labels[i])}</b><br>`+series.map(s=>`<span style="color:${s.color}">●</span> ${esc(s.label)}: <b>${fmt(s.vals[i])}</b>`).join('<br>'),ev);
+}
+function lcOut(id){const gd=document.getElementById(id+'_gd');if(gd)gd.setAttribute('visibility','hidden');untip();}
+function hbars(rows,opts){
+ const o=opts||{}, mx=Math.max(...rows.map(r=>r.v));
+ return rows.map(r=>`
+  <div class="brow ${r.me?'me':''}">
+   <span class="bl2">${esc(r.l)}</span>
+   <span class="gbar" ${r.tip?`onmousemove="tip('${esc(r.tip)}',event)" onmouseleave="untip()"`:''}><i data-w="${(r.v/mx*100).toFixed(1)}" style="background:${r.bg||'linear-gradient(90deg,var(--ac2),var(--ac))'}"></i></span>
+   <span class="bv mono">${fmt(r.v)}${o.suf||''}</span>
+  </div>`).join('');
+}
+function groupedBars(cats,series,w,h){
+ const pad={l:38,r:8,t:16,b:26}, mx=100;
+ const gw=(w-pad.l-pad.r)/cats.length, bw=Math.min(20,(gw-26)/series.length);
+ let g='';
+ for(let k=0;k<=4;k++){const v=mx*k/4,y=pad.t+(1-v/mx)*(h-pad.t-pad.b);
+  g+=`<line x1="${pad.l}" y1="${y}" x2="${w-pad.r}" y2="${y}" stroke="#1D2A44" stroke-dasharray="3 5"/><text x="${pad.l-6}" y="${y+3.5}" font-size="9" fill="#5E7192" text-anchor="end" class="mn">${v}</text>`;}
+ cats.forEach((c,ci)=>{
+  const x0=pad.l+ci*gw+(gw-bw*series.length-(series.length-1)*3)/2;
+  g+=`<text x="${(pad.l+ci*gw+gw/2).toFixed(1)}" y="${h-8}" font-size="10" fill="#9DB0CE" text-anchor="middle">${esc(c)}</text>`;
+  series.forEach((s,si)=>{
+   const v=s.vals[ci], bh=(v/mx)*(h-pad.t-pad.b), x=x0+si*(bw+3), y=pad.t+(h-pad.t-pad.b)-bh;
+   g+=`<rect class="gbr" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" rx="4" fill="${s.color}"
+      onmousemove="tip('<b>${esc(s.label)}</b><br>${esc(c)}: <b>${v}%</b>',event)" onmouseleave="untip()"/>`;
+   g+=`<text x="${(x+bw/2).toFixed(1)}" y="${(y-4).toFixed(1)}" font-size="8.5" fill="#9DB0CE" text-anchor="middle" class="mn gbl">${v}</text>`;
+  });
+ });
+ return `<svg width="100%" viewBox="0 0 ${w} ${h}" style="display:block">${g}</svg>`;
+}
+function radar(series,size){
+ const cx=size/2, cy=size/2+6, R=size/2-52, N=S.themes.length;
+ const P=(k,r)=>{const a=-Math.PI/2+k*2*Math.PI/N;return [cx+r*Math.cos(a),cy+r*Math.sin(a)];};
+ let g='';
+ for(let ring=1;ring<=4;ring++){
+  const pts=[...Array(N)].map((_,k)=>P(k,R*ring/4).map(v=>v.toFixed(1)).join(',')).join(' ');
+  g+=`<polygon points="${pts}" fill="none" stroke="#1D2A44" stroke-width="${ring===4?1.2:.7}"/>`;
+ }
+ [...Array(N)].forEach((_,k)=>{
+  const [x,y]=P(k,R); g+=`<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#1D2A44" stroke-width=".7"/>`;
+  const [lx,ly]=P(k,R+24);
+  const short=S.themes[k].replace('景観(富士山)','景観').replace('混雑・渋滞','混雑').replace('インバウンド','訪日').replace('雨天対応','雨天').replace('アクセス','ｱｸｾｽ').replace('価格感','価格');
+  g+=`<text x="${lx.toFixed(1)}" y="${(ly+3).toFixed(1)}" font-size="10" fill="#9DB0CE" text-anchor="middle">${short}</text>`;
+ });
+ series.forEach(s=>{
+  const pts=s.vals.map((v,k)=>P(k,R*v/100).map(n=>n.toFixed(1)).join(',')).join(' ');
+  g+=`<polygon class="rpoly" points="${pts}" fill="${s.color}" fill-opacity=".13" stroke="${s.color}" stroke-width="2.2" stroke-linejoin="round"/>`;
+  s.vals.forEach((v,k)=>{const [x,y]=P(k,R*v/100);
+   g+=`<circle class="rpoly" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${s.color}" onmousemove="tip('<b>${esc(s.label)}</b><br>${esc(S.themes[k])}: <b>${v}</b>',event)" onmouseleave="untip()" style="pointer-events:all"/>`;});
+ });
+ return `<svg width="100%" viewBox="0 0 ${size} ${size}" style="display:block;max-width:${size}px;margin:0 auto">${g}</svg>`;
+}
+function donut(parts,size,label,sub){
+ const tot=parts.reduce((a,b)=>a+b.v,0)||1, r=size/2-14, cx=size/2, cy=size/2;
+ let a0=-Math.PI/2,g='';
+ parts.forEach((p,i)=>{
+  const frac=p.v/tot, a1=a0+frac*Math.PI*2, gap=0.028;
+  const x0=cx+r*Math.cos(a0+gap),y0=cy+r*Math.sin(a0+gap),x1=cx+r*Math.cos(a1-gap),y1=cy+r*Math.sin(a1-gap);
+  const big=(a1-a0)>Math.PI?1:0;
+  if(p.v>0)g+=`<path class="dseg" d="M${x0.toFixed(1)},${y0.toFixed(1)}A${r},${r} 0 ${big} 1 ${x1.toFixed(1)},${y1.toFixed(1)}" fill="none" stroke="${p.c}" stroke-width="16" stroke-linecap="round"
+    onmousemove="tip('<b>${esc(p.n)}</b>: ${p.v}%',event)" onmouseleave="untip()" style="pointer-events:stroke"/>`;
+  a0=a1;
+ });
+ g+=`<text x="${cx}" y="${cy-3}" text-anchor="middle" font-size="19" font-weight="800" fill="#EAF1FB" class="mn">${label}</text><text x="${cx}" y="${cy+15}" text-anchor="middle" font-size="8.5" fill="#5E7192">${esc(sub)}</text>`;
+ return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="display:block;margin:0 auto">${g}</svg>`;
+}
+function mxColor(v){
+ if(v==null)return 'transparent';
+ const a=Math.min(1,Math.abs(v))*.85+.12;
+ return v>=0?`rgba(61,220,151,${(a*.9).toFixed(2)})`:`rgba(255,107,135,${(a*.9).toFixed(2)})`;
+}
+function mxSym(v){return v==null?'—':v>=.6?'◎':v>=.15?'○':v>-.15?'–':v>-.6?'△':'✕';}
+/* ================= modal / tip / ticker ================= */
+function openModal(html){$('#modal').innerHTML=`<button class="x" onclick="closeModal()">閉じる ✕</button>`+html;$('#mback').classList.add('on');}
+function closeModal(){$('#mback').classList.remove('on');}
+$('#mback')?.addEventListener('click',e=>{if(e.target.id==='mback')closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+let tipOn=false;
+function tip(html,ev){const t=$('#tip');t.innerHTML=html;t.style.display='block';tipOn=true;if(ev)moveTip(ev);}
+function untip(){$('#tip').style.display='none';tipOn=false;}
+function moveTip(e){const t=$('#tip');const x=Math.min(e.clientX+15,innerWidth-315),y=Math.min(e.clientY+15,innerHeight-90);t.style.left=x+'px';t.style.top=y+'px';}
+document.addEventListener('mousemove',e=>{if(tipOn)moveTip(e);});
+
+const FEED=[
+ ['実測','2024年度売上は<b>1,409億円</b>で過去最高 — 「衰退した」印象と実売のギャップこそ検証対象'],
+ ['サンプル','AIモード:「雨の日」文脈でG2言及率が<b>-9pt</b>'],
+ ['実測','2025年6月、店舗数日本一の座は<b>木更津（約330店）</b>へ'],
+ ['サンプル','「子連れ」テーマの第一想起を<b>木更津が3件</b>獲得'],
+ ['実測','Googleマップのクチコミは御殿場<b>29,126件・★4.2</b>（9/1時点）'],
+ ['サンプル','英語圏クエリの第一想起は<b>67%</b> — インバウンド面は優位'],
+ ['工事中','GA4連携で<b>AI経由流入×G2言及率の突合</b>が解放（権限付与のみで開通）']
+];
+let tkI=0,tkTimer=null;
+function tickStart(){
+ const el=$('#tk'),n=$('#tkn');
+ const show=()=>{el.classList.add('sw');setTimeout(()=>{const f=FEED[tkI%FEED.length];el.innerHTML=`<span class="tag ${f[0]==='実測'?'real':'smp'}" style="margin-right:8px">${f[0]}</span>${f[1]}`;n.textContent=(tkI%FEED.length+1)+'/'+FEED.length;el.classList.remove('sw');tkI++;},350);};
+ show(); if(!matchMedia('(prefers-reduced-motion: reduce)').matches) tkTimer=setInterval(show,5200);
+ $('#ticker').addEventListener('mouseenter',()=>clearInterval(tkTimer));
+ $('#ticker').addEventListener('mouseleave',()=>{clearInterval(tkTimer);if(!matchMedia('(prefers-reduced-motion: reduce)').matches)tkTimer=setInterval(show,5200);});
+}
+
+/* ================= nav & router ================= */
+const VIEWS=[
+ ['v1','◈','サマリー','mix'],
+ ['v2','⬡','AI4面比較','smp'],
+ ['v3','⚔','競合バトル','smp'],
+ ['v4','◔','ペルソナ','smp'],
+ ['v5','▦','地域イメージ','smp'],
+ ['v6','↗','時系列','smp'],
+ ['v7','▣','オープンデータ','real'],
+ ['v8','❝','生活者の声','real'],
+ ['v9','✦','KPI再設計','prop'],
+ ['vx1','◍','SNS公式','lock'],
+ ['vx2','◱','GA4×Affinity','lock'],
+ ['vx3','◫','CRM・会員','lock']
+];
+function buildNav(){
+ let h='<div class="sec">OVERVIEW</div>';
+ VIEWS.forEach(([id,ic,label,kind])=>{
+  if(id==='v2')h+='<div class="sec">AI計測（サンプル）</div>';
+  if(id==='v7')h+='<div class="sec">実データ</div>';
+  if(id==='v9')h+='<div class="sec">戦略</div>';
+  if(id==='vx1')h+='<div class="sec">連携（工事中）</div>';
+  const bd=kind==='smp'?'<span class="bd smp">SMP</span>':kind==='real'?'<span class="bd real">実測</span>':kind==='prop'?'<span class="bd prop">提案</span>':kind==='lock'?'<span class="bd lock">連携待ち</span>':'<span class="bd">R0</span>';
+  h+=`<button class="nv ${kind==='lock'?'ghost':''}" data-v="${id}" onclick="go('${id}')"><span class="ic">${ic}</span>${label}${bd}</button>`;
+ });
+ $('#nav').innerHTML=h;
+}
+function go(v){if(location.hash==='#'+v){render();}else{location.hash=v;}}
+let GRAN='w';
+function setGran(g){GRAN=g;render();}
+function cur(){const h=location.hash.replace('#','');return VIEWS.some(x=>x[0]===h)?h:'v1';}
+/* ---- 連携ティザー（工事中）: 数値は入れない。形だけのゴーストモック ---- */
+function ghostLine(w,h,n,seed,color){
+ let pts=[],v=h*.62;
+ for(let i=0;i<n;i++){v+= Math.sin(i*seed+seed)*h*.09 - h*.008; v=Math.max(h*.2,Math.min(h*.85,v)); pts.push([8+i*(w-16)/(n-1),v]);}
+ const d=smoothD(pts);
+ return `<svg width="100%" viewBox="0 0 ${w} ${h}" style="display:block">
+  <path d="${d}L${pts[pts.length-1][0]},${h-6}L${pts[0][0]},${h-6}Z" fill="${color}" opacity=".1"/>
+  <path d="${d}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="round"/>
+  ${[0.25,0.5,0.75].map(f=>`<line x1="8" x2="${w-8}" y1="${(h*f).toFixed(0)}" y2="${(h*f).toFixed(0)}" stroke="#1D2A44" stroke-dasharray="3 5"/>`).join('')}
+ </svg>`;
+}
+function ghostBars(w,h,n,seed,color){
+ let g='';const bw=(w-20)/n*.62;
+ for(let i=0;i<n;i++){const bh=h*(.25+.55*Math.abs(Math.sin(i*seed+2)));
+  g+=`<rect x="${(12+i*(w-24)/n).toFixed(1)}" y="${(h-8-bh).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" rx="4" fill="${color}" opacity="${(.4+.5*Math.abs(Math.cos(i*seed))).toFixed(2)}"/>`;}
+ return `<svg width="100%" viewBox="0 0 ${w} ${h}" style="display:block">${g}</svg>`;
+}
+function ghostSk(n){let g='';for(let i=0;i<n;i++)g+=`<div class="skrow" style="width:${88-(i*13)%46}%"></div>`;return g;}
+const LOCKV={
+ vx1:{ic:'◍',t:'SNS公式アカウント',en:'SOCIAL COCKPIT',kpi:'KPIツリー 04（記憶・推奨）',
+  need:'<b>X / Instagram の公式アカウント管理者権限</b>（インサイト閲覧の許可のみ・投稿権限は不要）',time:'権限付与から<b>約1営業日</b>で開通',
+  see:['公式投稿のエンゲージ率 × テーマ別（富士山/セール/グルメ/イルミ）の伸び比較',
+       'UGCメンション量とAI引用率の相関 —「SNSで増えた話題をAIが引用し始める」の実証',
+       'キャンペーンハッシュタグの到達・保存数の定点',
+       'インバウンド言語別（英/中/韓）の反応差 → 訪日面の投資配分'],
+  mock:g=>`<div class="g g2c" style="grid-template-columns:1.2fr 1fr"><div class="card"><div class="ct">テーマ別エンゲージ推移</div>${ghostLine(430,150,14,1.3,'#E27FA6')}${ghostLine(430,40,14,2.1,'#4E9BE8')}</div><div class="card"><div class="ct">投稿×保存数</div>${ghostBars(300,150,9,1.7,'#E27FA6')}<div style="margin-top:10px">${ghostSk(3)}</div></div></div>`},
+ vx2:{ic:'◱',t:'GA4 × Affinity',en:'SITE BEHAVIOR',kpi:'KPIツリー 02–03（滞在・体験）',
+  need:'<b>GA4プロパティの閲覧権限</b>（またはWindsor経由の接続）。広告管理画面があればさらに出し分け検証が可能',time:'権限付与から<b>約1営業日</b>で開通',
+  see:['店舗ページ閲覧者のAffinity（興味関心）分布 → エリア・クリエイティブの出し分け設計',
+       '<b>AI経由流入</b>（chatgpt.com / gemini 等の参照元）の推移 — 本ボードのG2言及率と突合し「語られ方→来訪」を接続',
+       'ページ回遊（West/East/Hill・ランチ/温泉ページ）→ テナント配置・導線設計への示唆',
+       '非セール期のランチ・滞在系ページ行動 → 平日稼働66%の攻略検証'],
+  mock:g=>`<div class="g g2c" style="grid-template-columns:1fr 1.2fr"><div class="card"><div class="ct">Affinity分布</div>${ghostBars(300,150,7,2.3,'#4E9BE8')}<div style="margin-top:10px">${ghostSk(2)}</div></div><div class="card"><div class="ct">AI経由流入 × G2言及率</div>${ghostLine(430,150,14,1.1,'#22C7D6')}${ghostLine(430,40,14,1.9,'#FF7A59')}</div></div>`},
+ vx3:{ic:'◫',t:'CRM・会員データ',en:'MEMBER JOURNEY',kpi:'KPIツリー 03–04（体験・記憶）',
+  need:'<b>会員DB・メール配信ログの読み取り権限</b>（個人が特定されない集計単位で接続）',time:'データ定義の確認込みで<b>約1週間</b>',
+  see:['会員セグメント × 来場頻度・買上 —「送客して終わり」からの脱却をデータで確認',
+       'ハイロイヤル会員が踏んだジャーニーの可視化 → 他セグメントへの追体験設計',
+       'メール開封 → 来場 → 体験（飲食・温泉）の接続 — 開封率単体KPIからの卒業',
+       '非セール期プログラム（ランチ・イベント）のLTV寄与'],
+  mock:g=>`<div class="g g2c" style="grid-template-columns:1fr 1fr"><div class="card"><div class="ct">セグメント×来場頻度</div>${ghostBars(300,150,8,2.7,'#B48CFF')}</div><div class="card"><div class="ct">ジャーニー遷移</div><div style="padding:12px 4px">${ghostSk(5)}</div></div></div>`}
+};
+function rLock(id){
+ const L=LOCKV[id];
+ let h=`<div class="crumb rv"><h2>${L.t}<small>${L.en}</small></h2>
+  <span class="chip glt">工事中 — 連携準備</span><span class="chip">${L.kpi}</span></div>`;
+ h+=`<div class="rv consband" style="margin-bottom:14px"><span>🚧</span><span><b>この画面は連携待ちのプレビューです。</b>数値は表示していません — 権限をいただくと実数値で開通します。</span></div>`;
+ h+=`<div class="lockwrap rv">
+   <div class="ghosted">${L.mock()}</div>
+   <div class="lockover"><div class="lockcard">
+    <div class="lh"><span class="lk">🔒</span><h3>${L.t} を接続すると見えるもの<small>UNLOCK PREVIEW</small></h3></div>
+    <ul>${L.see.map(s=>`<li>${s}</li>`).join('')}</ul>
+    <div class="req">必要なもの: ${L.need}<br>所要: ${L.time}｜費用: 追加APIコストなし（既存基盤に同居）</div>
+   </div></div>
+  </div>`;
+ h+=`<div class="card rv" style="margin-top:14px"><div class="ct">位置づけ</div>
+  <div class="ibox is4"><h4>■ なぜこの連携か</h4><p>本ボードの外側データ（AI・検索・クチコミ）は<b>すでに計測可能</b>。ここに内側データ（${L.t}）が繋がると、<mark>「語られ方の変化 → 行動の変化」まで一本の因果で追える</mark>ようになり、KPI再設計（${L.kpi}）の実測が完成する。</p></div>
+ </div>`;
+ return h+foot();
+}
+window.addEventListener('hashchange',render);
+
+/* ================= animation engine ================= */
+function animate(root){
+ clearT();
+ root.querySelectorAll('.rv').forEach((el,i)=>later(()=>el.classList.add('on'),60+i*70));
+ root.querySelectorAll('[data-cnt]').forEach((el,i)=>later(()=>countUp(el),240+i*90));
+ root.querySelectorAll('.gbar i').forEach((el,i)=>later(()=>{el.style.width=el.dataset.w+'%';},320+i*45));
+ root.querySelectorAll('path.draw').forEach((p,i)=>later(()=>p.classList.add('go'),280+i*110));
+ root.querySelectorAll('.afill').forEach((p,i)=>later(()=>{p.classList.add('go');p.style.opacity=p.dataset.op;},700+i*120));
+ root.querySelectorAll('.ringfg').forEach((c,i)=>later(()=>{c.style.strokeDashoffset=c.dataset.off;},350+i*140));
+ root.querySelectorAll('.hcell').forEach(el=>later(()=>el.classList.add('on'),200+(+el.dataset.d)*26));
+ root.querySelectorAll('.tile').forEach((el,i)=>later(()=>el.classList.add('on'),240+i*70));
+ root.querySelectorAll('.rpoly').forEach((el,i)=>later(()=>el.classList.add('on'),380+i*60));
+ root.querySelectorAll('.dseg').forEach((el,i)=>later(()=>el.classList.add('on'),340+i*110));
+ root.querySelectorAll('.gbr').forEach((el,i)=>later(()=>el.classList.add('go'),330+i*45));
+ root.querySelectorAll('.gbl').forEach((el,i)=>later(()=>el.classList.add('go'),900+i*40));
+}
+function render(){
+ const v=cur();
+ document.querySelectorAll('.nv').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+ const m=$('#main');
+ untip();
+ const R={v1:rV1,v2:rV2,v3:rV3,v4:rV4,v5:rV5,v6:rV6,v7:rV7,v8:rV8,v9:rV9};
+ m.innerHTML=R[v]?R[v]():rLock(v);
+ animate(m);
+ window.scrollTo(0,0);
+}
+
+/* ================= HELP ================= */
+const HELP={
+ idx:`<h3>語られ指数とは</h3><p><b>AI言及シェア ÷ 検索需要シェア × 100</b>。来場者数が非公開のため、需要シェア（指名検索の相対量）を実勢の代理としています。<b>100未満＝実需のわりにAIに語られていない</b>（AI比較の入口で不利）、100超＝実需以上に語られている。トヨタ車種別ボードの「語られ指数」（販売シェア比）の御殿場版です。</p><p>※この画面の値は設計プレビュー用サンプルです。実測はテスト計測（R1）から入ります。</p>`,
+ funnel:`<h3>G1〜G4の定義</h3><p><b>G1 露出機会 ＝ 1クエリあたりの期待引用数</b>。御殿場が出てくるべき質問に対して「AIがどれだけ回答を作り、どれだけ根拠リンクを引くか」を表す土俵の広さ。<b>回答が返る率 × 回答あたり平均引用数</b>で計算する（例: 90% × 4.1本 = 3.7引用/クエリ）。御殿場自身の成績ではなく、戦う場の大きさを測る指標。</p><p><b>G2 言及率</b>: 同じ質問群で御殿場が回答に登場した率（指名・比較クエリは分母から除外するファネル原則）。<b>G3 第一想起率</b>: 言及があった回答のうち最初に挙がった施設が御殿場だった率。<b>G4 検索需要</b>: Googleトレンド実測の指名検索指数（アンカー連結）。</p>`,
+ surface:`<h3>AI4面の見方</h3><p>同じ質問群を <b>ChatGPT / Gemini / GoogleのAI Overview / GoogleのAIモード</b> に投げ、面ごとの言及率・第一想起率・引用元を比較します。面によって参照する情報源が異なるため、<b>弱い面＝その面が引用しやすいメディアへの露出が課題</b>と読みます。</p>`,
+ battle:`<h3>勝敗マトリクスの読み方</h3><p>AI回答の全文から<b>テーマ×施設の優劣言及</b>を抽出し、御殿場から見た勝ち（緑）・負け（赤）を集計します。セルをクリックすると根拠スニペット（回答からの抜粋）が開きます。◎○強い勝ち〜✕強い負け、–は拮抗、—はデータなし。</p>`,
+ region:`<h3>地域イメージ差の測り方</h3><p>①Googleトレンドの<b>都県別 指名検索指数</b>（タイル地図・全国平均=100）②「日本で」「関東で」を明示した<b>聞き分けプロンプト</b>の回答差 ③テーマ言及率の全国/関東差分。関東では実用文脈（アクセス・混雑）、全国では観光文脈（富士山・訪日）に寄る仮説を検証します。</p>`,
+ voice:`<h3>生活者の声の集め方</h3><p>Googleマップのクチコミ（件数・評点・レビュー内キーワード件数）を実査で取得しています。キーワード件数はGoogleマップがクチコミ本文から自動集計しているタグの実数です。引用は原文からの短い抜粋で、出典リンク付き。今後はSNS言及・AI引用元のUGC率も加えます。</p>`,
+ open:`<h3>オープンデータの範囲</h3><p>市の観光統計・運営会社の公表資料・報道など、<b>一次情報として出典を示せる公開データ</b>のみを載せています。推計値は使いません。取れない数値は「—」表示です。</p>`,
+ kpi:`<h3>KPI再設計の前提</h3><p>現状の主要KPIが<b>駐車台数</b>であることへの問題意識から、来場→滞在→体験→記憶・推奨の4段でKPI候補と取得手段を整理したものです。個人ID単位のトラッキングは想定せず、公開データ・自社データ・AI計測の組み合わせで構成します。</p>`
+};
+function help(k){openModal(HELP[k]||HELP.idx);}
+function cellSnip(theme,rival,v){
+ const sn=S.mxsnip[theme]||S.mxsnip.def;
+ openModal(`<h3>${esc(theme)} × 対 ${esc(rival)}</h3>
+  <p>優劣スコア: <b class="mn" style="color:${v>=0?'var(--gn)':'var(--rd)'}">${v==null?'—':(v>0?'+':'')+v.toFixed(1)}</b>（-1〜+1、+が御殿場優勢）</p>
+  <div class="ibox" style="margin-top:12px"><h4>根拠スニペット（サンプル）</h4><p>${esc(sn.t)}<br><small style="color:var(--tx3)">出典面: ${esc(sn.f)}｜回答全文はsnapshotに保存され、ここに実引用が入ります</small></p></div>
+  <p style="margin-top:10px;font-size:11px">実測では該当テーマの言及を含む回答からの抜粋が、面バッジ・取得日付きで一覧表示されます。</p>`);
+}
+/* ================= V1 サマリー ================= */
+function rV1(){
+ const C=(2*Math.PI*80).toFixed(1), off=(2*Math.PI*80*(1-S.idx/150)).toFixed(1);
+ let h=`<div class="crumb rv"><h2>サマリー<small>WEEKLY PULSE</small></h2>
+  <span class="chip">出現期待クエリ <b>${S.calls.queries}</b>本×4面</span>
+  <span class="chip">回答 <b>${S.calls.answers}</b>/周</span>
+  <span class="chip glt">R0 プレビュー</span>
+  <button class="hbtn" onclick="help('idx')" aria-label="読み方">?</button></div>`;
+
+ h+=`<div class="hero">
+  <div class="card hl rv">
+   <div class="ct">語られ指数 — AIでの存在感<span class="tag smp">サンプル</span><button class="q" onclick="help('idx')">?</button></div>
+   <div class="ring">
+    <svg width="196" height="196" viewBox="0 0 196 196">
+     <defs><linearGradient id="gAc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF7A59"/><stop offset="1" stop-color="#FFC24B"/></linearGradient></defs>
+     <circle class="ringbg" cx="98" cy="98" r="80"/>
+     <circle class="ringfg" cx="98" cy="98" r="80" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${off}"/>
+    </svg>
+    <div class="mid"><div><div class="v mn" data-cnt="${S.idx}">0</div><div class="l">語られ指数<span class="delta up">前週 +${S.idx-S.idxPrev}</span></div></div></div>
+   </div>
+   <div class="sub2" style="text-align:center">AI言及シェア <b class="mono cyt">${S.aiShare}%</b> ÷ 需要シェア <b class="mono cyt">${S.demShare}%</b> × 100<br>
+   100超 = <mark class="g">実需以上にAIに語られている</mark></div>
+   <svg class="fuji-wm" width="150" height="86" viewBox="0 0 150 86" fill="none"><path d="M8 78 L52 16 Q57 8 63 16 L69 25 L75 16 Q81 8 86 16 L142 78" stroke="#EAF1FB" stroke-width="3"/><path d="M47 30 L56 22 L63 29 L71 21 L79 29 L87 30" stroke="#EAF1FB" stroke-width="2.4"/></svg>
+  </div>
+  <div class="card rv">
+   <div class="ct">ファネル指標 G1–G4<span class="tag smp">サンプル</span><button class="q" onclick="help('funnel')">?</button></div>
+   <div class="ktiles">
+    <div class="kt"><div class="t"><i style="background:var(--ac)"></i>G1 露出機会</div><div class="v mono"><span data-cnt="${S.g1}" data-dec="1">0</span><small> 引用/クエリ</small></div><div class="s">1クエリあたりの<b>期待引用数</b><br>= ${S.g1sub}</div>${spark([3.2,3.3,3.1,3.4,3.5,3.5,3.6,3.7],76,26,'#FF7A59',1)}</div>
+    <div class="kt"><div class="t"><i style="background:var(--bl)"></i>G2 言及率</div><div class="v mono"><span data-cnt="${S.g2}" data-dec="1">0</span><small>%</small></div><div class="s">出現期待 ${S.g2n} で言及</div>${spark(S.ts.g2.slice(-8),76,26,'#4E9BE8',1)}</div>
+    <div class="kt"><div class="t"><i style="background:var(--pu)"></i>G3 第一想起率</div><div class="v mono"><span data-cnt="${S.g3}" data-dec="1">0</span><small>%</small></div><div class="s">言及${S.g3n}中で最初に登場</div>${spark([38.2,39,38.5,40.1,40.8,40.2,41,41.5],76,26,'#B48CFF',1)}</div>
+    <div class="kt"><div class="t"><i style="background:var(--cy)"></i>G4 検索需要</div><div class="v mono"><span data-cnt="${S.g4}">0</span><small> pt</small></div><div class="s">指名検索指数（アンカー=100）<span class="delta up">${S.g4d}</span></div>${spark(S.ts.dem.slice(-8),76,26,'#22C7D6',1)}</div>
+   </div>
+   <div class="sub2" style="margin-top:10px">指名・比較クエリはG2/G3の分母から除外（ファネル原則）。ノイズ引用は除外して集計。</div>
+  </div>
+ </div>`;
+
+ h+=`<div class="card rv" style="margin-top:14px">
+  <div class="ct">実データハイライト<span class="tag real">実測</span><button class="q" onclick="help('open')">?</button></div>
+  <div class="ktiles" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr))">
+   <div class="kt"><div class="t"><i style="background:var(--gold)"></i>2024年度 売上高</div><div class="v mono glt"><span data-cnt="1409">0</span><small> 億円</small></div><div class="s"><mark class="g">過去最高</mark>・国内商業施設トップクラス</div></div>
+   <div class="kt"><div class="t"><i style="background:var(--gn)"></i>御殿場市 観光交流客数</div><div class="v mono"><span data-cnt="1538">0</span><small> 万人</small></div><div class="s">2024年度・過去最高圏。うち${REAL.share}がアウトレット</div></div>
+   <div class="kt"><div class="t"><i style="background:var(--bl)"></i>Googleマップ評価</div><div class="v mono">★<span data-cnt="4.2" data-dec="1">0</span></div><div class="s">クチコミ <b class="mono">${fmt(REAL.maps.gotemba.cnt)}</b>件（9/1時点）</div></div>
+   <div class="kt"><div class="t"><i style="background:var(--rd)"></i>店舗数日本一の座</div><div class="v mono dn" style="font-size:17px">木更津へ</div><div class="s">2025.6増床で約330店（御殿場は約290店）</div></div>
+  </div>
+  <div class="src">出典: ${srcA('ats','plan','impress','gmap')}</div>
+ </div>`;
+
+ h+=`<div class="card hl rv" style="margin-top:14px">
+  <div class="ct">検証テーマ —「存在感が薄まった」は本当か</div>
+  <div class="g g3c" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+   <div class="ibox is2" style="margin:0"><h4>■ 印象（仮説）</h4><p>昔は大盛り上がりだったが、<mark class="r">競合の出現で存在感が薄まり、テナントも弱くなった</mark>印象がある。「アウトレットどこ行く？」の会話で名前が挙がらなくなっていないか。</p></div>
+   <div class="ibox is3" style="margin:0"><h4>■ 実データ</h4><p>売上は<mark class="g">1,409億円で過去最高</mark>（2024年度）、市の観光交流客数も過去最高圏。25周年で<b>1年に27店を新規導入</b>。実需・実売は衰えていない。</p></div>
+   <div class="ibox is4" style="margin:0"><h4>■ だから測る</h4><p>薄まった可能性があるのは<mark>実売ではなく「語られ方」＝比較検討の入口シェア</mark>。木更津(2012開業→2025店舗数日本一)の台頭で、AI・検索・クチコミ上の相対的な存在感がどう動いたかを定点計測する。</p></div>
+  </div>
+ </div>`;
+
+ h+=`<div class="g g2c" style="grid-template-columns:1.25fr 1fr;margin-top:14px">
+  <div class="card rv">
+   <div class="ct">今週の警報<span class="tag smp">サンプル</span></div>
+   <div class="g" style="gap:9px">`+
+  S.alerts.map(a=>`<div class="alert ${a.sev==='mid'?'mid':''}"><span class="sev">${a.sev==='high'?'HIGH':'MID'}</span>
+    <div class="tx"><b>${esc(a.f)}</b>｜${esc(a.t)}<small>${esc(a.s)}</small></div>
+    <span class="pill fac">${esc(a.f)}</span></div>`).join('')+
+  `</div></div>
+  <div class="card rv">
+   <div class="ct">クエリ入替（今週）<span class="tag smp">サンプル</span></div>
+   <div style="font-size:10px;color:var(--tx3);margin-bottom:6px">▲ 昇格（需要スコア上昇で現役入り）</div>
+   ${S.promo.map(q=>`<span class="qchip"><span class="ar up">▲</span>${esc(q[0])}<span class="dm">需要${q[1]}</span></span>`).join('')}
+   <div style="font-size:10px;color:var(--tx3);margin:10px 0 6px">▼ 降格（補欠へ）</div>
+   ${S.demo.map(q=>`<span class="qchip"><span class="ar dn">▼</span>${esc(q[0])}<span class="dm">需要${q[1]}</span></span>`).join('')}
+   <div class="sub2" style="margin-top:10px">クエリIDは永続採番（振り直し禁止）。入替履歴は<a href="#v6" onclick="go('v6')">時系列</a>に蓄積。</div>
+  </div>
+ </div>`;
+
+ h+=`<div class="card rv" style="margin-top:14px">
+  <div class="ct">AI4面ステータス<span class="tag smp">サンプル</span><button class="q" onclick="help('surface')">?</button></div>
+  <div class="g g4c" style="grid-template-columns:repeat(4,minmax(0,1fr))">`+
+  S.faces.map(f=>`<div style="min-width:0">
+    <div style="display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700"><i style="width:8px;height:8px;border-radius:99px;background:${f.c};box-shadow:0 0 8px ${f.c}"></i>${f.n}<span class="mono" style="margin-left:auto;font-size:12px">${f.g2}%</span></div>
+    <div class="gbar" style="margin-top:6px"><i data-w="${f.g2}" style="background:${f.c}"></i></div>
+    <div class="sub2">G3 ${f.g3}%・引用${f.cite}/回答</div>
+   </div>`).join('')+
+ `</div></div>`;
+
+ h+=`<div class="card rv" style="margin-top:14px">
+  <div class="ct">連携ロードマップ — 繋がると解放される画面<span class="tag prop">工事中</span></div>
+  <div class="g g3c" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+   <div class="lockchip" onclick="go('vx1')"><span class="ic2">◍</span><div class="t2">SNS公式アカウント<small>UGC×AI引用の相関・テーマ別エンゲージ</small></div><span style="margin-left:auto">🔒</span></div>
+   <div class="lockchip" onclick="go('vx2')"><span class="ic2">◱</span><div class="t2">GA4 × Affinity<small>AI経由流入×G2突合・出し分け設計</small></div><span style="margin-left:auto">🔒</span></div>
+   <div class="lockchip" onclick="go('vx3')"><span class="ic2">◫</span><div class="t2">CRM・会員<small>ハイロイヤルのジャーニー再現</small></div><span style="margin-left:auto">🔒</span></div>
+  </div>
+  <div class="sub2" style="margin-top:9px">権限付与のみで開通（追加APIコストなし）。詳細は各画面の解放プレビューへ。</div>
+ </div>`;
+
+ h+=`<div class="card rv" style="margin-top:14px">
+  <div class="ct">今週の発見（実測から言えること — 形式サンプル）<span class="tag smp">サンプル</span></div>
+  <div class="g" style="gap:8px">
+   <div class="ibox" style="margin:0"><p>① 観光文脈（「箱根旅行 ついでに」「富士山 モデルコース」）のG2は<mark>74%と全ファミリー中最強</mark>。<b>箱根・富士山とセットで語らせる</b>のが御殿場の勝ち筋。</p></div>
+   <div class="ibox is2" style="margin:0"><p>② 弱点は<mark class="r">アクセス・混雑・子連れ</mark>。関東実用文脈では木更津に第一想起を奪われつつある（今週3件）。</p></div>
+   <div class="ibox is3" style="margin:0"><p>③ 英語圏クエリ（best outlet near Tokyo等）では<mark class="g">第一想起67%</mark>と国内比+9pt。インバウンド面の語られ方は優位で、伸ばす価値がある。</p></div>
+  </div>
+ </div>`;
+ return h+foot();
+}
+
+/* ================= V2 AI4面 ================= */
+let domSort={k:1,asc:false};
+function sortDom(k){domSort={k,asc:domSort.k===k?!domSort.asc:false};const el=document.getElementById('domtb');if(el)el.innerHTML=domRows();const m=$('#main');m.querySelectorAll('#domtb .gbar i').forEach(el2=>{el2.style.width=el2.dataset.w+'%';});}
+function domRows(){
+ const arr=[...S.domains].sort((a,b)=>domSort.k===0?(domSort.asc?String(a[0]).localeCompare(b[0]):String(b[0]).localeCompare(a[0])):(domSort.asc?a[1]-b[1]:b[1]-a[1]));
+ const mx=Math.max(...S.domains.map(d=>d[1]));
+ return arr.map((d,i)=>`<tr>
+   <td class="mono" style="color:var(--tx3)">${String(i+1).padStart(2,'0')}</td>
+   <td style="font-family:var(--mono);font-size:11.5px">${esc(d[0])}</td>
+   <td style="min-width:130px"><span class="gbar" style="display:block"><i data-w="${(d[1]/mx*100).toFixed(1)}" style="width:${(d[1]/mx*100).toFixed(1)}%;background:${d[2]==='自社公式'?'linear-gradient(90deg,var(--ac2),var(--ac))':d[2]==='競合公式'?'linear-gradient(90deg,#2C6CB8,var(--bl))':d[2]==='UGC'?'linear-gradient(90deg,#1E9E6E,var(--gn))':'linear-gradient(90deg,#3A4A6B,#55647F)'}"></i></span></td>
+   <td class="mono" style="text-align:right">${d[1].toFixed(1)}%</td>
+   <td><span class="pill ${d[2]==='自社公式'?'fac':d[2]==='UGC'?'pos':''}">${esc(d[2])}</span></td>
+  </tr>`).join('');
+}
+function rV2(){
+ let h=`<div class="crumb rv"><h2>AI4面比較<small>SURFACE BATTLE</small></h2>
+  <span class="chip">同一クエリ群を <b>4</b>面に同時投下</span><span class="chip glt">週次</span>
+  <button class="hbtn" onclick="help('surface')">?</button></div>`;
+
+ h+=`<div class="card rv"><div class="ct">面別スコア — G2言及率 / G3第一想起率 / 回答生成率<span class="tag smp">サンプル</span></div>
+  ${groupedBars(['G2 言及率','G3 第一想起率','回答生成率'],S.faces.map(f=>({label:f.n,color:f.hex,vals:[f.g2,f.g3,f.gen]})),760,270)}
+  <div class="legend">${S.faces.map(f=>`<span><i style="background:${f.hex}"></i>${f.n}</span>`).join('')}<span style="margin-left:auto">単位: %</span></div>
+ </div>`;
+
+ h+=`<div class="g g4c" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-top:14px">`+
+  S.faces.map(f=>`<div class="face rv" style="--fc:${f.c}">
+   <div class="nm"><i></i>${f.n}<span class="tag smp" style="margin-left:auto">SMP</span></div>
+   <div class="met">
+    <div class="m"><div class="a">回答生成率</div><div class="b mono">${f.gen}<small>%</small></div></div>
+    <div class="m"><div class="a">平均引用数</div><div class="b mono">${f.cite}</div></div>
+    <div class="m"><div class="a">G2 言及率</div><div class="b mono">${f.g2}<small>%</small></div></div>
+    <div class="m"><div class="a">G3 第一想起</div><div class="b mono">${f.g3}<small>%</small></div></div>
+   </div>
+   <div class="nt">${esc(f.note)}</div>
+  </div>`).join('')+`</div>`;
+
+ h+=`<div class="g g2c" style="grid-template-columns:1.35fr 1fr;margin-top:14px">
+  <div class="card rv"><div class="ct">引用元ドメインランキング（4面合算）<span class="tag smp">サンプル</span></div>
+   <div class="tblwrap"><table class="tbl"><thead><tr>
+    <th style="width:34px">#</th><th onclick="sortDom(0)">ドメイン ⇅</th><th>引用シェア</th><th onclick="sortDom(1)" style="text-align:right">% ⇅</th><th>分類</th>
+   </tr></thead><tbody id="domtb">${domRows()}</tbody></table></div>
+   <div class="sub2" style="margin-top:8px">その他 29.6%。Geminiのリダイレクタ引用はドメイン復元済み。</div>
+  </div>
+  <div class="card rv"><div class="ct">引用の構成 — 公式は思ったより引かれない<span class="tag smp">サンプル</span></div>
+   <div class="ktiles" style="grid-template-columns:1fr 1fr">
+    <div class="kt"><div class="t"><i style="background:var(--ac)"></i>自社公式の引用シェア</div><div class="v mono act"><span data-cnt="${S.official}" data-dec="1">0</span><small>%</small></div></div>
+    <div class="kt"><div class="t"><i style="background:var(--gn)"></i>UGC・クチコミ系</div><div class="v mono up"><span data-cnt="${S.ugc}" data-dec="1">0</span><small>%</small></div></div>
+   </div>
+   <div class="ibox" style="margin-top:12px"><h4>■ 示唆</h4><p>「どれがいい？」型の質問では<mark>公式サイトより口コミ・外部記事が引用されやすい</mark>（公式は自社の良いことしか書かないため比較の根拠にならない）。<b>タイアップ・外部メディア・UGCへの露出</b>が4面の言及率を動かすレバーになる。PR表記があってもAIは内容が有用なら評価対象とする。</p></div>
+  </div>
+ </div>`;
+ return h+foot();
+}
+
+/* ================= V3 競合バトル ================= */
+function rV3(){
+ let h=`<div class="crumb rv"><h2>競合バトル<small>THEME × RIVAL</small></h2>
+  <span class="chip">Tier1 競合 <b>9</b>施設</span><span class="chip">テーマ <b>9</b>軸</span>
+  <button class="hbtn" onclick="help('battle')">?</button></div>`;
+
+ h+=`<div class="g g2c" style="grid-template-columns:1.05fr 1fr">
+  <div class="card rv"><div class="ct">テーマ別スコア レーダー — 御殿場 × 木更津 × 軽井沢<span class="tag smp">サンプル</span></div>
+   ${radar([
+    {label:'御殿場',color:'#FF7A59',vals:S.radar.gotemba},
+    {label:'木更津',color:'#4E9BE8',vals:S.radar.kisarazu},
+    {label:'軽井沢',color:'#B48CFF',vals:S.radar.karuizawa}
+   ],420)}
+   <div class="legend"><span><i style="background:#FF7A59"></i>御殿場</span><span><i style="background:#4E9BE8"></i>木更津</span><span><i style="background:#B48CFF"></i>軽井沢</span><span>スコア=テーマ言及のポジ率（0–100）</span></div>
+  </div>
+  <div class="card rv"><div class="ct">第一想起の獲得数（302回答中）<span class="tag smp">サンプル</span></div>
+   ${hbars(S.firstBar.map(r=>({l:r[0],v:r[1],me:r[2],bg:r[2]?'linear-gradient(90deg,var(--ac2),var(--ac))':'linear-gradient(90deg,#31456B,#4A5E85)'})),{suf:''})}
+   <div class="sub2" style="margin-top:8px">残り30回答はTier2施設・その他。<b>御殿場73 vs 木更津54</b> — 差は19回答で、家族・実用文脈で侵食が進むと逆転圏。</div>
+  </div>
+ </div>`;
+
+ const cells=S.mx.map((row,ri)=>`<tr><th class="rowh">${esc(S.themes[ri])}</th>`+row.map((v,ci)=>
+   v==null?`<td class="non">—</td>`:
+   `<td><button class="hcell" data-d="${ri+ci}" style="background:${mxColor(v)};color:${Math.abs(v)>.45?'#04101D':'var(--tx)'}"
+     onclick="cellSnip('${esc(S.themes[ri])}','${esc(S.rivals[ci])}',${v})"
+     onmousemove="tip('<b>${esc(S.themes[ri])}</b> × 対${esc(S.rivals[ci])}<br>優劣: <b>${(v>0?'+':'')+v.toFixed(1)}</b>（+が御殿場優勢）<br>クリックで根拠スニペット',event)" onmouseleave="untip()">${mxSym(v)}</button></td>`).join('')+`</tr>`).join('');
+ h+=`<div class="card rv" style="margin-top:14px">
+  <div class="ct">勝敗マトリクス — テーマ × 競合（セルクリックで根拠）<span class="tag smp">サンプル</span><button class="q" onclick="help('battle')">?</button></div>
+  <div class="mwrap"><table class="mx"><thead><tr><th></th>${S.rivals.map(r=>`<th>${esc(r)}</th>`).join('')}</tr></thead><tbody>${cells}</tbody></table></div>
+  <div class="legend"><span><i style="background:rgba(61,220,151,.8)"></i>御殿場 優勢</span><span><i style="background:rgba(255,107,135,.8)"></i>御殿場 劣勢</span><span>◎○ 勝ち / – 拮抗 / △✕ 負け / — データなし</span></div>
+ </div>`;
+
+ h+=`<div class="card rv" style="margin-top:14px"><div class="ct">バトル総括</div>
+  <div class="ibox"><h4>■ 勝ち筋</h4><p><mark class="g">景観（富士山）・インバウンド・品揃え</mark>はほぼ全施設に勝ち。軽井沢とだけ「景観・特別感」を分け合う構図。</p></div>
+  <div class="ibox is2"><h4>■ 負け筋</h4><p><mark class="r">アクセスは対 木更津・横浜BS・入間で明確に負け</mark>。子連れは木更津に負け。混雑・渋滞はネガ言及が最多で、AI回答にも「渋滞に注意」が定型化しつつある。</p></div>
+  <div class="ibox is3"><h4>■ だからどうする</h4><p>①観光セット文脈（箱根・富士山・温泉）を外部メディアで増幅し勝ち筋を固定化 ②「渋滞・行き方」の一次情報（時間帯別の空き・シャトル）を公式とマップ系に整備しネガ引用を上書き ③子連れ文脈は施設実装（キッズ導線）とセットで木更津と差別化。</p></div>
+ </div>`;
+ return h+foot();
+}
+/* ================= V4 ペルソナ ================= */
+function rV4(){
+ let h=`<div class="crumb rv"><h2>ペルソナ<small>WHO IS IT FOR</small></h2>
+  <span class="chip">属性付与 <b>145</b>言及</span><button class="hbtn" onclick="help('surface')">?</button></div>`;
+
+ h+=`<div class="g g2c" style="grid-template-columns:340px minmax(0,1fr)">
+  <div class="card rv"><div class="ct">言及のペルソナ分布<span class="tag smp">サンプル</span></div>
+   ${donut(S.personas.map(p=>({n:p.n,v:p.v,c:p.c})),230,'145','言及ベース')}
+   <div class="legend" style="justify-content:center">${S.personas.map(p=>`<span><i style="background:${p.c}"></i>${p.n} <b class="mono" style="color:var(--tx2)">${p.v}%</b></span>`).join('')}</div>
+  </div>
+  <div class="card rv"><div class="ct">面ごとのペルソナ構成 — どのAIが誰に勧めるか<span class="tag smp">サンプル</span></div>
+   <div class="g" style="gap:13px;margin-top:4px">`+
+   S.faces.map(f=>{const mix=S.pmix[f.id];return `
+    <div>
+     <div style="display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;margin-bottom:5px"><i style="width:8px;height:8px;border-radius:99px;background:${f.c}"></i>${f.n}</div>
+     <div style="display:flex;gap:2px;height:15px;border-radius:99px;overflow:hidden">
+      ${mix.map((v,i)=>`<span style="width:${v}%;background:${S.personas[i].c}" onmousemove="tip('<b>${f.n}</b><br>${esc(S.personas[i].n)}: <b>${v}%</b>',event)" onmouseleave="untip()"></span>`).join('')}
+     </div>
+    </div>`;}).join('')+
+   `</div>
+   <div class="sub2" style="margin-top:12px">Geminiは<b>インバウンド寄り（27%）</b>、ChatGPTは<b>家族寄り（34%）</b>に言及が偏る — 面ごとに「誰へのおすすめとして語られるか」が違う。</div>
+  </div>
+ </div>`;
+
+ h+=`<div class="g g3c" style="grid-template-columns:repeat(3,minmax(0,1fr));margin-top:14px">`+
+  S.personas.slice(0,5).map(p=>`
+  <div class="card rv" style="border-top:2px solid ${p.c}">
+   <div class="ct" style="margin-bottom:8px"><i style="width:9px;height:9px;border-radius:99px;background:${p.c}"></i>${p.n}
+    <span class="mono" style="margin-left:auto;font-size:15px;color:var(--tx)">${p.v}%</span><span class="delta ${p.d.startsWith('+')?'up':p.d==='0'||p.d==='—'?'fl':'dn'}">${p.d}</span></div>
+   <div class="quote" style="border:none;background:rgba(8,14,26,.6);padding:10px 12px"><div class="qq" style="font-size:11.5px">${esc(p.q)}</div></div>
+   <div class="sub2" style="margin-top:8px">${esc(p.s)}</div>
+  </div>`).join('')+
+ `</div>`;
+
+ h+=`<div class="card rv" style="margin-top:14px"><div class="ct">ペルソナ総括</div>
+  <div class="ibox is3"><h4>■ 強い</h4><p><mark class="g">インバウンド（24%・+3pt）</mark>が伸長。「Mt.Fuji view × 免税 × ブランド」の三点セットで英語圏の推奨が固い。実データ側でも外国人宿泊が2019年比2.2倍と符合。</p></div>
+  <div class="ibox is2"><h4>■ 揺らぎ</h4><p>最大セグメントの<mark class="r">家族連れ（31%）で「雨天」「キッズ導線」のネガ言及</mark>が混じり、木更津への流出文脈が発生。カップルは軽井沢と言及を分け合う。</p></div>
+  <div class="ibox is3"><h4>■ だからどうする</h4><p>ペルソナ×面のマトリクスで<b>広告・タイアップの出し分け</b>（例: Gemini面が強い訪日文脈は英語メディア、ChatGPT面の家族文脈は国内メディア）に接続する。</p></div>
+ </div>`;
+ return h+foot();
+}
+
+/* ================= V5 地域イメージ ================= */
+function rV5(){
+ const mx=Math.max(...S.themeDiff.map(d=>Math.abs(d[1])));
+ let h=`<div class="crumb rv"><h2>地域イメージ<small>JAPAN vs KANTO</small></h2>
+  <span class="chip">都県別需要 × 聞き分けプロンプト</span><button class="hbtn" onclick="help('region')">?</button></div>`;
+
+ h+=`<div class="g g2c" style="grid-template-columns:1fr 1.15fr">
+  <div class="card rv"><div class="ct">指名検索の需要指数マップ（全国平均=100）<span class="tag smp">サンプル</span></div>
+   <div class="tmap">`+
+   [...Array(12)].map((_,i)=>{
+    const r=Math.floor(i/4)+1,c=i%4+1;
+    const t=S.tiles.find(t=>t.r===r&&t.c===c);
+    if(!t)return `<div class="tile ghost"></div>`;
+    const a=Math.min(1,t.v/130)*.75+.08;
+    return `<div class="tile" style="background:rgba(255,122,89,${a.toFixed(2)});border-color:rgba(255,154,107,${(a+.15).toFixed(2)})"
+      onmousemove="tip('<b>${t.p}</b>: 需要指数 <b>${t.v}</b>${t.note?'<br>'+t.note:''}',event)" onmouseleave="untip()">
+      ${t.star?'<span class="st">🗻</span>':''}<div class="p">${t.p}</div><div class="v mn">${t.v}</div><div class="d">${t.note||''}</div></div>`;
+   }).join('')+
+   `</div>
+   <div class="sub2" style="margin-top:10px">模式タイル地図。<b>地元圏（静岡128・神奈川96・山梨84）に需要が偏り</b>、千葉29は木更津圏で最弱 — 商圏の「東の壁」が見える。</div>
+  </div>
+  <div class="card rv"><div class="ct">テーマ言及の 全国⇄関東 差分<span class="tag smp">サンプル</span></div>
+   <div style="display:grid;gap:7px">`+
+   S.themeDiff.map(d=>{const v=d[1],w=Math.abs(v)/mx*50;
+    return `<div style="display:grid;grid-template-columns:92px 1fr;gap:8px;align-items:center">
+     <span style="font-size:10.5px;color:var(--tx2);text-align:right;white-space:nowrap">${esc(d[0])}</span>
+     <div style="position:relative;height:13px;background:#0A1322;border-radius:99px" onmousemove="tip('<b>${esc(d[0])}</b><br>${v>0?'関東で +'+v+'pt 言及されやすい':'全国で +'+(-v)+'pt 言及されやすい'}',event)" onmouseleave="untip()">
+      <span style="position:absolute;left:50%;top:-2px;bottom:-2px;width:1.5px;background:var(--line2)"></span>
+      <span class="gbar" style="position:absolute;top:2px;bottom:2px;height:auto;${v>0?'left:50%':'right:50%'};border-radius:99px;width:${w}%"><i data-w="100" style="background:${v>0?'linear-gradient(90deg,#2C6CB8,var(--bl))':'linear-gradient(270deg,var(--ac2),var(--ac))'}"></i></span>
+     </div></div>`;}).join('')+
+   `</div>
+   <div class="legend"><span><i style="background:var(--ac)"></i>全国プロンプトで強い（観光文脈）</span><span><i style="background:var(--bl)"></i>関東プロンプトで強い（実用文脈）</span></div>
+   <div class="sub2" style="margin-top:6px">全国では<mark>富士山・訪日の観光地</mark>、関東では<mark class="r">「遠い・混む」の実用比較対象</mark>として語られる — 同じ施設が地域で別のブランドになっている。</div>
+  </div>
+ </div>`;
+
+ h+=`<div class="g g2c" style="grid-template-columns:1fr 1fr;margin-top:14px">
+  <div class="card rv"><div class="ct">「日本でおすすめのアウトレットは？」<span class="tag smp">サンプル</span></div>
+   <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <div class="kpi act">御殿場</div><span class="pill pos">4面中 ${S.askJp.gotemba}面で第一想起</span><span class="pill">軽井沢 ${S.askJp.karuizawa}面</span>
+   </div>
+   <div class="sub2" style="margin-top:8px">全国視点では「日本最大級 × 富士山」で御殿場がほぼ独走。根拠引用は旅行メディア中心。</div>
+  </div>
+  <div class="card rv"><div class="ct">「関東でおすすめのアウトレットは？」<span class="tag smp">サンプル</span></div>
+   <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <div class="kpi" style="color:var(--bl)">木更津と互角</div><span class="pill fac">御殿場 ${S.askKanto.gotemba}面</span><span class="pill fac">木更津 ${S.askKanto.kisarazu}面</span>
+   </div>
+   <div class="sub2" style="margin-top:8px">関東視点では<mark class="r">アクセス軸で木更津が並ぶ</mark>。「都心から近い順」で並べる回答形式が増えると構造的に不利。</div>
+  </div>
+ </div>`;
+
+ h+=`<div class="card rv" style="margin-top:14px"><div class="ct">地域戦略の含意</div>
+  <div class="ibox is3"><h4>■ だからどうする</h4><p>①全国・訪日向けは「富士山×買い物」の観光文脈を維持強化 ②関東向けは<b>時間価値の再定義</b>（「遠いが1日遊べる」滞在型訴求・非セール期のランチ/温泉訴求）で木更津との軸をずらす ③千葉・茨城は深追いせず、神奈川・東京西部・静岡・山梨の地元圏を固める。</p></div>
+ </div>`;
+ return h+foot();
+}
+
+/* ================= V6 時系列 ================= */
+function rV6(){
+ const T=GRAN==='d'?S.tsD:GRAN==='m'?S.tsM:S.ts;
+ const GL={d:'日次（直近28日）',w:'週次（12ラウンド）',m:'月次（12か月）'}[GRAN];
+ const dlt=a=>{const d=a[a.length-1]-a[0];return (d>0?'+':'')+(Math.abs(d)<10?d.toFixed(1).replace('.0',''):Math.round(d));};
+ const rng={d:{idx:[104,120],g2:[52,62],dem:[80,120]},w:{idx:[95,125],g2:[45,65],dem:[50,110]},m:{idx:[92,120],g2:[45,62],dem:[50,105]}}[GRAN];
+ let h=`<div class="crumb rv"><h2>時系列<small>TREND EXPLORER</small></h2>
+  <span class="seg" role="tablist" aria-label="集計粒度">
+   <button class="${GRAN==='d'?'on':''}" onclick="setGran('d')">日次</button>
+   <button class="${GRAN==='w'?'on':''}" onclick="setGran('w')">週次</button>
+   <button class="${GRAN==='m'?'on':''}" onclick="setGran('m')">月次</button>
+  </span>
+  <span class="chip">${GL}</span>
+  <button class="hbtn" onclick="help('idx')">?</button></div>`;
+
+ h+=`<div class="rv" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+  <span class="gstat"><i style="width:8px;height:8px;border-radius:99px;background:#FF7A59"></i>語られ指数 期間Δ <b class="${T.idx[T.idx.length-1]>=T.idx[0]?'up':'dn'}">${dlt(T.idx)}</b></span>
+  <span class="gstat"><i style="width:8px;height:8px;border-radius:99px;background:#4E9BE8"></i>G2言及率 Δ <b class="${T.g2[T.g2.length-1]>=T.g2[0]?'up':'dn'}">${dlt(T.g2)}pt</b></span>
+  <span class="gstat"><i style="width:8px;height:8px;border-radius:99px;background:#22C7D6"></i>検索需要 Δ <b class="${T.dem[T.dem.length-1]>=T.dem[0]?'up':'dn'}">${dlt(T.dem)}</b></span>
+ </div>`;
+
+ h+=`<div class="card rv"><div class="ct">語られ指数 — ${GL}<span class="tag smp">サンプル</span></div>
+  ${lineChart('tsA',T.w,[{label:'語られ指数',color:'#FF7A59',hex:'#FF7A59',vals:T.idx,fill:1}],760,220,{min:rng.idx[0],max:rng.idx[1],smooth:1,marks:T.ev.map(e=>({i:e.i}))})}
+  <div class="legend"><span><i style="background:#FF7A59"></i>語られ指数（100=需要並み）</span>${GRAN==='w'?'<span style="color:var(--gold)">▼ = クエリ入替ラウンド</span>':''}${GRAN==='d'?'<span>週末は需要急増の分だけ指数が沈む（分母効果）</span>':''}${GRAN==='m'?'<span>1月・8月の需要ピークで指数が沈む — 繁忙期ほど語られ方が追いつかない</span>':''}</div>
+ </div>`;
+
+ h+=`<div class="g g2c" style="grid-template-columns:1fr 1fr;margin-top:14px">
+  <div class="card rv"><div class="ct">G2 言及率（%）— ${GL}<span class="tag smp">サンプル</span></div>
+   ${lineChart('tsB',T.w,[{label:'G2',color:'#4E9BE8',hex:'#4E9BE8',vals:T.g2,fill:1}],380,190,{min:rng.g2[0],max:rng.g2[1],smooth:1})}
+  </div>
+  <div class="card rv"><div class="ct">G4 検索需要指数 — ${GL}<span class="tag smp">サンプル</span></div>
+   ${lineChart('tsC',T.w,[{label:'需要',color:'#22C7D6',hex:'#22C7D6',vals:T.dem,fill:1}],380,190,{min:rng.dem[0],max:rng.dem[1],smooth:1})}
+   ${GRAN==='d'?'<div class="sub2">土日に需要が跳ねる週末型。非セール期の平日をどう埋めるかがKPI再設計の論点。</div>':''}
+  </div>
+ </div>`;
+
+ h+=`<div class="g g2c" style="grid-template-columns:1fr 1.2fr;margin-top:14px">
+  <div class="card rv"><div class="ct">クエリ入替の履歴<span class="tag smp">サンプル</span>${GRAN!=='w'?'<span class="chip">週次ベース</span>':''}</div>
+   <div class="tl">
+    <div class="tle"><div class="y">8/31 週（R12）</div><div class="t">▲「富士山 観光 モデルコース」「アウトレット 福袋 いつ」／▼「雨の日 大型 買い物 施設」<small> 需要スコア改定による自動入替</small></div></div>
+    <div class="tle"><div class="y">8/3 週（R8）</div><div class="t">▲ 英語E族 3本を現役昇格（訪日需要増）／▼ 2本<small> locale挙動はprobe検証済み</small></div></div>
+    <div class="tle"><div class="y">7/6 週（R4）</div><div class="t">▲「イルミネーション 関東」を季節先行で仕込み／▼ 1本<small> 季節イベント族の運用開始</small></div></div>
+   </div>
+  </div>
+  <div class="card rv"><div class="ct">ラウンド実績<span class="tag smp">サンプル</span></div>
+   <div class="tblwrap"><table class="tbl"><thead><tr><th>週</th><th>呼数</th><th>取得率</th><th>コスト</th><th>主な変化</th></tr></thead><tbody>
+    <tr><td class="mono">8/31</td><td class="mono">336</td><td class="mono up">99.7%</td><td class="mono">$13.1</td><td>指数116に上昇・雨天ネガ警報</td></tr>
+    <tr><td class="mono">8/24</td><td class="mono">336</td><td class="mono up">99.9%</td><td class="mono">$12.8</td><td>木更津が子連れ第一想起+2</td></tr>
+    <tr><td class="mono">8/17</td><td class="mono">336</td><td class="mono up">100%</td><td class="mono">$12.6</td><td>需要指数が夏休み明けで一服</td></tr>
+    <tr><td class="mono">8/10</td><td class="mono">336</td><td class="mono up">99.4%</td><td class="mono">$13.4</td><td>AIO生成率が+4pt回復</td></tr>
+   </tbody></table></div>
+   <div class="sub2" style="margin-top:8px">snapshotに全回答本文＋引用を保存 — 勝敗テーマ・ペルソナ抽出の再計算がいつでも可能。</div>
+  </div>
+ </div>`;
+
+ h+=`<div class="card rv" style="margin-top:14px"><div class="ct">読み方</div>
+  <div class="ibox"><h4>■ この画面が答える問い</h4><p>「語られ方は<b>良くなっているのか悪くなっているのか</b>」。指数・言及率・需要を同じ粒度で並べ、<mark>施策（外部露出・リニューアル報道）の反映ラグ</mark>を観測する。クエリ入替はIDを永続化しているため時系列は壊れない。</p></div>
+  <div class="ibox is4"><h4>■ 粒度の使い分け</h4><p><b>週次が正</b>（4面フル計測ラウンド）。<b>日次</b>は軽量クエリの毎日スキャン運用（トヨタ日次60本方式）を想定した設計で、警報の早期検知に使う。<b>月次</b>は週次の集計で、季節性（初売り・夏休み）と施策効果の俯瞰に使う。</p></div>
+ </div>`;
+ return h+foot();
+}
+/* ================= V7 オープンデータ ================= */
+function rV7(){
+ let h=`<div class="crumb rv"><h2>オープンデータ<small>VERIFIED FACTS</small></h2>
+  <span class="chip up">全数値 出典付き実データ</span><span class="chip">取得 2026-09-01</span>
+  <button class="hbtn" onclick="help('open')">?</button></div>`;
+
+ h+=`<div class="card rv"><div class="ct">経営・来場の実勢<span class="tag real">実測</span></div>
+  <div class="ktiles" style="grid-template-columns:repeat(auto-fit,minmax(175px,1fr))">
+   <div class="kt"><div class="t"><i style="background:var(--gold)"></i>売上高（2024年度）</div><div class="v mono glt"><span data-cnt="1409">0</span><small> 億円</small></div><div class="s">過去最高。2011年度586億円から<b class="mono">約2.4倍</b></div></div>
+   <div class="kt"><div class="t"><i style="background:var(--ac)"></i>累計来場者</div><div class="v mono">2.3<small> 億人</small></div><div class="s">2000年開業〜2025年3月末</div></div>
+   <div class="kt"><div class="t"><i style="background:var(--bl)"></i>店舗数</div><div class="v mono"><span data-cnt="290">0</span><small> 店</small></div><div class="s">2020年第4期増床（+88店）後</div></div>
+   <div class="kt"><div class="t"><i style="background:var(--gn)"></i>25周年の刷新</div><div class="v mono"><span data-cnt="27">0</span><small> 店 新規</small></div><div class="s">2024.4〜2025.8。既存30店以上も改装・移転</div></div>
+   <div class="kt"><div class="t"><i style="background:var(--cy)"></i>宿泊客数（御殿場市）</div><div class="v mono"><span data-cnt="122.2" data-dec="1">0</span><small> 万人</small></div><div class="s">2024年度。2019年度96.8万人から増</div></div>
+   <div class="kt"><div class="t"><i style="background:var(--pu)"></i>外国人宿泊（市）</div><div class="v mono"><span data-cnt="24.9" data-dec="1">0</span><small> 万人</small></div><div class="s">2024年・<mark class="g">2019年比 約2.2倍</mark></div></div>
+   <div class="kt"><div class="t"><i style="background:var(--rd)"></i>日帰り平均滞在</div><div class="v mono dn"><span data-cnt="3.6" data-dec="1">0</span><small> 時間</small></div><div class="s">県全体9時間32分の1/3以下 — 滞在化が課題</div></div>
+   <div class="kt"><div class="t"><i style="background:var(--gold)"></i>平日の稼働</div><div class="v mono"><span data-cnt="66">0</span><small> %</small></div><div class="s">休前日=100とした市内観光関連施設の平日稼働</div></div>
+  </div>
+  <div class="src">出典: ${srcA('ats','prtimes','plan','planR4','wiki')}</div>
+ </div>`;
+
+ h+=`<div class="g g2c" style="grid-template-columns:1.3fr 1fr;margin-top:14px">
+  <div class="card rv"><div class="ct">御殿場市 観光交流客数の推移（万人）<span class="tag real">実測</span></div>
+   ${lineChart('kk',REAL.kanko.years.map(y=>String(y)),[{label:'交流客数',color:'#3DDC97',hex:'#3DDC97',vals:REAL.kanko.vals,fill:1}],640,240,{min:900,max:1650,smooth:1,marks:[{i:9}]})}
+   <div class="legend"><span><i style="background:#3DDC97"></i>観光交流客数（うち${REAL.share}がアウトレット）</span><span style="color:var(--gold)">▼ = 2020 コロナ禍</span></div>
+   <div class="sub2">2020年に1,029万人まで落ち、<mark class="g">2023年に完全回復・2024年度は1,538万人と過去最高圏</mark>。「客足の衰退」は市の統計からは確認できない。</div>
+   <div class="src">出典: ${srcA('plan','planR4')}</div>
+  </div>
+  <div class="card rv"><div class="ct">店舗数レース — 「日本一」の交代<span class="tag real">実測</span></div>
+   ${hbars([
+    {l:'木更津（2025.6〜）',v:330,me:0,bg:'linear-gradient(90deg,#2C6CB8,var(--bl))',tip:'2025年6月 第4期増床で約330店'},
+    {l:'御殿場（2020.6〜）',v:290,me:1,tip:'2020年6月 第4期増床で約290店'}
+   ],{suf:'店'})}
+   <div class="sub2" style="margin-top:6px">2020年の増床で御殿場が獲った「店舗数日本一」を、<mark class="r">2025年6月に木更津が奪回</mark>。「規模」の看板では戦えなくなった — 語られ方の軸（富士山・体験・訪日）へ移る必然。</div>
+   <div class="ibox is2" style="margin-top:10px"><h4>■ 補足</h4><p>売上では御殿場1,409億円（2024年度・過去最高）に対し、木更津は増床を機に<b>中長期で1,000億円を目指す</b>と報道されており、追う側の投資が続く。</p></div>
+   <div class="src">出典: ${srcA('impress','ats')}</div>
+  </div>
+ </div>`;
+
+ h+=`<div class="card rv" style="margin-top:14px"><div class="ct">競争環境の年表 — 「盛り上がり→競合出現」の実際<span class="tag real">実測</span></div>
+  <div class="tl">${REAL.timeline.map(e=>`<div class="tle ${e.me?'':'riv'}"><div class="y">${esc(e.y)}${e.me?'':' <span class="pill" style="margin-left:6px;color:var(--bl);border-color:rgba(78,155,232,.45)">競合</span>'}</div><div class="t">${esc(e.t)} <small><a href="${REAL.srcs[e.src][1]}" target="_blank" rel="noopener">[出典]</a></small></div></div>`).join('')}</div>
+  <div class="ibox is4" style="margin-top:12px"><h4>■ 読み解き</h4><p>実売・実需は右肩。ただし<mark>2012年の木更津出現以降、「関東で一番」の座標軸が「近さ×規模」に書き換わり</mark>、2025年に店舗数の看板も移った。<b>実勢が強いのに語られ方で負け始める</b>のが今の構図で、それを可視化するのが本ボードのAI計測系（現在サンプル）。</p></div>
+ </div>`;
+ return h+foot();
+}
+
+/* ================= V8 生活者の声 ================= */
+function rV8(){
+ const M=REAL.maps;
+ const kt=(m,color)=>{
+  const mxv=Math.max(...m.tags.map(t=>t[1]));
+  return `<div class="card rv">
+   <div class="ct"><a href="${m.url}" target="_blank" rel="noopener" style="color:inherit">${m.n}</a><span class="tag real">実測</span></div>
+   <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+    <span class="starbig" style="color:${color}"><span data-cnt="${m.star}" data-dec="1">0</span></span>
+    <span class="stars">★★★★☆</span>
+    <span class="mono" style="color:var(--tx3);font-size:11px"><span data-cnt="${m.cnt}">0</span> 件</span>
+   </div>
+   <div style="margin-top:11px;display:grid;gap:7px">
+    ${m.tags.map(t=>`<div style="display:grid;grid-template-columns:86px 1fr 44px;gap:8px;align-items:center">
+      <span style="font-size:10.5px;color:var(--tx2);text-align:right">${esc(t[0])}</span>
+      <span class="gbar"><i data-w="${(t[1]/mxv*100).toFixed(1)}" style="background:${color}"></i></span>
+      <span class="mono" style="font-size:10.5px;text-align:right">${fmt(t[1])}</span></div>`).join('')}
+   </div>
+   <div class="sub2" style="margin-top:8px">クチコミ内キーワード件数（Googleマップ自動集計）</div>
+  </div>`;};
+
+ let h=`<div class="crumb rv"><h2>生活者の声<small>REAL VOICES</small></h2>
+  <span class="chip up">Googleマップ実査（2026-09-01）</span>
+  <button class="hbtn" onclick="help('voice')">?</button></div>`;
+
+ h+=`<div class="g g3c" style="grid-template-columns:repeat(3,minmax(0,1fr))">${kt(M.gotemba,'#FF7A59')}${kt(M.kisarazu,'#4E9BE8')}${kt(M.karuizawa,'#B48CFF')}</div>`;
+
+ h+=`<div class="card rv" style="margin-top:14px"><div class="ct">声から見える「語られ方の資産」<span class="tag real">実測</span></div>
+  <div class="g g3c" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+   <div class="ibox is3" style="margin:0"><h4>■ 御殿場の声の核</h4><p><mark class="g">「富士山」1,314件</mark> — 2位以下（渋滞171・橋110）の8倍近い圧倒的な体験キーワード。クチコミ件数29,126件も3施設で最多。</p></div>
+   <div class="ibox" style="margin:0"><h4>■ 競合の声の核</h4><p>木更津は<b>「フードコート」570件</b>と食・実用が核。軽井沢は<b>「芝生」「敷地」</b>の滞在体験。それぞれ語られる土俵が違う。</p></div>
+   <div class="ibox is2" style="margin:0"><h4>■ ネガ密度の逆転</h4><p>「渋滞」言及率は御殿場0.6%（171/29,126）に対し<mark class="r">木更津1.8%（306/17,201）と約3倍</mark>。渋滞イメージは実は相手の方が濃い — AI回答でどちらに紐づくかが勝負。</p></div>
+  </div>
+ </div>`;
+
+ h+=`<div class="g g2c" style="grid-template-columns:1fr 1fr;margin-top:14px">`+
+  REAL.quotes.map(q=>{const m=M[q.f];return `
+  <div class="quote rv">
+   <div class="qq">${esc(q.t)}</div>
+   <div class="meta">
+    <span class="pill ${q.s==='pos'?'pos':'neg'}">${q.s==='pos'?'ポジ':'ネガ'}</span>
+    <span class="pill">${esc(q.th)}</span>
+    <span class="pill fac">${m.n}</span>
+    <span style="margin-left:auto"><a href="${m.url}" target="_blank" rel="noopener">${esc(q.w)}</a></span>
+   </div>
+  </div>`;}).join('')+
+ `</div>`;
+
+ h+=`<div class="card rv" style="margin-top:14px"><div class="ct">声の総括</div>
+  <div class="ibox is3"><h4>■ だからどうする</h4><p>①富士山ビューは<b>クチコミ上すでに独占資産</b> — AI回答の引用元（旅行メディア・UGC）へこの文脈を供給し続ける ②駐車場・シャトルの運用ネガは<b>時間帯情報の一次発信</b>で打ち消す ③「渋滞は木更津の方が濃い」という実データは、関東文脈の比較で使える反証材料。今後はSNS言及とAI引用元のUGC率を加えて定点化する。</p></div>
+  <div class="src">出典: ${srcA('gmap')} ／ 引用は各クチコミからの短い抜粋（リンク先で原文確認可）</div>
+ </div>`;
+ return h+foot();
+}
+
+/* ================= V9 KPI再設計 ================= */
+function rV9(){
+ let h=`<div class="crumb rv"><h2>KPI再設計<small>BEYOND PARKING COUNT</small></h2>
+  <span class="chip cyt">提案骨子</span><button class="hbtn" onclick="help('kpi')">?</button></div>`;
+
+ h+=`<div class="card hl rv"><div class="ct">出発点<span class="tag prop">提案</span></div>
+  <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+   <div><div class="kpi" style="font-size:22px">現KPI = <span class="act">駐車台数</span></div>
+   <div class="sub2" style="font-size:12px;margin-top:6px">来場ボリュームの代理値としては機能するが、<mark class="r">「来た後」（滞在・飲食・体験・記憶）と「来る前」（比較検討・AIでの語られ方）が丸ごと見えない</mark>。送客して終わりの構造から、体験と記憶までを計測対象に広げる。</div></div>
+  </div>
+ </div>`;
+
+ const KN=(no,t,c,items,src)=>`<div class="knode" style="--kc:${c}"><div class="h"><span class="no">${no}</span>${t}</div><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul><div class="dsrc">${src}</div></div>`;
+ h+=`<div class="card rv" style="margin-top:14px"><div class="ct">KPIツリー — 来場から記憶まで4段<span class="tag prop">提案</span></div>
+  <div class="kwrapx">
+   ${KN('01','来場','#FF7A59',['駐車台数（既存）','市観光交流客数 <b>1,538万人</b>','時間帯別の混雑相対値'],'源: 既存KPI／市統計／Maps混雑クロール')}
+   <div class="karr">→</div>
+   ${KN('02','滞在','#FFC24B',['平均滞在時間（現状 日帰り<b>3.6h</b>）','エリア回遊（West/East/Hill）','平日稼働（現状<b>66%</b>）'],'源: 市調査／Maps混雑の時間帯カーブ')}
+   <div class="karr">→</div>
+   ${KN('03','体験','#3DDC97',['飲食利用率・ランチ帯の伸び','ホテル・温泉の併用（宿泊<b>122万人</b>）','非セール期の来場動機'],'源: 周辺飲食店の混雑相対比較／GA×Affinity')}
+   <div class="karr">→</div>
+   ${KN('04','記憶・推奨','#22C7D6',['クチコミ量・評点（<b>★4.2 / 2.9万件</b>）','テーマ言及（富士山<b>1,314件</b>）','AI語られ方 G1–G4・第一想起'],'源: Maps定点／本ボードAI4面計測')}
+  </div>
+  <div class="sub2" style="margin-top:10px">個人ID単位の追跡はしない。公開データ＋自社データ＋AI計測の組み合わせで、<b>太字は今日時点で既に取れている実数</b>。</div>
+ </div>`;
+
+ h+=`<div class="card rv" style="margin-top:14px"><div class="ct">計測手段マップ — 何が・いくらで・いつから<span class="tag prop">提案</span></div>
+  <div class="tblwrap"><table class="tbl"><thead><tr><th>手段</th><th>分かること</th><th>コスト</th><th>着手</th><th>状態</th></tr></thead><tbody>
+   <tr><td><b>AI4面計測</b>（本ボード）</td><td>語られ方G1–G4・勝敗テーマ・ペルソナ・引用元</td><td class="mono">$12–15/周</td><td>今週</td><td><span class="pill pos">R1準備完了</span></td></tr>
+   <tr><td><b>Googleマップ クチコミ定点</b></td><td>評点・件数・テーマ言及の週次差分（競合込み）</td><td class="mono">ほぼ0</td><td>本日から</td><td><span class="pill pos">初回実査済み</span></td></tr>
+   <tr><td><b>Maps混雑クローリング</b></td><td>時間帯別の混雑相対値・周辺飲食店との比較（滞在・食事の代理指標）</td><td class="mono">ほぼ0</td><td>2週間PoC</td><td><span class="pill">未着手</span></td></tr>
+   <tr><td><b>Googleトレンド</b>（pytrends）</td><td>指名検索需要・都県別の地域差</td><td class="mono">0</td><td>今週</td><td><span class="pill pos">実装済み資産あり</span></td></tr>
+   <tr><td><b>GA × Affinity</b></td><td>店舗ページ閲覧者の特性→出し分け・導線設計</td><td class="mono">0（要データ提供）</td><td>先方合意後</td><td><span class="pill">要アクセス権</span></td></tr>
+   <tr><td>人流データ購入</td><td>実来場の精密計測</td><td class="mono dn">高額</td><td>—</td><td><span class="pill neg">上記で代替検証後に判断</span></td></tr>
+  </tbody></table></div>
+ </div>`;
+
+ h+=`<div class="g g2c" style="grid-template-columns:1fr 1fr;margin-top:14px">
+  <div class="card rv"><div class="ct">機会① 非セール期の訴求余地<span class="tag prop">提案</span></div>
+   <div class="sub2" style="font-size:12px">平日稼働<b class="mono">66%</b>・日帰り滞在<b class="mono">3.6h</b>という実データは、<mark>「セール以外の来場理由」がまだ設計されていない</mark>ことを示す。セール期のクーポン型広告に対し、非セール期は<b>ランチ・温泉・富士山ビュー</b>の滞在訴求へ出し分ける。効果はMaps混雑カーブ（食事帯）とクチコミ・テーマ言及で観測できる。</div>
+  </div>
+  <div class="card rv"><div class="ct">機会② 引用される側への投資<span class="tag prop">提案</span></div>
+   <div class="sub2" style="font-size:12px">AI回答は<mark>公式サイトより口コミ・外部記事を引用しやすい</mark>（比較質問では公式情報が根拠にならないため）。動画広告の完全否定ではなく、<b>タイアップ・外部メディア・UGC醸成への投資配分を見直す</b>のが論点。効果は本ボードの引用元ドメインランキングとG2/G3で週次確認する。</div>
+  </div>
+ </div>`;
+
+ h+=`<div class="card rv" style="margin-top:14px"><div class="ct">進め方（3ステップ）</div>
+  <div class="ibox is3"><h4>■ だからどうする</h4><p><b>Step1（今週）</b>: AI4面テスト計測1周（$12–15）＋クチコミ定点の自動化 — 実測値でこのボードのサンプルを置換。<b>Step2（2週間）</b>: Maps混雑クローリングPoCで滞在・食事の代理指標を追加。<b>Step3（合意後）</b>: GA×Affinity接続でKPIツリー4段を全点灯し、週次の定例をこのボードで回す。</p></div>
+ </div>`;
+ return h+foot();
+}
+
+/* ================= footer / init ================= */
+function foot(){
+ return `<div class="foot rv">出典（実データ）: ${srcA('ats','prtimes','plan','planR4','impress','wiki','wikik','odakyu','gmap')}<br>
+ AI計測系（サンプル表示）の設計: DataForSEO AI Optimization API 4面・実測単価ベースの試算。デモ値をボード実数として扱いません — 取れない数値は「—」。<br>
+ このページは閲覧ゲート実装前のデザインプレビューです（noindex）。© 御殿場GEOボード R0</div>`;
+}
+function init(){
+ buildNav(); tickStart(); render();
+ setTimeout(()=>{const sp=$('#splash');if(sp){sp.classList.add('off');setTimeout(()=>sp.remove(),600);}},1150);
+ startFx();
+}
+/* ---- particles ---- */
+function startFx(){
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches){$('#fx').remove();return;}
+ const cv=$('#fx'),ctx=cv.getContext('2d');let W,H,ps=[];
+ const resize=()=>{W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';};
+ resize();addEventListener('resize',resize);
+ for(let i=0;i<46;i++)ps.push({x:Math.random(),y:Math.random(),r:(Math.random()*1.6+.5)*devicePixelRatio,s:Math.random()*.00022+.00007,tw:Math.random()*Math.PI*2,g:Math.random()<.28});
+ let run=true;
+ document.addEventListener('visibilitychange',()=>{run=!document.hidden;if(run)requestAnimationFrame(loop);});
+ function loop(t){
+  if(!run)return;
+  ctx.clearRect(0,0,W,H);
+  ps.forEach(p=>{
+   p.y-=p.s;if(p.y<-.02){p.y=1.02;p.x=Math.random();}
+   const a=(Math.sin(t/1400+p.tw)+1)/2*.5+.12;
+   ctx.beginPath();ctx.arc(p.x*W,p.y*H,p.r,0,7);
+   ctx.fillStyle=p.g?`rgba(255,194,75,${a})`:`rgba(158,187,228,${a*.8})`;
+   ctx.fill();
+  });
+  requestAnimationFrame(loop);
+ }
+ requestAnimationFrame(loop);
+}
+init();
+
 </script>
 </body>
 </html>
