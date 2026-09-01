@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+node_modules/
+plain.html
+index_new.html
+s_board.png
+s_gate_after.png
+data/last_error.txt
+.DS_Store
