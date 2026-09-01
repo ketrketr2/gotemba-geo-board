@@ -376,7 +376,7 @@ svg .mono, svg text.mn{font-family:'JetBrains Mono',monospace;}
    計測設計: <b>約120</b>クエリ × <b>4</b>面/週<br>
    想定コスト: <b>$12–15</b>/周（実測単価より試算）<br>
    実データ取得: <b>2026-09-01</b> JST<br>
-   ゲート: 暗号化認証（実装時に適用）
+   公開: 直接配信（ゲートなし）
   </div>
  </aside>
 
@@ -408,6 +408,16 @@ const fmt=n=>n==null?'—':(typeof n==='number'?n.toLocaleString('ja-JP'):n);
 const esc=s=>String(s==null?'—':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const srcA=(...keys)=>keys.map(k=>{const s=REAL.srcs[k];return `<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`;}).join(' ／ ');
 const tagS='<span class="tag smp">サンプル</span>', tagR='<span class="tag real">実測</span>', tagP='<span class="tag prop">提案</span>';
+/* 実測モード: aggregate_board.py が実測で上書きした指標のカードだけ tagM=実測 に切替える。
+   未実測のカード（語られ指数・レーダー・マトリクス・ペルソナ・時系列等）は tagS のまま。 */
+const MEAS=!!META.measured;
+const tagM=MEAS?tagR:tagS;
+if(MEAS){
+ const rb=document.querySelector('.ribbon span:last-child');
+ if(rb)rb.innerHTML=`<b>R1 実測ラウンド ${esc(META.round_date||'')}</b>｜AI計測系は<b>実測値</b>（${fmt(META.n_cells)}回答・実費$${(+META.round_cost||0).toFixed(2)}）｜<b>サンプル</b>タグは実測対応前の設計プレビューのみ`;
+ const op=document.querySelector('#rsel option');
+ if(op)op.textContent=`R1｜実測（${META.round_date||''}）`;
+}
 let TMRS=[];
 const later=(fn,ms)=>TMRS.push(setTimeout(fn,ms));
 const clearT=()=>{TMRS.forEach(clearTimeout);TMRS=[];};
@@ -571,6 +581,12 @@ const FEED=[
  ['サンプル','英語圏クエリの第一想起は<b>67%</b> — インバウンド面は優位'],
  ['工事中','GA4連携で<b>AI経由流入×G2言及率の突合</b>が解放（権限付与のみで開通）']
 ];
+if(MEAS){
+ const fb=S.firstBar||[[['—'],0],[['—'],0]];
+ FEED[1]=['実測',`R1計測: 第一想起は<b>${esc(fb[0][0])}が${fb[0][1]}回</b>で首位（2位 ${esc(fb[1][0])} ${fb[1][1]}回）`];
+ FEED[3]=['実測',`G2言及率 <b>${S.g2}%</b>・G3第一想起率 <b>${S.g3}%</b>（${fmt(META.n_cells)}回答・実費$${(+META.round_cost||0).toFixed(2)}）`];
+ FEED[5]=['実測',`AI引用元に占める自社公式は<b>${S.official}%</b>・UGC系${S.ugc}% — 外部露出が言及率のレバー`];
+}
 let tkI=0,tkTimer=null;
 function tickStart(){
  const el=$('#tk'),n=$('#tkn');
@@ -583,7 +599,7 @@ function tickStart(){
 /* ================= nav & router ================= */
 const VIEWS=[
  ['v1','◈','サマリー','mix'],
- ['v2','⬡','AI4面比較','smp'],
+ ['v2','⬡','AI4面比較',MEAS?'real':'smp'],
  ['v3','⚔','競合バトル','smp'],
  ['v4','◔','ペルソナ','smp'],
  ['v5','▦','地域イメージ','smp'],
@@ -598,7 +614,7 @@ const VIEWS=[
 function buildNav(){
  let h='<div class="sec">OVERVIEW</div>';
  VIEWS.forEach(([id,ic,label,kind])=>{
-  if(id==='v2')h+='<div class="sec">AI計測（サンプル）</div>';
+  if(id==='v2')h+='<div class="sec">AI計測'+(MEAS?'':'（サンプル）')+'</div>';
   if(id==='v7')h+='<div class="sec">実データ</div>';
   if(id==='v9')h+='<div class="sec">戦略</div>';
   if(id==='vx1')h+='<div class="sec">連携（工事中）</div>';
@@ -724,7 +740,7 @@ function rV1(){
  let h=`<div class="crumb rv"><h2>サマリー<small>WEEKLY PULSE</small></h2>
   <span class="chip">出現期待クエリ <b>${S.calls.queries}</b>本×4面</span>
   <span class="chip">回答 <b>${S.calls.answers}</b>/周</span>
-  <span class="chip glt">R0 プレビュー</span>
+  <span class="chip glt">${MEAS?('R1 実測 '+esc(META.round_date||'')):'R0 プレビュー'}</span>
   <button class="hbtn" onclick="help('idx')" aria-label="読み方">?</button></div>`;
 
  h+=`<div class="hero">
@@ -743,12 +759,12 @@ function rV1(){
    <svg class="fuji-wm" width="150" height="86" viewBox="0 0 150 86" fill="none"><path d="M8 78 L52 16 Q57 8 63 16 L69 25 L75 16 Q81 8 86 16 L142 78" stroke="#EAF1FB" stroke-width="3"/><path d="M47 30 L56 22 L63 29 L71 21 L79 29 L87 30" stroke="#EAF1FB" stroke-width="2.4"/></svg>
   </div>
   <div class="card rv">
-   <div class="ct">ファネル指標 G1–G4<span class="tag smp">サンプル</span><button class="q" onclick="help('funnel')">?</button></div>
+   <div class="ct">ファネル指標 G1–G4${tagM}<button class="q" onclick="help('funnel')">?</button></div>
    <div class="ktiles">
-    <div class="kt"><div class="t"><i style="background:var(--ac)"></i>G1 露出機会</div><div class="v mono"><span data-cnt="${S.g1}" data-dec="1">0</span><small> 引用/クエリ</small></div><div class="s">1クエリあたりの<b>期待引用数</b><br>= ${S.g1sub}</div>${spark([3.2,3.3,3.1,3.4,3.5,3.5,3.6,3.7],76,26,'#FF7A59',1)}</div>
-    <div class="kt"><div class="t"><i style="background:var(--bl)"></i>G2 言及率</div><div class="v mono"><span data-cnt="${S.g2}" data-dec="1">0</span><small>%</small></div><div class="s">出現期待 ${S.g2n} で言及</div>${spark(S.ts.g2.slice(-8),76,26,'#4E9BE8',1)}</div>
-    <div class="kt"><div class="t"><i style="background:var(--pu)"></i>G3 第一想起率</div><div class="v mono"><span data-cnt="${S.g3}" data-dec="1">0</span><small>%</small></div><div class="s">言及${S.g3n}中で最初に登場</div>${spark([38.2,39,38.5,40.1,40.8,40.2,41,41.5],76,26,'#B48CFF',1)}</div>
-    <div class="kt"><div class="t"><i style="background:var(--cy)"></i>G4 検索需要</div><div class="v mono"><span data-cnt="${S.g4}">0</span><small> pt</small></div><div class="s">指名検索指数（アンカー=100）<span class="delta up">${S.g4d}</span></div>${spark(S.ts.dem.slice(-8),76,26,'#22C7D6',1)}</div>
+    <div class="kt"><div class="t"><i style="background:var(--ac)"></i>G1 露出機会</div><div class="v mono"><span data-cnt="${S.g1}" data-dec="1">0</span><small> 引用/クエリ</small></div><div class="s">1クエリあたりの<b>期待引用数</b><br>= ${S.g1sub}</div>${MEAS?'':spark([3.2,3.3,3.1,3.4,3.5,3.5,3.6,3.7],76,26,'#FF7A59',1)}</div>
+    <div class="kt"><div class="t"><i style="background:var(--bl)"></i>G2 言及率</div><div class="v mono"><span data-cnt="${S.g2}" data-dec="1">0</span><small>%</small></div><div class="s">出現期待 ${S.g2n} で言及</div>${MEAS?'':spark(S.ts.g2.slice(-8),76,26,'#4E9BE8',1)}</div>
+    <div class="kt"><div class="t"><i style="background:var(--pu)"></i>G3 第一想起率</div><div class="v mono"><span data-cnt="${S.g3}" data-dec="1">0</span><small>%</small></div><div class="s">言及${S.g3n}中で最初に登場</div>${MEAS?'':spark([38.2,39,38.5,40.1,40.8,40.2,41,41.5],76,26,'#B48CFF',1)}</div>
+    <div class="kt"><div class="t"><i style="background:var(--cy)"></i>G4 検索需要</div><div class="v mono"><span data-cnt="${S.g4}">0</span><small> pt</small></div><div class="s">指名検索指数（アンカー=100）${MEAS?'':`<span class="delta up">${S.g4d}</span>`}</div>${MEAS?'':spark(S.ts.dem.slice(-8),76,26,'#22C7D6',1)}</div>
    </div>
    <div class="sub2" style="margin-top:10px">指名・比較クエリはG2/G3の分母から除外（ファネル原則）。ノイズ引用は除外して集計。</div>
   </div>
@@ -793,7 +809,7 @@ function rV1(){
  </div>`;
 
  h+=`<div class="card rv" style="margin-top:14px">
-  <div class="ct">AI4面ステータス<span class="tag smp">サンプル</span><button class="q" onclick="help('surface')">?</button></div>
+  <div class="ct">AI4面ステータス${tagM}<button class="q" onclick="help('surface')">?</button></div>
   <div class="g g4c" style="grid-template-columns:repeat(4,minmax(0,1fr))">`+
   S.faces.map(f=>`<div style="min-width:0">
     <div style="display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700"><i style="width:8px;height:8px;border-radius:99px;background:${f.c};box-shadow:0 0 8px ${f.c}"></i>${f.n}<span class="mono" style="margin-left:auto;font-size:12px">${f.g2}%</span></div>
@@ -842,14 +858,14 @@ function rV2(){
   <span class="chip">同一クエリ群を <b>4</b>面に同時投下</span><span class="chip glt">週次</span>
   <button class="hbtn" onclick="help('surface')">?</button></div>`;
 
- h+=`<div class="card rv"><div class="ct">面別スコア — G2言及率 / G3第一想起率 / 回答生成率<span class="tag smp">サンプル</span></div>
+ h+=`<div class="card rv"><div class="ct">面別スコア — G2言及率 / G3第一想起率 / 回答生成率${tagM}</div>
   ${groupedBars(['G2 言及率','G3 第一想起率','回答生成率'],S.faces.map(f=>({label:f.n,color:f.hex,vals:[f.g2,f.g3,f.gen]})),760,270)}
   <div class="legend">${S.faces.map(f=>`<span><i style="background:${f.hex}"></i>${f.n}</span>`).join('')}<span style="margin-left:auto">単位: %</span></div>
  </div>`;
 
  h+=`<div class="g g4c" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-top:14px">`+
   S.faces.map(f=>`<div class="face rv" style="--fc:${f.c}">
-   <div class="nm"><i></i>${f.n}<span class="tag smp" style="margin-left:auto">SMP</span></div>
+   <div class="nm"><i></i>${f.n}<span class="tag ${MEAS?'real':'smp'}" style="margin-left:auto">${MEAS?'実測':'SMP'}</span></div>
    <div class="met">
     <div class="m"><div class="a">回答生成率</div><div class="b mono">${f.gen}<small>%</small></div></div>
     <div class="m"><div class="a">平均引用数</div><div class="b mono">${f.cite}</div></div>
@@ -860,13 +876,13 @@ function rV2(){
   </div>`).join('')+`</div>`;
 
  h+=`<div class="g g2c" style="grid-template-columns:1.35fr 1fr;margin-top:14px">
-  <div class="card rv"><div class="ct">引用元ドメインランキング（4面合算）<span class="tag smp">サンプル</span></div>
+  <div class="card rv"><div class="ct">引用元ドメインランキング（4面合算）${tagM}</div>
    <div class="tblwrap"><table class="tbl"><thead><tr>
     <th style="width:34px">#</th><th onclick="sortDom(0)">ドメイン ⇅</th><th>引用シェア</th><th onclick="sortDom(1)" style="text-align:right">% ⇅</th><th>分類</th>
    </tr></thead><tbody id="domtb">${domRows()}</tbody></table></div>
-   <div class="sub2" style="margin-top:8px">その他 29.6%。Geminiのリダイレクタ引用はドメイン復元済み。</div>
+   <div class="sub2" style="margin-top:8px">上位${S.domains.length}ドメイン計 ${S.domains.reduce((a,d)=>a+d[1],0).toFixed(1)}%（残りはロングテール）。Geminiのリダイレクタ引用はドメイン復元済み。</div>
   </div>
-  <div class="card rv"><div class="ct">引用の構成 — 公式は思ったより引かれない<span class="tag smp">サンプル</span></div>
+  <div class="card rv"><div class="ct">引用の構成 — 公式は思ったより引かれない${tagM}</div>
    <div class="ktiles" style="grid-template-columns:1fr 1fr">
     <div class="kt"><div class="t"><i style="background:var(--ac)"></i>自社公式の引用シェア</div><div class="v mono act"><span data-cnt="${S.official}" data-dec="1">0</span><small>%</small></div></div>
     <div class="kt"><div class="t"><i style="background:var(--gn)"></i>UGC・クチコミ系</div><div class="v mono up"><span data-cnt="${S.ugc}" data-dec="1">0</span><small>%</small></div></div>
@@ -892,9 +908,9 @@ function rV3(){
    ],420)}
    <div class="legend"><span><i style="background:#FF7A59"></i>御殿場</span><span><i style="background:#4E9BE8"></i>木更津</span><span><i style="background:#B48CFF"></i>軽井沢</span><span>スコア=テーマ言及のポジ率（0–100）</span></div>
   </div>
-  <div class="card rv"><div class="ct">第一想起の獲得数（302回答中）<span class="tag smp">サンプル</span></div>
+  <div class="card rv"><div class="ct">第一想起の獲得数（${MEAS?('出現期待'+String(S.g2n).split('/')[1]+'中'):'302回答中'}）${tagM}</div>
    ${hbars(S.firstBar.map(r=>({l:r[0],v:r[1],me:r[2],bg:r[2]?'linear-gradient(90deg,var(--ac2),var(--ac))':'linear-gradient(90deg,#31456B,#4A5E85)'})),{suf:''})}
-   <div class="sub2" style="margin-top:8px">残り30回答はTier2施設・その他。<b>御殿場73 vs 木更津54</b> — 差は19回答で、家族・実用文脈で侵食が進むと逆転圏。</div>
+   <div class="sub2" style="margin-top:8px">${MEAS?`<b>${esc(S.firstBar[0][0])} ${S.firstBar[0][1]} vs ${esc(S.firstBar[1][0])} ${S.firstBar[1][1]}</b> — 御殿場が言及された回答のうち${S.g3}%で最初に登場（${S.g3n}）。`:'残り30回答はTier2施設・その他。<b>御殿場73 vs 木更津54</b> — 差は19回答で、家族・実用文脈で侵食が進むと逆転圏。'}</div>
   </div>
  </div>`;
 
