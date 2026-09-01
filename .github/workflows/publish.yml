@@ -19,19 +19,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: 鍵の有無を確認
-        env:
-          G: ${{ secrets.GOTEMBA_GATE_KEY }}
-        run: |
-          if [ -z "$G" ]; then
-            echo "::error::GOTEMBA_GATE_KEY 未登録"
-            exit 1
-          fi
-          case "$G" in
-            *:*) echo "形式OK（id:pw）";;
-            *) echo "::error::GOTEMBA_GATE_KEY の値に半角コロン : がありません。IDとPWを id:pw の形で連結してください"; exit 1;;
-          esac
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -60,16 +47,11 @@ jobs:
           python tools/build.py
           node tools/verify.js
 
-      - name: 暗号化 → 復号検証 → 公開
-        env:
-          GOTEMBA_GATE_KEY: ${{ secrets.GOTEMBA_GATE_KEY }}
-          PW_CHROME: ""
+      - name: 公開（ゲートなし・直接配置）
         run: |
           set -e
-          python tools/encrypt.py
-          node tools/verify_gate.js
-          mv index_new.html docs/index.html
-          rm -f plain.html s_board.png s_gate_after.png
+          mv plain.html docs/index.html
+          rm -f s_board.png s_gate_after.png
 
       - name: コミット
         run: |

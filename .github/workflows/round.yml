@@ -31,10 +31,9 @@ jobs:
         env:
           L: ${{ secrets.DATAFORSEO_LOGIN }}
           P: ${{ secrets.DATAFORSEO_PASSWORD }}
-          G: ${{ secrets.GOTEMBA_GATE_KEY }}
         run: |
-          if [ -z "$L" ] || [ -z "$P" ] || [ -z "$G" ]; then
-            echo "::error::Secrets未登録（DATAFORSEO_LOGIN / DATAFORSEO_PASSWORD / GOTEMBA_GATE_KEY）"
+          if [ -z "$L" ] || [ -z "$P" ]; then
+            echo "::error::Secrets未登録（DATAFORSEO_LOGIN / DATAFORSEO_PASSWORD）"
             exit 1
           fi
 
@@ -79,16 +78,11 @@ jobs:
           python tools/build.py
           node tools/verify.js
 
-      - name: 暗号化 → 復号検証 → 公開
-        env:
-          GOTEMBA_GATE_KEY: ${{ secrets.GOTEMBA_GATE_KEY }}
-          PW_CHROME: ""
+      - name: 公開（ゲートなし・直接配置）
         run: |
           set -e
-          python tools/encrypt.py
-          node tools/verify_gate.js
-          mv index_new.html docs/index.html
-          rm -f plain.html s_board.png s_gate_after.png
+          mv plain.html docs/index.html
+          rm -f s_board.png s_gate_after.png
 
       - name: コミット
         if: ${{ always() }}
