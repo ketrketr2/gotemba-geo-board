@@ -1,0 +1,66 @@
+# ============================================================
+#  引用URL分類（citations の bucket 判定）
+#  判定順: noise → owned → affiliated → competitor → platform(UGC/SNS)
+#          → travel_media → reference → press → media
+#  ワイルドカード可（fnmatch）。サブドメインは自動で一致。
+# ============================================================
+version: 1
+
+owned_domains:
+  - premiumoutlets.co.jp          # 施設公式（佐野・酒々井・あみ等の社内施設も同居する点に注意）
+  - mes.premiumoutlets.co.jp      # 三菱地所・サイモン コーポレート
+
+affiliated_domains:
+  - gotemba-konohananoyu.jp       # 木の花の湯
+  - odakyu-hotel.co.jp            # HOTEL CLAD（小田急系）
+
+competitor_domains:
+  - mitsui-shopping-park.com      # 三井アウトレットパーク各施設
+  - karuizawa-psp.jp              # 軽井沢・プリンスショッピングプラザ
+  - grandberrypark.com
+  - tokyu-tmd.co.jp
+  - nasu-gardenoutlet.com
+
+# UGC・SNS（「AI引用元に占めるUGC率」の分子）
+platforms:
+  - { id: youtube,     domains: [youtube.com, youtu.be] }
+  - { id: x,           domains: [x.com, twitter.com] }
+  - { id: instagram,   domains: [instagram.com] }
+  - { id: tiktok,      domains: [tiktok.com] }
+  - { id: note,        domains: [note.com] }
+  - { id: blog,        domains: [ameblo.jp, hatenablog.com, hatena.ne.jp, livedoor.jp] }
+  - { id: qa,          domains: [chiebukuro.yahoo.co.jp, detail.chiebukuro.yahoo.co.jp, oshiete.goo.ne.jp] }
+  - { id: reddit,      domains: [reddit.com] }
+  - { id: review,      domains: [tripadvisor.com, tripadvisor.jp, tabelog.com, retty.me, google.com/maps] }
+
+travel_media_domains:
+  - jalan.net
+  - rurubu.jp
+  - icotto.jp
+  - travel.rakuten.co.jp
+  - jtb.co.jp
+  - klook.com
+  - veltra.com
+  - matcha-jp.com
+  - japan-guide.com
+  - tokyocheapo.com
+
+reference_domains:
+  - wikipedia.org
+  - ja.wikipedia.org
+
+press_domains:
+  - prtimes.jp
+  - atpress.ne.jp
+  - fashion-press.net
+  - ssnp.co.jp
+  - ryutsuu.biz
+
+# リダイレクタ・計測系はノイズとして除外（G1の引用数にも数えない）
+noise_patterns:
+  - "google.com/goto"
+  - "vertexaisearch"
+  - "grounding-api-redirect"
+  - "gstatic.com"
+  - "googleusercontent.com"
+  - "mapbox.com/legal"

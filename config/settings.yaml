@@ -1,0 +1,92 @@
+# ============================================================
+#  御殿場GEOボード 設定
+#  すべての閾値・重みはここで管理する。コードは触らない。
+# ============================================================
+
+site:
+  title: "御殿場GEOボード"
+  brand: "御殿場プレミアム・アウトレット"
+  owner: "s/ash"
+  target_domain: "premiumoutlets.co.jp"
+  market: "Japan"
+  language: "ja"
+  timezone: "Asia/Tokyo"
+  gate_marker: "GOTEMBA_BOARD"
+
+# ---- 計測するAI4面 ----
+# 仕様はトヨタ案件で1,500呼以上検証済みのものをそのまま使う。
+surfaces:
+  - id: chatgpt
+    label: "ChatGPT"
+    provider: dataforseo
+    model: "gpt-5"
+    enabled: true
+    runs: 1
+    # gpt-5 は推論モデル。max_tokens が小さいと推論だけで使い切り本文が返らない
+    max_tokens: 4096
+    system_message: "最新の情報をウェブで確認したうえで、参照した出典を必ず示して日本語で回答してください。"
+  - id: gemini
+    label: "Gemini"
+    provider: dataforseo
+    model: "gemini-2.5-flash"    # DataForSEOが受け付ける実在の名前
+    enabled: true
+    runs: 1
+  - id: aio
+    label: "AI Overview"
+    provider: serp               # organic + load_async_ai_overview
+    enabled: true
+    runs: 1
+  - id: aimode
+    label: "AIモード"
+    provider: serp               # serp/google/ai_mode
+    enabled: true
+    runs: 1
+
+serp:
+  location_code: 2392            # Japan
+  language_code: "ja"
+
+# 英語クエリ（E族）の面別設定。probe で1本挙動確認してから本番投入する
+english:
+  language_code: "en"
+  # chatgpt: web_search_country_iso_code は JP のまま（訪日客の検索地は日本想定）
+
+# ---- サンプリング ----
+sampling:
+  runs_per_prompt: 1             # 横比較が目的。反復より本数を優先（トヨタ car 方式）
+  tier_schedule:
+    active:   { max_prompts: 130 }   # 現役枠（週次ラウンド対象）
+    bench:    { max_prompts: 0 }     # 補欠（計測しない。需要スコアのみ更新）
+    retired:  { max_prompts: 0 }
+
+# 週あたり呼び出し目安: 120本 × 4面 = 480呼 ≒ $12–15
+budget:
+  round_usd_max: 20              # 1ラウンドの支払上限。超えた時点で新規呼び出し停止
+
+# ---- クエリ選定（score_demand.py） ----
+# 家族別の現役クォータ。合計 ≒ 120本
+quota:
+  A: 25   # 出現期待・カテゴリ型
+  B: 20   # 出現期待・ペルソナ内包型
+  F: 20   # 出現期待・観光文脈型
+  G: 15   # 出現期待・季節イベント型
+  E: 15   # 出現期待・英語インバウンド型
+  C: 10   # 比較型（G2/G3分母から除外・勝敗分析に使用）
+  D: 10   # 指名型（分母除外・体験の質・警報用）
+  H: 5    # ネガ検証型
+
+# ---- Googleトレンド（tools/pull_trend.py） ----
+trends:
+  anchor: "御殿場アウトレット"     # 全バッチ共通アンカー（=100 正規化）
+  timeframe: "today 12-m"
+  geo_national: "JP"
+  geo_prefs:                      # 都県別（§4）
+    JP-22: "静岡"
+    JP-19: "山梨"
+    JP-13: "東京"
+    JP-14: "神奈川"
+    JP-11: "埼玉"
+    JP-12: "千葉"
+    JP-08: "茨城"
+    JP-09: "栃木"
+    JP-10: "群馬"
