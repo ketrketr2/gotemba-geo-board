@@ -63,7 +63,15 @@ def main() -> None:
             s["g2"] = round(sum(v["mention_rate"] for v in pf) / len(pf), 1)
             g3s = [v["first_rate"] for v in pf if v.get("first_rate") is not None]
             s["g3"] = round(sum(g3s) / len(g3s), 1) if g3s else None
-            s["g1sub"] = f"生成率{gen:.0f}% × 平均引用{cit:.1f}"
+            s["g1sub"] = f"回答が返る率 {gen:.0f}% × 回答あたり引用 {cit:.1f}本"
+            exp = sum(v["expect_cells"] for v in pf)
+            men = sum(v["mention"] for v in pf)
+            fst = sum(v["first"] for v in pf)
+            s["g2n"] = f"{men}/{exp}セル"
+            s["g3n"] = f"{fst}/{men}回答"
+            s["calls"] = {"queries": max(v["expect_cells"] for v in pf),
+                          "faces": len(pf), "answers": snap["n_cells"],
+                          "mentions": men, "first": fst}
         # 第一想起ランキング
         s["firstBar"] = [[NAME.get(k, k), n, 1 if k == "gotemba" else 0]
                          for k, n in sm["first_rank"]]

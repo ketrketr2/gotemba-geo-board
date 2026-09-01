@@ -350,7 +350,7 @@ function rV1(){
   <div class="card rv">
    <div class="ct">ファネル指標 G1–G4<span class="tag smp">サンプル</span><button class="q" onclick="help('funnel')">?</button></div>
    <div class="ktiles">
-    <div class="kt"><div class="t"><i style="background:var(--ac)"></i>G1 露出機会</div><div class="v mono"><span data-cnt="${S.g1}" data-dec="1">0</span><small> 引用/クエリ</small></div><div class="s">1クエリあたりの<b>期待引用数</b><br>= 回答が返る率 <b class="mono">90%</b> × 回答あたり引用 <b class="mono">4.1</b>本</div>${spark([3.2,3.3,3.1,3.4,3.5,3.5,3.6,3.7],76,26,'#FF7A59',1)}</div>
+    <div class="kt"><div class="t"><i style="background:var(--ac)"></i>G1 露出機会</div><div class="v mono"><span data-cnt="${S.g1}" data-dec="1">0</span><small> 引用/クエリ</small></div><div class="s">1クエリあたりの<b>期待引用数</b><br>= ${S.g1sub}</div>${spark([3.2,3.3,3.1,3.4,3.5,3.5,3.6,3.7],76,26,'#FF7A59',1)}</div>
     <div class="kt"><div class="t"><i style="background:var(--bl)"></i>G2 言及率</div><div class="v mono"><span data-cnt="${S.g2}" data-dec="1">0</span><small>%</small></div><div class="s">出現期待 ${S.g2n} で言及</div>${spark(S.ts.g2.slice(-8),76,26,'#4E9BE8',1)}</div>
     <div class="kt"><div class="t"><i style="background:var(--pu)"></i>G3 第一想起率</div><div class="v mono"><span data-cnt="${S.g3}" data-dec="1">0</span><small>%</small></div><div class="s">言及${S.g3n}中で最初に登場</div>${spark([38.2,39,38.5,40.1,40.8,40.2,41,41.5],76,26,'#B48CFF',1)}</div>
     <div class="kt"><div class="t"><i style="background:var(--cy)"></i>G4 検索需要</div><div class="v mono"><span data-cnt="${S.g4}">0</span><small> pt</small></div><div class="s">指名検索指数（アンカー=100）<span class="delta up">${S.g4d}</span></div>${spark(S.ts.dem.slice(-8),76,26,'#22C7D6',1)}</div>
