@@ -1,0 +1,81 @@
+name: publish
+
+# 再計測なしの公開のみ: 既存snapshot → 集計 → ビルド → 検証 → 暗号化 → 復号検証 → docs/公開。
+# ゲート鍵の入替や表示側の修正を、APIコストゼロで反映するためのワークフロー。
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gotemba-geo
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 鍵の有無を確認
+        env:
+          G: ${{ secrets.GOTEMBA_GATE_KEY }}
+        run: |
+          if [ -z "$G" ]; then
+            echo "::error::GOTEMBA_GATE_KEY 未登録"
+            exit 1
+          fi
+          case "$G" in
+            *:*) echo "形式OK（id:pw）";;
+            *) echo "::error::GOTEMBA_GATE_KEY の値に半角コロン : がありません。IDとPWを id:pw の形で連結してください"; exit 1;;
+          esac
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install (python)
+        run: pip install -r requirements.txt
+
+      - name: 集計 → board_data.json（既存snapshotから・再計測なし）
+        run: python tools/aggregate_board.py
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Playwright
+        run: |
+          npm i -D playwright
+          npx playwright install --with-deps chromium
+
+      - name: ビルド → 検証（ERRORS none まで公開しない）
+        env:
+          PW_CHROME: ""
+        run: |
+          set -e
+          python tools/build.py
+          node tools/verify.js
+
+      - name: 暗号化 → 復号検証 → 公開
+        env:
+          GOTEMBA_GATE_KEY: ${{ secrets.GOTEMBA_GATE_KEY }}
+          PW_CHROME: ""
+        run: |
+          set -e
+          python tools/encrypt.py
+          node tools/verify_gate.js
+          mv index_new.html docs/index.html
+          rm -f plain.html s_board.png s_gate_after.png
+
+      - name: コミット
+        run: |
+          git config user.name  "gotemba-geo-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -f docs/ tools/board_data.json || true
+          git diff --staged --quiet || git commit -m "chore: publish $(date -u +%Y-%m-%dT%H:%M)"
+          git pull --rebase -q || true
+          git push
