@@ -1,0 +1,44 @@
+name: probe
+
+# Day-1 □5: 各API 1呼ずつの疎通・構造・実測cost確認（合計$2上限）。
+# 実行はここ（GitHub Actions）だけが正規経路。ローカルやチャットからAPIを叩かない。
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gotemba-geo
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 鍵の有無を確認
+        env:
+          L: ${{ secrets.DATAFORSEO_LOGIN }}
+          P: ${{ secrets.DATAFORSEO_PASSWORD }}
+        run: |
+          if [ -z "$L" ] || [ -z "$P" ]; then
+            echo "::error::DATAFORSEO_LOGIN / DATAFORSEO_PASSWORD が未登録です（Settings > Secrets and variables > Actions）"
+            exit 1
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: pip install -r requirements.txt
+
+      - name: Probe（各API 1呼・値はログに出るがechoでSecretsを出さない）
+        env:
+          DATAFORSEO_LOGIN:    ${{ secrets.DATAFORSEO_LOGIN }}
+          DATAFORSEO_PASSWORD: ${{ secrets.DATAFORSEO_PASSWORD }}
+        run: python src/probe.py
