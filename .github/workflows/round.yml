@@ -1,0 +1,101 @@
+name: round
+
+# 週次ラウンド: 計測 → 集計 → ビルド → playwright検証 → 暗号化 → 復号検証 → docs/公開 → コミット。
+# 定常cronはテスト1周（□7）と予算確定後に有効化する。
+#   毎週月曜 07:10 JST = 日曜 22:10 UTC
+on:
+  workflow_dispatch:
+    inputs:
+      cap:
+        description: "この1回の支払上限（USD）"
+        default: "20"
+  # schedule:
+  #   - cron: "10 22 * * 0"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gotemba-geo          # probeと同グループ。二重支払いを防ぐ
+  cancel-in-progress: false
+
+jobs:
+  round:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 鍵の有無を確認
+        id: keys
+        env:
+          L: ${{ secrets.DATAFORSEO_LOGIN }}
+          P: ${{ secrets.DATAFORSEO_PASSWORD }}
+          G: ${{ secrets.GOTEMBA_GATE_KEY }}
+        run: |
+          if [ -z "$L" ] || [ -z "$P" ] || [ -z "$G" ]; then
+            echo "::error::Secrets未登録（DATAFORSEO_LOGIN / DATAFORSEO_PASSWORD / GOTEMBA_GATE_KEY）"
+            exit 1
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install (python)
+        run: pip install -r requirements.txt
+
+      - name: detect selftest（guard衝突の退行検知）
+        run: python src/detect.py
+
+      - name: 計測ラウンド
+        env:
+          DATAFORSEO_LOGIN:    ${{ secrets.DATAFORSEO_LOGIN }}
+          DATAFORSEO_PASSWORD: ${{ secrets.DATAFORSEO_PASSWORD }}
+        run: python src/run_round.py --cap "${{ inputs.cap || '20' }}"
+
+      - name: Googleトレンド（失敗しても続行・板は「—」表示）
+        continue-on-error: true
+        run: python tools/pull_trend.py
+
+      - name: 集計 → board_data.json
+        run: python tools/aggregate_board.py
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Playwright
+        run: |
+          npm i -D playwright
+          npx playwright install --with-deps chromium
+
+      - name: ビルド → 検証（ERRORS none まで公開しない）
+        env:
+          PW_CHROME: ""
+        run: |
+          set -e
+          python tools/build.py
+          node tools/verify.js
+
+      - name: 暗号化 → 復号検証 → 公開
+        env:
+          GOTEMBA_GATE_KEY: ${{ secrets.GOTEMBA_GATE_KEY }}
+          PW_CHROME: ""
+        run: |
+          set -e
+          python tools/encrypt.py
+          node tools/verify_gate.js
+          mv index_new.html docs/index.html
+          rm -f plain.html s_board.png s_gate_after.png
+
+      - name: コミット
+        if: ${{ always() }}
+        run: |
+          git config user.name  "gotemba-geo-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -f data/snapshots data/trends.json tools/board_data.json docs/ prompts/registry.yaml || true
+          git diff --staged --quiet || git commit -m "chore: round $(date -u +%Y-%m-%dT%H:%M)"
+          git pull --rebase -q || true
+          git push
