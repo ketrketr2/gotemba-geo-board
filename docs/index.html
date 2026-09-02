@@ -28,6 +28,8 @@ a{color:var(--cy);text-decoration:none;} a:hover{text-decoration:underline;}
 mark{background:linear-gradient(transparent 55%, rgba(255,194,75,.38) 55%);color:inherit;padding:0 2px;border-radius:2px;font-weight:700;}
 mark.r{background:linear-gradient(transparent 55%, rgba(255,107,135,.32) 55%);}
 mark.g{background:linear-gradient(transparent 55%, rgba(61,220,151,.30) 55%);}
+/* .g はグリッド汎用クラスと衝突するため、mark には inline を強制する（VQ回答ハイライトで顕在化した実バグ） */
+mark.g,mark.r{display:inline;gap:0;}
 :focus-visible{outline:2px solid var(--cy);outline-offset:2px;border-radius:6px;}
 ::selection{background:rgba(255,122,89,.35);}
 ::-webkit-scrollbar{width:9px;height:9px;} ::-webkit-scrollbar-thumb{background:#22314E;border-radius:99px;} ::-webkit-scrollbar-track{background:transparent;}
@@ -319,6 +321,39 @@ svg .mono, svg text.mn{font-family:'JetBrains Mono',monospace;}
 .tip{position:fixed;z-index:140;background:#1A2740;border:1px solid var(--line2);border-radius:10px;padding:9px 12px;font-size:11px;line-height:1.85;color:var(--tx);max-width:300px;pointer-events:none;display:none;box-shadow:0 16px 44px rgba(0,0,0,.55);}
 .tip b{color:var(--gold);}
 
+/* ===== VQ クエリの中身 ===== */
+.qfbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:4px 0 10px;}
+.qsi{background:#0B1424;border:1px solid var(--line2);border-radius:10px;color:var(--tx);font-family:inherit;font-size:11.5px;padding:7px 12px;min-width:190px;outline:none;}
+.qsi:focus{border-color:var(--ac);}
+.qsi::placeholder{color:var(--tx3);}
+.qchips{display:flex;gap:5px;flex-wrap:wrap;}
+.fch{background:#0E1830;border:1px solid var(--line2);color:var(--tx2);font-family:inherit;font-size:10px;border-radius:99px;padding:4px 11px;cursor:pointer;transition:.15s;}
+.fch:hover{color:var(--tx);border-color:#33456B;}
+.fch.on{color:#04101D;background:linear-gradient(120deg,var(--ac2),var(--ac));border-color:transparent;font-weight:700;}
+.qr{cursor:pointer;}
+.qr:hover{background:rgba(255,122,89,.07);}
+.qr .qtx{font-size:12px;color:var(--tx);}
+.qd{margin:0 1px;font-size:12.5px;}
+.modal.qw{max-width:940px;}
+.qtabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:13px;}
+.qtab{background:#0E1830;border:1px solid var(--line2);border-radius:11px;color:var(--tx2);font-family:inherit;font-size:11.5px;font-weight:700;padding:8px 4px;cursor:pointer;display:flex;flex-direction:column;gap:3px;align-items:center;transition:.15s;}
+.qtab small{font-size:9px;font-weight:400;color:var(--tx3);}
+.qtab:hover{border-color:#33456B;color:var(--tx);}
+.qtab.on{border-color:var(--fc);color:var(--tx);box-shadow:inset 0 0 0 1px var(--fc);}
+.qtab.on small{color:var(--fc);font-weight:700;}
+.qans{border-left:3px solid var(--fc);background:#0B1424;border-radius:0 12px 12px 0;padding:13px 16px;font-size:12.3px;line-height:2.05;color:var(--tx2);max-height:330px;overflow-y:auto;overflow-wrap:break-word;}
+.qcl{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow-y:auto;padding-right:2px;}
+.qcite{display:flex;gap:8px;align-items:center;padding:6px 9px;border:1px solid var(--line);border-radius:9px;text-decoration:none;color:var(--tx2);font-size:11px;transition:.15s;}
+.qcite:hover{border-color:var(--line2);background:#101B30;color:var(--tx);}
+.qcite .qn{color:var(--tx3);font-size:9.5px;}
+.qcite .qh{color:#7FA3C8;font-size:10.5px;white-space:nowrap;max-width:210px;overflow:hidden;text-overflow:ellipsis;}
+.qcite .qt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;color:var(--tx3);}
+.qmiss{padding:26px 18px;text-align:center;color:var(--tx3);font-size:12px;border:1px dashed var(--line2);border-radius:12px;}
+.qnav{display:flex;justify-content:space-between;margin-top:13px;}
+.qnv{background:#0E1830;border:1px solid var(--line2);border-radius:9px;color:var(--tx2);font-family:inherit;font-size:11px;padding:6px 13px;cursor:pointer;}
+.qnv:hover:not([disabled]){color:var(--tx);border-color:var(--ac);}
+@media(max-width:640px){.qtabs{grid-template-columns:repeat(2,minmax(0,1fr));}.qcite .qt{display:none;}.qcite .qh{max-width:none;flex:1;}}
+
 /* ===== footer ===== */
 .foot{margin-top:26px;border-top:1px dashed var(--line);padding-top:14px;font-size:9px;color:var(--tx3);line-height:2;}
 .foot a{color:#7FA3C8;}
@@ -390,7 +425,7 @@ svg .mono, svg text.mn{font-family:'JetBrains Mono',monospace;}
 <div class="tip" id="tip"></div>
 
 <script>
-window.BOARD_DATA={"real":{"asof":"2026-09-01","sales":{"y2011":586,"y2024":1409,"rank":"国内商業施設トップクラス"},"cum":"2.3億人","stores":{"gotemba":290,"kisarazu":330},"renewal":{"new25":27,"refit25":"30以上"},"kanko":{"years":[2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"vals":[1322,1287,1332,1412,1443,1421,1426,1425,1425,1029,1199,1378,1512,1538]},"share":"約7割","stayDay":3.6,"stayPref":"9時間32分","weekdayOp":66,"lodgers":{"y2019":96.8,"y2024":122.2},"inbound":{"v":248690,"note":"2019年比 約2.2倍"},"maps":{"gotemba":{"n":"御殿場","star":4.2,"cnt":29126,"tags":[["富士山",1314],["渋滞",171],["橋",110],["シャトルバス",89]],"url":"https://www.google.com/maps/search/御殿場プレミアム・アウトレット"},"kisarazu":{"n":"木更津","star":4,"cnt":17201,"tags":[["フードコート",570],["渋滞",306],["平日",209],["休日",105]],"url":"https://www.google.com/maps/search/三井アウトレットパーク木更津"},"karuizawa":{"n":"軽井沢","star":4.1,"cnt":20584,"tags":[["芝生",251],["敷地",161],["新幹線",112],["ドッグラン",97]],"url":"https://www.google.com/maps/search/軽井沢・プリンスショッピングプラザ"}},"quotes":[{"f":"gotemba","s":"pos","th":"景観（富士山）","t":"富士山を眺めながら大自然の中でショッピングは身体と心を癒してくれます","w":"Googleマップ クチコミ"},{"f":"gotemba","s":"pos","th":"インバウンド","t":"来場者も多く、海外からの観光客も目立ちました","w":"Googleマップ クチコミ・8か月前"},{"f":"gotemba","s":"neg","th":"アクセス運用","t":"少し遅れると遠くの駐車場を案内されシャトルバスコースになる","w":"Googleマップ クチコミ・4か月前"},{"f":"gotemba","s":"neg","th":"混雑・駐車","t":"日曜15時頃、第7駐車場は1階満車。空きスペースは少ない状況","w":"Googleマップ クチコミ・6か月前"},{"f":"kisarazu","s":"pos","th":"アクセス","t":"東京から1時間かからずに行けるアクセスの良さが魅力","w":"Googleマップ クチコミ・4か月前"},{"f":"kisarazu","s":"pos","th":"品揃え","t":"ひと通り見て回ろうとすると丸一日かかるほどの充実度","w":"Googleマップ クチコミ・4か月前"},{"f":"karuizawa","s":"pos","th":"滞在体験","t":"自然豊かで広大な敷地。ドッグランや子供が遊べるエリアもあり買い物以外でも楽しめます","w":"Googleマップ クチコミ・1か月前"},{"f":"karuizawa","s":"neg","th":"品揃え","t":"ハイブランドなどの店舗数は他のアウトレットと比べると少なく感じます","w":"Googleマップ クチコミ・1か月前"}],"timeline":[{"y":"2000.07","t":"御殿場プレミアム・アウトレット開業（三菱地所・サイモン）","me":1,"src":"prtimes"},{"y":"2011年度","t":"売上高586億円 — 国内アウトレットモール首位","me":1,"src":"wiki"},{"y":"2012.04","t":"三井アウトレットパーク木更津 開業（アクアライン圏の直接競合が出現）","me":0,"src":"wikik"},{"y":"2019.12","t":"HOTEL CLAD・日帰り温泉「木の花の湯」開業 — 滞在型へ布石","me":1,"src":"odakyu"},{"y":"2020.06","t":"御殿場 第4期増床（+88店 → 約290店）","me":1,"src":"wiki"},{"y":"2024年度","t":"御殿場 売上高1,409億円で過去最高・国内商業施設トップクラス／御殿場市観光交流客数1,538万人","me":1,"src":"ats"},{"y":"2025.06","t":"木更津 増床で約330店 —「店舗数日本一」が御殿場から木更津へ","me":0,"src":"impress"},{"y":"2025.07","t":"御殿場 開業25周年 — 1年で新規27店・30店以上を改装しラインナップ刷新","me":1,"src":"prtimes"}],"srcs":{"ats":["静岡新聞DIGITAL 2025/7/27","https://news.at-s.com/article/1771327"],"prtimes":["三菱地所・サイモン プレスリリース 2025/7","https://prtimes.jp/main/html/rd/p/000000587.000009047.html"],"plan":["御殿場市観光戦略プラン（最新版）","https://www.city.gotemba.lg.jp/gyousei/kanri/assets/uploads/2026/01/fc177ff09da3f710201c48430ec773d7-1.pdf"],"planR4":["御殿場市観光戦略プラン（R4案）","https://www.city.gotemba.lg.jp/gyousei/kanri/assets/uploads/2022/01/gotembacity_kankousenryakuplansoan2_R4_7.pdf"],"impress":["Impress Watch 2024/3/14","https://www.watch.impress.co.jp/docs/news/1576363.html"],"wiki":["Wikipedia 御殿場プレミアム・アウトレット","https://ja.wikipedia.org/wiki/%E5%BE%A1%E6%AE%BF%E5%A0%B4%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E3%83%A0%E3%83%BB%E3%82%A2%E3%82%A6%E3%83%88%E3%83%AC%E3%83%83%E3%83%88"],"wikik":["Wikipedia 三井アウトレットパーク木更津","https://ja.wikipedia.org/wiki/%E4%B8%89%E4%BA%95%E3%82%A2%E3%82%A6%E3%83%88%E3%83%AC%E3%83%83%E3%83%88%E3%83%91%E3%83%BC%E3%82%AF_%E6%9C%A8%E6%9B%B4%E6%B4%A5"],"odakyu":["小田急ホテル プレスリリース 2019/12","https://www.odakyu-hotel.co.jp/news/press/2019/1213093048/"],"gmap":["Googleマップ（2026/9/1 実査）","https://www.google.com/maps/search/御殿場プレミアム・アウトレット"]},"trends":{"asof":"2026-09-01","prefs":{"JP-22":29.3,"JP-19":30.1,"JP-13":30.0,"JP-14":29.8,"JP-11":31.3,"JP-12":32.8,"JP-08":24.8,"JP-09":17.3,"JP-10":11.8}}},"s":{"g1":6.2,"g1sub":"回答が返る率 96% × 回答あたり引用 6.5本","g2":45.9,"g2n":"66/144セル","g3":77.4,"g3n":"51/66回答","g4":100,"g4d":"+6","idx":116,"idxPrev":112,"aiShare":24.1,"demShare":20.8,"calls":{"queries":36,"faces":4,"answers":192,"mentions":66,"first":51},"faces":[{"id":"gpt","n":"ChatGPT","c":"var(--gpt)","hex":"#17A469","gen":100.0,"cite":5.67,"g2":52.8,"g3":89.5,"note":"web_search: JP指定。ノイズ引用は除外して集計"},{"id":"gem","n":"Gemini","c":"var(--gem)","hex":"#7A64EE","gen":100.0,"cite":11.29,"g2":55.6,"g3":65.0,"note":"リダイレクタ引用はtitleからドメイン復元（トヨタ実測で73%が該当）"},{"id":"aio","n":"AI Overview","c":"var(--aio)","hex":"#0C8FA8","gen":85.4,"cite":6.07,"g2":33.3,"g3":75.0,"note":"AIO出現率=生成率として扱う。location:Japan"},{"id":"aim","n":"AIモード","c":"var(--aim)","hex":"#C8850A","gen":97.9,"cite":2.98,"g2":41.7,"g3":80.0,"note":"4面中で言及率が最も高い（回答が長く網羅的なため）"}],"firstBar":[["御殿場",51,1],["木更津",14,0],["横浜BS",9,0],["長島",3,0],["グランベリー",2,0],["幕張",2,0],["酒々井",1,0],["軽井沢",1,0]],"domains":[["premiumoutlets.co.jp",10.6,"自社公式"],["mitsui-shopping-park.com",3.9,"競合公式"],["jalan.net",3.1,"旅行メディア"],["iko-yo.net",1.8,"メディア"],["youtube.com",1.8,"UGC"],["tabiiro.jp",1.4,"メディア"],["prtimes.jp",1.2,"プレス"],["rakuten.co.jp",1.2,"メディア"],["tour.ne.jp",1.2,"メディア"],["fashion-press.net",1.1,"プレス"]],"ugc":5.5,"official":11.1,"themes":["景観(富士山)","品揃え","インバウンド","食事","価格感","雨天対応","子連れ","アクセス","混雑・渋滞"],"radar":{"gotemba":[92,84,81,66,62,44,58,38,31],"kisarazu":[41,78,55,61,70,52,76,62,45],"karuizawa":[88,72,68,70,55,38,64,48,52]},"rivals":["木更津","入間","幕張","横浜BS","多摩","軽井沢","佐野","酒々井","あみ"],"mx":[[0.8,0.9,0.9,0.7,0.9,0.2,0.8,0.9,0.9],[0.2,0.5,0.4,0.3,0.6,0.3,0.5,0.4,0.6],[0.5,0.7,0.6,0.4,0.8,0.3,0.7,0.7,0.8],[0.1,0.3,0.2,0,0.4,-0.2,0.3,0.2,null],[-0.2,0.1,0,-0.1,0.2,0.2,0.1,0,0.1],[-0.2,0.1,0.1,-0.3,null,0.2,0,0.1,0.1],[-0.5,0.1,-0.1,-0.2,0.2,-0.1,0.2,0.1,0.3],[-0.6,-0.5,-0.4,-0.7,-0.5,-0.3,0.2,-0.1,0.1],[-0.4,-0.2,-0.1,-0.3,0.1,0.3,0.2,0.1,0.2]],"mxsnip":{"景観(富士山)":{"t":"「富士山を一望できる開放的なロケーションはここならでは」","f":"ChatGPT"},"アクセス":{"t":"「都心からはアクアライン経由の木更津の方が短時間で行きやすい」","f":"AIモード"},"子連れ":{"t":"「木更津は子ども向け遊び場が充実しており家族連れに人気」","f":"Gemini"},"混雑・渋滞":{"t":"「連休は周辺道路の渋滞が発生しやすく時間に余裕を」","f":"AI Overview"},"def":{"t":"該当テーマの根拠スニペット（回答全文から抽出）を表示します","f":"—"}},"personas":[{"n":"家族連れ","v":31,"d":"+2","c":"#4E9BE8","q":"子ども連れでも1日過ごせる規模と施設","s":"雨天時の回遊・キッズ導線が課題として言及されがち"},{"n":"インバウンド","v":24,"d":"+3","c":"#3DDC97","q":"Mt.Fuji viewと免税・ブランドの組み合わせで推奨","s":"英語圏クエリでは第一想起67%と国内比+9pt"},{"n":"カップル","v":18,"d":"-1","c":"#E27FA6","q":"日帰りドライブ+買い物の定番として言及","s":"「軽井沢=特別感」との比較で言及を分け合う"},{"n":"ブランド目的","v":15,"d":"0","c":"#B48CFF","q":"ラグジュアリー系の店舗網羅性で優位","s":"25周年刷新の新規店舗はまだAI回答に反映薄"},{"n":"シニア","v":7,"d":"-1","c":"#22C7D6","q":"温泉・ホテル併設の滞在型として言及","s":"休憩動線・坂の言及がネガ側で出現"},{"n":"その他","v":5,"d":"—","c":"#55647F","q":"—","s":"—"}],"pmix":{"gpt":[34,20,19,16,7,4],"gem":[28,27,17,16,7,5],"aio":[33,22,18,14,8,5],"aim":[29,26,18,15,7,5]},"tiles":[{"p":"群馬","v":24,"r":1,"c":2},{"p":"栃木","v":19,"r":1,"c":3},{"p":"茨城","v":15,"r":1,"c":4},{"p":"山梨","v":84,"r":2,"c":1},{"p":"埼玉","v":38,"r":2,"c":2},{"p":"千葉","v":29,"r":2,"c":4,"note":"木更津の地元圏"},{"p":"静岡","v":128,"r":3,"c":1,"star":1,"note":"御殿場の地元圏"},{"p":"東京","v":71,"r":3,"c":2},{"p":"神奈川","v":96,"r":3,"c":3}],"themeDiff":[["アクセス",18],["混雑・渋滞",9],["価格感",6],["子連れ",4],["雨天対応",3],["食事",2],["品揃え",-2],["インバウンド",-11],["景観(富士山)",-14]],"askJp":{"gotemba":3,"karuizawa":1},"askKanto":{"gotemba":2,"kisarazu":2},"ts":{"w":["6/15","6/22","6/29","7/6","7/13","7/20","7/27","8/3","8/10","8/17","8/24","8/31"],"g2":[52.1,53,52.4,54.2,55.1,54.8,56.3,55.9,57.2,56.8,57.6,58.3],"idx":[104,106,103,108,110,109,112,111,114,112,112,116],"dem":[62,64,68,71,78,83,88,92,96,90,94,100],"ev":[{"i":3,"t":"昇格2 / 降格1"},{"i":7,"t":"昇格3 / 降格2"},{"i":11,"t":"昇格2 / 降格1"}]},"tsD":{"w":["8/4","8/5","8/6","8/7","8/8","8/9","8/10","8/11","8/12","8/13","8/14","8/15","8/16","8/17","8/18","8/19","8/20","8/21","8/22","8/23","8/24","8/25","8/26","8/27","8/28","8/29","8/30","8/31"],"g2":[55.9,56.9,55.8,55.3,57.2,57.6,55.8,56,57.4,57.1,55.9,57.2,58.4,57,56.3,57.6,58.1,56.9,57.3,58.8,58.2,56.9,57.6,58.8,58.1,57.7,58.9,58.3],"idx":[111,113,112,111,108,110,114,113,111,112,113,112,111,112,113,115,115,114,111,112,116,116,115,114,115,113,114,116],"dem":[86,89,90,89,103,102,87,90,93,94,92,106,105,90,93,96,97,96,110,109,94,97,100,101,100,114,113,100],"ev":[]},"tsM":{"w":["25/9","25/10","25/11","25/12","26/1","26/2","26/3","26/4","26/5","26/6","26/7","26/8"],"g2":[49.2,50.1,50.8,51.5,52,52.6,53.4,54,54.7,55.3,56.2,57.1],"idx":[100,102,103,101,97,105,107,108,106,110,112,114],"dem":[60,63,66,78,96,70,68,72,80,71,84,95],"ev":[]},"alerts":[{"sev":"high","f":"AIモード","t":"「雨の日」文脈でG2言及率が-9pt（52→43）","s":"雨天対応テーマの根拠引用が競合記事に置き換わり"},{"sev":"mid","f":"Gemini","t":"引用にクーポン系アグリゲータ2ドメインが新規浮上","s":"価格文脈の引用元が非公式サイトへ流出"},{"sev":"mid","f":"全面","t":"「子連れ」第一想起を木更津が3件獲得（前週+3）","s":"家族文脈の負けが2週連続で拡大"}],"promo":[["富士山 観光 モデルコース",78],["アウトレット 福袋 いつ",64]],"demo":[["雨の日 大型 買い物 施設",31],["アウトレット 疲れる",18]]},"meta":{"seed":true,"sample_ai":true,"built_at":"2026-09-01","measured":true,"round_date":"2026-09-01","round_cost":4.5156,"n_cells":192}};
+window.BOARD_DATA={"real":{"asof":"2026-09-01","sales":{"y2011":586,"y2024":1409,"rank":"国内商業施設トップクラス"},"cum":"2.3億人","stores":{"gotemba":290,"kisarazu":330},"renewal":{"new25":27,"refit25":"30以上"},"kanko":{"years":[2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024],"vals":[1322,1287,1332,1412,1443,1421,1426,1425,1425,1029,1199,1378,1512,1538]},"share":"約7割","stayDay":3.6,"stayPref":"9時間32分","weekdayOp":66,"lodgers":{"y2019":96.8,"y2024":122.2},"inbound":{"v":248690,"note":"2019年比 約2.2倍"},"maps":{"gotemba":{"n":"御殿場","star":4.2,"cnt":29126,"tags":[["富士山",1314],["渋滞",171],["橋",110],["シャトルバス",89]],"url":"https://www.google.com/maps/search/御殿場プレミアム・アウトレット"},"kisarazu":{"n":"木更津","star":4,"cnt":17201,"tags":[["フードコート",570],["渋滞",306],["平日",209],["休日",105]],"url":"https://www.google.com/maps/search/三井アウトレットパーク木更津"},"karuizawa":{"n":"軽井沢","star":4.1,"cnt":20584,"tags":[["芝生",251],["敷地",161],["新幹線",112],["ドッグラン",97]],"url":"https://www.google.com/maps/search/軽井沢・プリンスショッピングプラザ"}},"quotes":[{"f":"gotemba","s":"pos","th":"景観（富士山）","t":"富士山を眺めながら大自然の中でショッピングは身体と心を癒してくれます","w":"Googleマップ クチコミ"},{"f":"gotemba","s":"pos","th":"インバウンド","t":"来場者も多く、海外からの観光客も目立ちました","w":"Googleマップ クチコミ・8か月前"},{"f":"gotemba","s":"neg","th":"アクセス運用","t":"少し遅れると遠くの駐車場を案内されシャトルバスコースになる","w":"Googleマップ クチコミ・4か月前"},{"f":"gotemba","s":"neg","th":"混雑・駐車","t":"日曜15時頃、第7駐車場は1階満車。空きスペースは少ない状況","w":"Googleマップ クチコミ・6か月前"},{"f":"kisarazu","s":"pos","th":"アクセス","t":"東京から1時間かからずに行けるアクセスの良さが魅力","w":"Googleマップ クチコミ・4か月前"},{"f":"kisarazu","s":"pos","th":"品揃え","t":"ひと通り見て回ろうとすると丸一日かかるほどの充実度","w":"Googleマップ クチコミ・4か月前"},{"f":"karuizawa","s":"pos","th":"滞在体験","t":"自然豊かで広大な敷地。ドッグランや子供が遊べるエリアもあり買い物以外でも楽しめます","w":"Googleマップ クチコミ・1か月前"},{"f":"karuizawa","s":"neg","th":"品揃え","t":"ハイブランドなどの店舗数は他のアウトレットと比べると少なく感じます","w":"Googleマップ クチコミ・1か月前"}],"timeline":[{"y":"2000.07","t":"御殿場プレミアム・アウトレット開業（三菱地所・サイモン）","me":1,"src":"prtimes"},{"y":"2011年度","t":"売上高586億円 — 国内アウトレットモール首位","me":1,"src":"wiki"},{"y":"2012.04","t":"三井アウトレットパーク木更津 開業（アクアライン圏の直接競合が出現）","me":0,"src":"wikik"},{"y":"2019.12","t":"HOTEL CLAD・日帰り温泉「木の花の湯」開業 — 滞在型へ布石","me":1,"src":"odakyu"},{"y":"2020.06","t":"御殿場 第4期増床（+88店 → 約290店）","me":1,"src":"wiki"},{"y":"2024年度","t":"御殿場 売上高1,409億円で過去最高・国内商業施設トップクラス／御殿場市観光交流客数1,538万人","me":1,"src":"ats"},{"y":"2025.06","t":"木更津 増床で約330店 —「店舗数日本一」が御殿場から木更津へ","me":0,"src":"impress"},{"y":"2025.07","t":"御殿場 開業25周年 — 1年で新規27店・30店以上を改装しラインナップ刷新","me":1,"src":"prtimes"}],"srcs":{"ats":["静岡新聞DIGITAL 2025/7/27","https://news.at-s.com/article/1771327"],"prtimes":["三菱地所・サイモン プレスリリース 2025/7","https://prtimes.jp/main/html/rd/p/000000587.000009047.html"],"plan":["御殿場市観光戦略プラン（最新版）","https://www.city.gotemba.lg.jp/gyousei/kanri/assets/uploads/2026/01/fc177ff09da3f710201c48430ec773d7-1.pdf"],"planR4":["御殿場市観光戦略プラン（R4案）","https://www.city.gotemba.lg.jp/gyousei/kanri/assets/uploads/2022/01/gotembacity_kankousenryakuplansoan2_R4_7.pdf"],"impress":["Impress Watch 2024/3/14","https://www.watch.impress.co.jp/docs/news/1576363.html"],"wiki":["Wikipedia 御殿場プレミアム・アウトレット","https://ja.wikipedia.org/wiki/%E5%BE%A1%E6%AE%BF%E5%A0%B4%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E3%83%A0%E3%83%BB%E3%82%A2%E3%82%A6%E3%83%88%E3%83%AC%E3%83%83%E3%83%88"],"wikik":["Wikipedia 三井アウトレットパーク木更津","https://ja.wikipedia.org/wiki/%E4%B8%89%E4%BA%95%E3%82%A2%E3%82%A6%E3%83%88%E3%83%AC%E3%83%83%E3%83%88%E3%83%91%E3%83%BC%E3%82%AF_%E6%9C%A8%E6%9B%B4%E6%B4%A5"],"odakyu":["小田急ホテル プレスリリース 2019/12","https://www.odakyu-hotel.co.jp/news/press/2019/1213093048/"],"gmap":["Googleマップ（2026/9/1 実査）","https://www.google.com/maps/search/御殿場プレミアム・アウトレット"]},"trends":{"asof":"2026-09-01","prefs":{"JP-22":29.3,"JP-19":30.1,"JP-13":30.0,"JP-14":29.8,"JP-11":31.3,"JP-12":32.8,"JP-08":24.8,"JP-09":17.3,"JP-10":11.8}}},"s":{"g1":6.2,"g1sub":"回答が返る率 96% × 回答あたり引用 6.5本","g2":45.9,"g2n":"66/144セル","g3":77.4,"g3n":"51/66回答","g4":100,"g4d":"+6","idx":116,"idxPrev":112,"aiShare":24.1,"demShare":20.8,"calls":{"queries":36,"faces":4,"answers":192,"mentions":66,"first":51},"faces":[{"id":"gpt","n":"ChatGPT","c":"var(--gpt)","hex":"#17A469","gen":100.0,"cite":5.67,"g2":52.8,"g3":89.5,"note":"web_search: JP指定。ノイズ引用は除外して集計"},{"id":"gem","n":"Gemini","c":"var(--gem)","hex":"#7A64EE","gen":100.0,"cite":11.29,"g2":55.6,"g3":65.0,"note":"リダイレクタ引用はtitleからドメイン復元（トヨタ実測で73%が該当）"},{"id":"aio","n":"AI Overview","c":"var(--aio)","hex":"#0C8FA8","gen":85.4,"cite":6.07,"g2":33.3,"g3":75.0,"note":"AIO出現率=生成率として扱う。location:Japan"},{"id":"aim","n":"AIモード","c":"var(--aim)","hex":"#C8850A","gen":97.9,"cite":2.98,"g2":41.7,"g3":80.0,"note":"4面中で言及率が最も高い（回答が長く網羅的なため）"}],"firstBar":[["御殿場",51,1],["木更津",14,0],["横浜BS",9,0],["長島",3,0],["グランベリー",2,0],["幕張",2,0],["酒々井",1,0],["軽井沢",1,0]],"domains":[["premiumoutlets.co.jp",10.6,"自社公式"],["mitsui-shopping-park.com",3.9,"競合公式"],["jalan.net",3.1,"旅行メディア"],["iko-yo.net",1.8,"メディア"],["youtube.com",1.8,"UGC"],["tabiiro.jp",1.4,"メディア"],["prtimes.jp",1.2,"プレス"],["rakuten.co.jp",1.2,"メディア"],["tour.ne.jp",1.2,"メディア"],["fashion-press.net",1.1,"プレス"]],"ugc":5.5,"official":11.1,"themes":["景観(富士山)","品揃え","インバウンド","食事","価格感","雨天対応","子連れ","アクセス","混雑・渋滞"],"radar":{"gotemba":[92,84,81,66,62,44,58,38,31],"kisarazu":[41,78,55,61,70,52,76,62,45],"karuizawa":[88,72,68,70,55,38,64,48,52]},"rivals":["木更津","入間","幕張","横浜BS","多摩","軽井沢","佐野","酒々井","あみ"],"mx":[[0.8,0.9,0.9,0.7,0.9,0.2,0.8,0.9,0.9],[0.2,0.5,0.4,0.3,0.6,0.3,0.5,0.4,0.6],[0.5,0.7,0.6,0.4,0.8,0.3,0.7,0.7,0.8],[0.1,0.3,0.2,0,0.4,-0.2,0.3,0.2,null],[-0.2,0.1,0,-0.1,0.2,0.2,0.1,0,0.1],[-0.2,0.1,0.1,-0.3,null,0.2,0,0.1,0.1],[-0.5,0.1,-0.1,-0.2,0.2,-0.1,0.2,0.1,0.3],[-0.6,-0.5,-0.4,-0.7,-0.5,-0.3,0.2,-0.1,0.1],[-0.4,-0.2,-0.1,-0.3,0.1,0.3,0.2,0.1,0.2]],"mxsnip":{"景観(富士山)":{"t":"「富士山を一望できる開放的なロケーションはここならでは」","f":"ChatGPT"},"アクセス":{"t":"「都心からはアクアライン経由の木更津の方が短時間で行きやすい」","f":"AIモード"},"子連れ":{"t":"「木更津は子ども向け遊び場が充実しており家族連れに人気」","f":"Gemini"},"混雑・渋滞":{"t":"「連休は周辺道路の渋滞が発生しやすく時間に余裕を」","f":"AI Overview"},"def":{"t":"該当テーマの根拠スニペット（回答全文から抽出）を表示します","f":"—"}},"personas":[{"n":"家族連れ","v":31,"d":"+2","c":"#4E9BE8","q":"子ども連れでも1日過ごせる規模と施設","s":"雨天時の回遊・キッズ導線が課題として言及されがち"},{"n":"インバウンド","v":24,"d":"+3","c":"#3DDC97","q":"Mt.Fuji viewと免税・ブランドの組み合わせで推奨","s":"英語圏クエリでは第一想起67%と国内比+9pt"},{"n":"カップル","v":18,"d":"-1","c":"#E27FA6","q":"日帰りドライブ+買い物の定番として言及","s":"「軽井沢=特別感」との比較で言及を分け合う"},{"n":"ブランド目的","v":15,"d":"0","c":"#B48CFF","q":"ラグジュアリー系の店舗網羅性で優位","s":"25周年刷新の新規店舗はまだAI回答に反映薄"},{"n":"シニア","v":7,"d":"-1","c":"#22C7D6","q":"温泉・ホテル併設の滞在型として言及","s":"休憩動線・坂の言及がネガ側で出現"},{"n":"その他","v":5,"d":"—","c":"#55647F","q":"—","s":"—"}],"pmix":{"gpt":[34,20,19,16,7,4],"gem":[28,27,17,16,7,5],"aio":[33,22,18,14,8,5],"aim":[29,26,18,15,7,5]},"tiles":[{"p":"群馬","v":24,"r":1,"c":2},{"p":"栃木","v":19,"r":1,"c":3},{"p":"茨城","v":15,"r":1,"c":4},{"p":"山梨","v":84,"r":2,"c":1},{"p":"埼玉","v":38,"r":2,"c":2},{"p":"千葉","v":29,"r":2,"c":4,"note":"木更津の地元圏"},{"p":"静岡","v":128,"r":3,"c":1,"star":1,"note":"御殿場の地元圏"},{"p":"東京","v":71,"r":3,"c":2},{"p":"神奈川","v":96,"r":3,"c":3}],"themeDiff":[["アクセス",18],["混雑・渋滞",9],["価格感",6],["子連れ",4],["雨天対応",3],["食事",2],["品揃え",-2],["インバウンド",-11],["景観(富士山)",-14]],"askJp":{"gotemba":3,"karuizawa":1},"askKanto":{"gotemba":2,"kisarazu":2},"ts":{"w":["6/15","6/22","6/29","7/6","7/13","7/20","7/27","8/3","8/10","8/17","8/24","8/31"],"g2":[52.1,53,52.4,54.2,55.1,54.8,56.3,55.9,57.2,56.8,57.6,58.3],"idx":[104,106,103,108,110,109,112,111,114,112,112,116],"dem":[62,64,68,71,78,83,88,92,96,90,94,100],"ev":[{"i":3,"t":"昇格2 / 降格1"},{"i":7,"t":"昇格3 / 降格2"},{"i":11,"t":"昇格2 / 降格1"}]},"tsD":{"w":["8/4","8/5","8/6","8/7","8/8","8/9","8/10","8/11","8/12","8/13","8/14","8/15","8/16","8/17","8/18","8/19","8/20","8/21","8/22","8/23","8/24","8/25","8/26","8/27","8/28","8/29","8/30","8/31"],"g2":[55.9,56.9,55.8,55.3,57.2,57.6,55.8,56,57.4,57.1,55.9,57.2,58.4,57,56.3,57.6,58.1,56.9,57.3,58.8,58.2,56.9,57.6,58.8,58.1,57.7,58.9,58.3],"idx":[111,113,112,111,108,110,114,113,111,112,113,112,111,112,113,115,115,114,111,112,116,116,115,114,115,113,114,116],"dem":[86,89,90,89,103,102,87,90,93,94,92,106,105,90,93,96,97,96,110,109,94,97,100,101,100,114,113,100],"ev":[]},"tsM":{"w":["25/9","25/10","25/11","25/12","26/1","26/2","26/3","26/4","26/5","26/6","26/7","26/8"],"g2":[49.2,50.1,50.8,51.5,52,52.6,53.4,54,54.7,55.3,56.2,57.1],"idx":[100,102,103,101,97,105,107,108,106,110,112,114],"dem":[60,63,66,78,96,70,68,72,80,71,84,95],"ev":[]},"alerts":[{"sev":"high","f":"AIモード","t":"「雨の日」文脈でG2言及率が-9pt（52→43）","s":"雨天対応テーマの根拠引用が競合記事に置き換わり"},{"sev":"mid","f":"Gemini","t":"引用にクーポン系アグリゲータ2ドメインが新規浮上","s":"価格文脈の引用元が非公式サイトへ流出"},{"sev":"mid","f":"全面","t":"「子連れ」第一想起を木更津が3件獲得（前週+3）","s":"家族文脈の負けが2週連続で拡大"}],"promo":[["富士山 観光 モデルコース",78],["アウトレット 福袋 いつ",64]],"demo":[["雨の日 大型 買い物 施設",31],["アウトレット 疲れる",18]],"qindex":[["g001","関東でおすすめのアウトレットモールはどこですか？","A",0,0,"ja",[3,3,0,3]],["g002","東京から日帰りで行ける買い物スポットのおすすめを教えてください","A",0,0,"ja",[3,2,1,3]],["g003","ブランド品を安く買う方法を教えてください","A",0,0,"ja",[3,1,1,1]],["g004","日本で一番大きいアウトレットモールはどこですか？","A",0,0,"ja",[2,3,3,3]],["g005","アウトレットモールの選び方を教えてください","A",0,0,"ja",[3,3,2,3]],["g006","首都圏で1日遊べるショッピング施設のおすすめは？","A",0,0,"ja",[1,1,1,1]],["g007","静岡県でおすすめの買い物スポットはどこですか？","A",0,0,"ja",[3,3,0,3]],["g008","車なしで電車やバスで行けるアウトレットはありますか？","A",0,0,"ja",[3,2,2,1]],["g009","子連れでも1日楽しめるアウトレットはどこですか？","B",0,0,"ja",[1,2,1,3]],["g010","関東でデートにおすすめのアウトレットはありますか？","B",0,0,"ja",[1,3,1,1]],["g011","雨の日でも楽しめる大型の買い物施設を教えてください","B",0,0,"ja",[1,1,1,1]],["g012","犬と一緒に行けるアウトレットはありますか？","B",0,0,"ja",[3,2,2,2]],["g013","シニアの両親と一緒に行きやすいアウトレットは？","B",0,0,"ja",[2,2,1,1]],["g014","海外から来た友人を連れて行くならどのアウトレットがいい？","B",0,0,"ja",[3,3,3,1]],["g015","車椅子やベビーカーでも回りやすいアウトレットは？","B",0,0,"ja",[1,1,3,0]],["g016","箱根旅行のついでに買い物をするならどこがいいですか？","F",0,0,"ja",[3,3,3,1]],["g017","富士山観光の1日モデルコースを教えてください","F",0,0,"ja",[1,1,1,1]],["g018","御殿場観光でおすすめのスポットを教えてください","F",0,0,"ja",[3,3,3,3]],["g019","富士山がきれいに見えて、ショッピングもできる場所はありますか？","F",0,0,"ja",[3,3,0,3]],["g020","東京から富士山方面への日帰り旅行プランを提案してください","F",0,0,"ja",[1,1,1,1]],["g021","温泉と買い物を1日で両方楽しめる場所はありますか？","F",0,0,"ja",[1,1,3,1]],["g022","河口湖・山中湖の観光と組み合わせて楽しめる施設は？","F",0,0,"ja",[1,1,1,1]],["g023","静岡・山梨エリアで雨の日でも楽しめる観光は？","F",0,0,"ja",[1,1,3,3]],["g024","アウトレットの初売りや福袋はどこが狙い目ですか？","G",0,0,"ja",[1,2,1,2]],["g025","関東でおすすめのイルミネーションスポットはどこですか？","G",0,0,"ja",[1,1,1,1]],["g026","アウトレットの夏セールはいつからで、どこがお得ですか？","G",0,0,"ja",[1,1,1,2]],["g027","クリスマスに買い物も楽しめるデートスポットは？","G",0,0,"ja",[1,1,1,1]],["g028","ゴールデンウィークに混雑を避けて買い物できる場所は？","G",0,0,"ja",[1,1,0,1]],["g029","紅葉狩りと買い物を1日で楽しむプランを教えて","G",0,0,"ja",[1,1,1,1]],["g030","What is the best outlet mall near Tokyo?","E",0,0,"en",[3,2,3,3]],["g031","Is Gotemba Premium Outlets worth visiting?","E",1,0,"en",[1,3,3,3]],["g032","Plan a Mt Fuji day trip from Tokyo that includes shopping.","E",0,0,"en",[3,3,3,3]],["g033","Where can I buy luxury brands cheaply in Japan?","E",0,0,"en",[3,3,0,1]],["g034","What are the best shopping options near Hakone?","E",0,0,"en",[3,3,0,3]],["g035","Is the bus tour from Tokyo to Gotemba outlets worth it?","E",1,0,"en",[3,3,3,3]],["g036","Best tax-free shopping spots for tourists in Japan?","E",0,0,"en",[3,1,0,1]],["g037","御殿場と木更津のアウトレット、どちらがおすすめですか？","C",0,1,"ja",[1,3,3,3]],["g038","プレミアム・アウトレットと三井アウトレットパークの違いを教えて","C",0,1,"ja",[1,3,1,3]],["g039","御殿場と軽井沢、旅行で行くならどっちがいい？","C",0,1,"ja",[3,2,2,2]],["g040","関東のアウトレットを規模順にランキングしてください","C",0,1,"ja",[1,3,1,1]],["g041","御殿場アウトレットより品揃えがいいアウトレットはありますか？","C",1,1,"ja",[2,3,3,3]],["g042","御殿場アウトレットの営業時間と東京からの行き方を教えて","D",1,0,"ja",[3,3,3,3]],["g043","御殿場アウトレットのセールはいつ開催されますか？","D",1,0,"ja",[3,3,3,3]],["g044","御殿場アウトレットの混雑状況は？平日と休日どちらがおすすめ？","D",1,0,"ja",[1,3,3,3]],["g045","御殿場アウトレットで外せないおすすめの店を教えて","D",1,0,"ja",[3,3,3,3]],["g046","御殿場アウトレットの渋滞を回避する方法はありますか？","H",1,0,"ja",[1,3,3,3]],["g047","アウトレットって疲れるし遠くないですか？行く価値はありますか？","H",0,0,"ja",[3,3,1,1]],["g048","アウトレットは本当に安いの？定価品との違いは？","H",0,0,"ja",[1,1,1,1]]]},"meta":{"seed":true,"sample_ai":true,"built_at":"2026-09-02","measured":true,"round_date":"2026-09-01","round_cost":4.5156,"n_cells":192}};
 </script>
 <script>
 
@@ -562,7 +597,7 @@ function mxColor(v){
 }
 function mxSym(v){return v==null?'—':v>=.6?'◎':v>=.15?'○':v>-.15?'–':v>-.6?'△':'✕';}
 /* ================= modal / tip / ticker ================= */
-function openModal(html){$('#modal').innerHTML=`<button class="x" onclick="closeModal()">閉じる ✕</button>`+html;$('#mback').classList.add('on');}
+function openModal(html){const m=$('#modal');m.className='modal';m.innerHTML=`<button class="x" onclick="closeModal()">閉じる ✕</button>`+html;$('#mback').classList.add('on');}
 function closeModal(){$('#mback').classList.remove('on');}
 $('#mback')?.addEventListener('click',e=>{if(e.target.id==='mback')closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
@@ -600,6 +635,7 @@ function tickStart(){
 const VIEWS=[
  ['v1','◈','サマリー','mix'],
  ['v2','⬡','AI4面比較',MEAS?'real':'smp'],
+ ['vq','☰','クエリの中身',MEAS?'real':'smp'],
  ['v3','⚔','競合バトル','smp'],
  ['v4','◔','ペルソナ','smp'],
  ['v5','▦','地域イメージ','smp'],
@@ -709,7 +745,7 @@ function render(){
  document.querySelectorAll('.nv').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
  const m=$('#main');
  untip();
- const R={v1:rV1,v2:rV2,v3:rV3,v4:rV4,v5:rV5,v6:rV6,v7:rV7,v8:rV8,v9:rV9};
+ const R={v1:rV1,v2:rV2,vq:rVQ,v3:rV3,v4:rV4,v5:rV5,v6:rV6,v7:rV7,v8:rV8,v9:rV9};
  m.innerHTML=R[v]?R[v]():rLock(v);
  animate(m);
  window.scrollTo(0,0);
@@ -719,6 +755,7 @@ function render(){
 const HELP={
  idx:`<h3>語られ指数とは</h3><p><b>AI言及シェア ÷ 検索需要シェア × 100</b>。来場者数が非公開のため、需要シェア（指名検索の相対量）を実勢の代理としています。<b>100未満＝実需のわりにAIに語られていない</b>（AI比較の入口で不利）、100超＝実需以上に語られている。トヨタ車種別ボードの「語られ指数」（販売シェア比）の御殿場版です。</p><p>※この画面の値は設計プレビュー用サンプルです。実測はテスト計測（R1）から入ります。</p>`,
  funnel:`<h3>G1〜G4の定義</h3><p><b>G1 露出機会 ＝ 1クエリあたりの期待引用数</b>。御殿場が出てくるべき質問に対して「AIがどれだけ回答を作り、どれだけ根拠リンクを引くか」を表す土俵の広さ。<b>回答が返る率 × 回答あたり平均引用数</b>で計算する（例: 90% × 4.1本 = 3.7引用/クエリ）。御殿場自身の成績ではなく、戦う場の大きさを測る指標。</p><p><b>G2 言及率</b>: 同じ質問群で御殿場が回答に登場した率（指名・比較クエリは分母から除外するファネル原則）。<b>G3 第一想起率</b>: 言及があった回答のうち最初に挙がった施設が御殿場だった率。<b>G4 検索需要</b>: Googleトレンド実測の指名検索指数（アンカー連結）。</p>`,
+ query:`<h3>クエリの中身の見方</h3><p>計測ラウンドで実際にAIへ投げた質問（クエリ）と、返ってきた<b>回答全文・引用リンク・検出施設</b>をそのまま閲覧できます。記号は面ごとの結果で、<b>◎=第一想起</b>（回答内で最初に登場）、<b>●=言及あり</b>、<b>○=回答はあるが御殿場が不在</b>、<b>—=回答なし</b>。<b>指名・比較</b>タグ付きクエリはファネル原則によりG2/G3の分母から除外されています。</p><p>回答本文はスナップショット（data/snapshots/）に保存された実データそのもので、<mark>御殿場の言及箇所はハイライト</mark>表示。引用リンクはAIが実際に根拠として提示したURLです（リダイレクタ引用はドメイン復元済み）。</p>`,
  surface:`<h3>AI4面の見方</h3><p>同じ質問群を <b>ChatGPT / Gemini / GoogleのAI Overview / GoogleのAIモード</b> に投げ、面ごとの言及率・第一想起率・引用元を比較します。面によって参照する情報源が異なるため、<b>弱い面＝その面が引用しやすいメディアへの露出が課題</b>と読みます。</p>`,
  battle:`<h3>勝敗マトリクスの読み方</h3><p>AI回答の全文から<b>テーマ×施設の優劣言及</b>を抽出し、御殿場から見た勝ち（緑）・負け（赤）を集計します。セルをクリックすると根拠スニペット（回答からの抜粋）が開きます。◎○強い勝ち〜✕強い負け、–は拮抗、—はデータなし。</p>`,
  region:`<h3>地域イメージ差の測り方</h3><p>①Googleトレンドの<b>都県別 指名検索指数</b>（タイル地図・全国平均=100）②「日本で」「関東で」を明示した<b>聞き分けプロンプト</b>の回答差 ③テーマ言及率の全国/関東差分。関東では実用文脈（アクセス・混雑）、全国では観光文脈（富士山・訪日）に寄る仮説を検証します。</p>`,
@@ -892,6 +929,121 @@ function rV2(){
  </div>`;
  return h+foot();
 }
+
+/* ================= VQ クエリの中身（QUERY EXPLORER） ================= */
+let QF={fam:'all',hit:'all',q:''},QCUR=null,QFACE=0,CELLS=null,CELLS_ST='idle';
+const FAML={A:'カテゴリ型',B:'ペルソナ',F:'観光文脈',G:'季節イベント',E:'英語圏',C:'比較型',D:'指名型',H:'ネガ検証'};
+const FACESQ=[['gpt','ChatGPT','#17A469'],['gem','Gemini','#7A64EE'],['aio','AI Overview','#0C8FA8'],['aim','AIモード','#C8850A']];
+const BUCKL={owned:'自社公式',affiliated:'関連',competitor:'競合公式',ugc:'UGC',travel:'旅行メディア',reference:'百科',press:'プレス',media:'メディア',noise:'ノイズ'};
+const QNAME={gotemba:'御殿場',kisarazu:'木更津',karuizawa:'軽井沢',iruma:'入間',makuhari:'幕張',yokohama_bs:'横浜BS',tama:'多摩南大沢',sano:'佐野',shisui:'酒々井',ami:'あみ',grandberry:'グランベリー',nagashima:'長島',nasu:'那須'};
+const QMARK=/(御殿場プレミアム・アウトレット|御殿場プレミアムアウトレット|御殿場のアウトレット|御殿場アウトレット|gotemba premium outlets|gotemba premium outlet|gotemba outlets|gotemba outlet|御殿場)/gi;
+function loadCells(){
+ if(CELLS||CELLS_ST==='loading')return;
+ if(location.protocol==='file:'){CELLS_ST='offline';return;}
+ CELLS_ST='loading';
+ fetch('cells.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json();})
+  .then(j=>{CELLS=j.cells||{};CELLS_ST='ok';if(QCUR&&$('#mback').classList.contains('on'))openQ(QCUR,QFACE);else if(cur()==='vq')qRefresh();})
+  .catch(()=>{CELLS_ST='err';if(QCUR&&$('#mback').classList.contains('on'))openQ(QCUR,QFACE);});
+}
+function qFiltered(){
+ return (S.qindex||[]).filter(r=>{
+  const men=r[6].filter(x=>x>=2).length,fst=r[6].filter(x=>x===3).length;
+  if(QF.fam!=='all'&&r[2]!==QF.fam)return false;
+  if(QF.hit==='men'&&men===0)return false;
+  if(QF.hit==='fst'&&fst===0)return false;
+  if(QF.hit==='non'&&men>0)return false;
+  if(QF.q&&!(r[1]+' '+r[0]).toLowerCase().includes(QF.q.toLowerCase()))return false;
+  return true;
+ });
+}
+function qRows(){
+ const rows=qFiltered().map(r=>{
+  const [id,txt,fam,nm,cp,lg,codes]=r;
+  const men=codes.filter(x=>x>=2).length;
+  const dots=codes.map((c,i)=>`<span class="qd" style="${c>=2?`color:${FACESQ[i][2]};text-shadow:0 0 8px ${FACESQ[i][2]}66`:'color:#3A4A66'}">${c===3?'◎':c===2?'●':c===1?'○':'—'}</span>`).join('');
+  return `<tr class="qr" onclick="openQ('${id}')">
+   <td class="mono" style="color:var(--tx3)">${id}</td>
+   <td style="min-width:250px"><span class="qtx">${esc(txt)}</span></td>
+   <td style="white-space:nowrap"><span class="pill">${FAML[fam]||fam}</span>${nm?' <span class="pill neg">指名</span>':''}${cp?' <span class="pill neg">比較</span>':''}${lg==='en'?' <span class="pill">EN</span>':''}</td>
+   <td class="mono" style="text-align:center;letter-spacing:5px;white-space:nowrap">${dots}</td>
+   <td class="mono" style="text-align:right;color:${men?'var(--gn)':'var(--tx3)'}">${men}/4</td>
+  </tr>`;
+ }).join('');
+ return rows||`<tr><td colspan="5" style="text-align:center;color:var(--tx3);padding:24px">該当するクエリがありません</td></tr>`;
+}
+function qRefresh(chips){
+ const el=$('#qlist');if(el)el.innerHTML=qRows();
+ const c=$('#qcnt');if(c)c.textContent=qFiltered().length;
+ if(chips){document.querySelectorAll('[data-qf]').forEach(b=>b.classList.toggle('on',b.dataset.qf===QF.fam));
+  document.querySelectorAll('[data-qh]').forEach(b=>b.classList.toggle('on',b.dataset.qh===QF.hit));}
+}
+function rVQ(){
+ loadCells();
+ const qi=S.qindex||[];
+ let h=`<div class="crumb rv"><h2>クエリの中身<small>QUERY EXPLORER</small></h2>
+  <span class="chip">クエリ <b>${qi.length||'—'}</b>本 × 4面</span>
+  ${MEAS?`<span class="chip">R1 ${esc(META.round_date||'')}</span><span class="chip glt">回答全文・引用リンク付き</span>`:''}
+  <button class="hbtn" onclick="help('query')">?</button></div>`;
+ if(!qi.length){
+  return h+`<div class="card rv"><div class="ct">クエリ・ドリルダウン${tagS}</div>
+   <div class="qmiss">計測ラウンド完了後、実際にAIへ投げたクエリと回答全文がここに表示されます。</div></div>`+foot();
+ }
+ const fams=[...new Set(qi.map(r=>r[2]))];
+ h+=`<div class="card rv"><div class="ct">全${qi.length}クエリ — 行クリックで4面の実回答を開く${tagM}</div>
+  <div class="qfbar">
+   <input id="qsearch" class="qsi" type="search" placeholder="クエリ検索…" oninput="QF.q=this.value;qRefresh()">
+   <div class="qchips"><button class="fch ${QF.fam==='all'?'on':''}" data-qf="all" onclick="QF.fam='all';qRefresh(1)">全分類</button>${fams.map(f=>`<button class="fch ${QF.fam===f?'on':''}" data-qf="${f}" onclick="QF.fam='${f}';qRefresh(1)">${FAML[f]||f}</button>`).join('')}</div>
+   <div class="qchips"><button class="fch ${QF.hit==='all'?'on':''}" data-qh="all" onclick="QF.hit='all';qRefresh(1)">全表示</button><button class="fch ${QF.hit==='men'?'on':''}" data-qh="men" onclick="QF.hit='men';qRefresh(1)">言及あり</button><button class="fch ${QF.hit==='fst'?'on':''}" data-qh="fst" onclick="QF.hit='fst';qRefresh(1)">第一想起</button><button class="fch ${QF.hit==='non'?'on':''}" data-qh="non" onclick="QF.hit='non';qRefresh(1)">言及なし</button></div>
+  </div>
+  <div class="sub2" style="margin-bottom:8px"><b id="qcnt">${qFiltered().length}</b>本表示｜面の並びは GPT・Gemini・AIO・AIモード｜◎第一想起 ●言及 ○言及なし —回答なし</div>
+  <div class="tblwrap"><table class="tbl"><thead><tr>
+   <th style="width:46px">ID</th><th>クエリ（実際にAIへ投げた質問文）</th><th>分類</th><th style="text-align:center">4面の結果</th><th style="text-align:right">言及</th>
+  </tr></thead><tbody id="qlist">${qRows()}</tbody></table></div>
+  ${CELLS_ST==='offline'?'<div class="sub2" style="margin-top:9px">※回答全文はオンライン版（GitHub Pages）で読み込まれます。この検証表示では一覧のみ。</div>':CELLS_ST==='err'?'<div class="sub2" style="margin-top:9px">※cells.json の読込に失敗しました。公開ラウンド後に自動生成されます。</div>':''}
+ </div>`;
+ return h+foot();
+}
+function qAnswer(d,F){
+ const a=esc(d.a||'').replace(QMARK,'<mark class="g">$1</mark>').replace(/\n/g,'<br>');
+ const o=(d.o||[]).map(([k,rk])=>`<span class="pill ${k==='gotemba'?'fac':''}">${rk}位 ${QNAME[k]||esc(k)}</span>`).join(' ');
+ const all=d.c||[],cites=all.filter(c=>c[1]!=='noise'),noise=all.length-cites.length;
+ const cl=cites.map((c,i)=>`<a class="qcite" href="${esc(c[2])}" target="_blank" rel="noopener">
+   <span class="mono qn">${String(i+1).padStart(2,'0')}</span>
+   <span class="pill ${c[1]==='owned'?'fac':c[1]==='ugc'?'pos':c[1]==='competitor'?'neg':''}">${BUCKL[c[1]]||esc(c[1])}</span>
+   <span class="qh mono">${esc(c[0])}</span><span class="qt">${esc(c[3]||'')}</span></a>`).join('');
+ return `<div class="qans" style="--fc:${F[2]}">${a}</div>
+  ${o?`<div class="sub2" style="margin:11px 0 5px">検出施設（回答内の登場順）</div><div style="display:flex;gap:6px;flex-wrap:wrap">${o}</div>`:'<div class="sub2" style="margin:11px 0 0">検出施設なし（どのアウトレットも登場せず）</div>'}
+  <div class="sub2" style="margin:13px 0 5px">引用元 ${cites.length}件${noise?`（ほかノイズ引用 ${noise}件は除外）`:''}</div>
+  <div class="qcl">${cl||'<span class="sub2">引用なし</span>'}</div>`;
+}
+function openQ(pid,face){
+ const r=(S.qindex||[]).find(x=>x[0]===pid);if(!r)return;
+ QCUR=pid;QFACE=face==null?(r[6].findIndex(c=>c>=2)>=0?r[6].findIndex(c=>c>=2):0):face;
+ loadCells();
+ const [id,txt,fam,nm,cp,lg,codes]=r;
+ const F=FACESQ[QFACE];
+ let body;
+ if(CELLS_ST==='ok'&&CELLS[id]){
+  const d=CELLS[id][F[0]];
+  body=d?qAnswer(d,F):`<div class="qmiss">この面では回答が生成されませんでした（AIO非表示など）。</div>`;
+ }else if(CELLS_ST==='offline'){body='<div class="qmiss">回答全文はオンライン版（GitHub Pages）で表示されます。</div>';}
+ else if(CELLS_ST==='err'){body='<div class="qmiss">cells.json を読み込めませんでした。計測ラウンド後に自動生成されます。</div>';}
+ else{body='<div class="qmiss">回答データを読込中…</div>';}
+ const fl=qFiltered(),ix=fl.findIndex(x=>x[0]===pid);
+ const pv=ix>0?fl[ix-1][0]:null,nx=ix>=0&&ix<fl.length-1?fl[ix+1][0]:null;
+ openModal(`<h3 style="margin-right:80px;line-height:1.7">${esc(txt)}</h3>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px">
+   <span class="pill">${id}</span><span class="pill">${FAML[fam]||fam}</span>${nm?'<span class="pill neg">指名（G2/G3分母外）</span>':''}${cp?'<span class="pill neg">比較（G2/G3分母外）</span>':''}${lg==='en'?'<span class="pill">EN</span>':''}${MEAS?`<span class="tag real">実測 ${esc(META.round_date||'')}</span>`:''}
+  </div>
+  <div class="qtabs">${FACESQ.map((Fx,i)=>{const c=codes[i];return `<button class="qtab ${i===QFACE?'on':''}" style="--fc:${Fx[2]}" onclick="openQ('${id}',${i})">${Fx[1]}<small>${c===3?'◎ 第一想起':c===2?'● 言及あり':c===1?'○ 言及なし':'— 回答なし'}</small></button>`;}).join('')}</div>
+  ${body}
+  <div class="qnav">
+   <button class="qnv" ${pv?`onclick="openQ('${pv}',${QFACE})"`:'disabled style="opacity:.35;cursor:default"'}>← 前のクエリ</button>
+   <button class="qnv" ${nx?`onclick="openQ('${nx}',${QFACE})"`:'disabled style="opacity:.35;cursor:default"'}>次のクエリ →</button>
+  </div>`);
+ $('#modal').classList.add('qw');
+}
+if(MEAS)setTimeout(loadCells,2500);
 
 /* ================= V3 競合バトル ================= */
 function rV3(){
