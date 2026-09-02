@@ -8,7 +8,7 @@ data = json.load(open(os.environ.get('BOARD_DATA', f'{CB}/board_data.json'), enc
 head = open(f'{CB}/part_head.html', encoding='utf-8').read()
 js = open(f'{CB}/part_js1.js', encoding='utf-8').read()
 html = (head
-        + '\n<script>\nwindow.BOARD_DATA=' + json.dumps(data, ensure_ascii=False, separators=(',', ':'))
+        + '\n<script>\nwindow.BOARD_DATA=' + json.dumps(data, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
         + ';\n</script>\n<script>\n' + js + '\n</script>\n</body>\n</html>\n')
 open('plain.html', 'w', encoding='utf-8').write(html)
 print(f'plain.html {len(html.encode())/1024:.0f}KB')

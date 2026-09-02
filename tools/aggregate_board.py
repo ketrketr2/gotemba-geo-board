@@ -14,6 +14,8 @@ import json
 import sys
 from pathlib import Path
 
+import yaml
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from common import DATA, ROOT, today  # noqa: E402
 
@@ -84,6 +86,47 @@ def main() -> None:
         board["meta"]["round_date"] = snap["date"]
         board["meta"]["round_cost"] = snap["api_cost"]["usd"]
         board["meta"]["n_cells"] = snap["n_cells"]
+
+        # ---- クエリ・ドリルダウン（VQ「クエリの中身」ビュー） ----
+        # s.qindex   : 軽量索引（板に埋め込む）。[id, 質問文, family, named, compare, lang,
+        #              [面別コード: 0=回答なし 1=言及なし 2=言及 3=第一想起] × gpt/gem/aio/aim]
+        # docs/cells.json : 回答全文・引用・検出施設（重いのでPagesから遅延fetch）
+        with open(ROOT / "prompts" / "registry.yaml", encoding="utf-8") as f:
+            preg = {p["id"]: p for p in yaml.safe_load(f)["prompts"]}
+        order = ["chatgpt", "gemini", "aio", "aimode"]
+        by_q: dict[str, dict] = {}
+        for c in snap["cells"]:
+            by_q.setdefault(c["prompt_id"], {})[c["surface"]] = c
+        qindex, qcells = [], {}
+        for pid in sorted(by_q):
+            p = preg.get(pid, {})
+            codes, fdetail = [], {}
+            for sfc in order:
+                c = by_q[pid].get(sfc)
+                if not c or not c.get("answer"):
+                    codes.append(0)
+                    continue
+                g = c["outlets"].get("gotemba")
+                codes.append(3 if (g and g.get("rank") == 1) else 2 if g else 1)
+                fdetail[FACE_KEY[sfc]] = {
+                    "a": c["answer"],
+                    "o": sorted(([k, v["rank"]] for k, v in c["outlets"].items()),
+                                key=lambda x: x[1]),
+                    "c": [[x.get("host") or "", x.get("bucket") or "",
+                           x.get("url") or "", (x.get("title") or "")[:120]]
+                          for x in c["citations"]],
+                }
+            qindex.append([pid, p.get("text") or pid, p.get("family") or "-",
+                           1 if p.get("named") else 0, 1 if p.get("compare") else 0,
+                           p.get("lang") or "ja", codes])
+            qcells[pid] = fdetail
+        s["qindex"] = qindex
+        docs = ROOT / "docs"
+        docs.mkdir(exist_ok=True)
+        with open(docs / "cells.json", "w", encoding="utf-8") as f:
+            json.dump({"date": snap["date"], "cells": qcells}, f,
+                      ensure_ascii=False, separators=(",", ":"))
+        print(f"wrote docs/cells.json ({len(qcells)} queries)")
 
     # トレンド（G4）
     tpath = DATA / "trends.json"

@@ -167,7 +167,7 @@ function mxColor(v){
 }
 function mxSym(v){return v==null?'—':v>=.6?'◎':v>=.15?'○':v>-.15?'–':v>-.6?'△':'✕';}
 /* ================= modal / tip / ticker ================= */
-function openModal(html){$('#modal').innerHTML=`<button class="x" onclick="closeModal()">閉じる ✕</button>`+html;$('#mback').classList.add('on');}
+function openModal(html){const m=$('#modal');m.className='modal';m.innerHTML=`<button class="x" onclick="closeModal()">閉じる ✕</button>`+html;$('#mback').classList.add('on');}
 function closeModal(){$('#mback').classList.remove('on');}
 $('#mback')?.addEventListener('click',e=>{if(e.target.id==='mback')closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
@@ -205,6 +205,7 @@ function tickStart(){
 const VIEWS=[
  ['v1','◈','サマリー','mix'],
  ['v2','⬡','AI4面比較',MEAS?'real':'smp'],
+ ['vq','☰','クエリの中身',MEAS?'real':'smp'],
  ['v3','⚔','競合バトル','smp'],
  ['v4','◔','ペルソナ','smp'],
  ['v5','▦','地域イメージ','smp'],
@@ -314,7 +315,7 @@ function render(){
  document.querySelectorAll('.nv').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
  const m=$('#main');
  untip();
- const R={v1:rV1,v2:rV2,v3:rV3,v4:rV4,v5:rV5,v6:rV6,v7:rV7,v8:rV8,v9:rV9};
+ const R={v1:rV1,v2:rV2,vq:rVQ,v3:rV3,v4:rV4,v5:rV5,v6:rV6,v7:rV7,v8:rV8,v9:rV9};
  m.innerHTML=R[v]?R[v]():rLock(v);
  animate(m);
  window.scrollTo(0,0);
@@ -324,6 +325,7 @@ function render(){
 const HELP={
  idx:`<h3>語られ指数とは</h3><p><b>AI言及シェア ÷ 検索需要シェア × 100</b>。来場者数が非公開のため、需要シェア（指名検索の相対量）を実勢の代理としています。<b>100未満＝実需のわりにAIに語られていない</b>（AI比較の入口で不利）、100超＝実需以上に語られている。トヨタ車種別ボードの「語られ指数」（販売シェア比）の御殿場版です。</p><p>※この画面の値は設計プレビュー用サンプルです。実測はテスト計測（R1）から入ります。</p>`,
  funnel:`<h3>G1〜G4の定義</h3><p><b>G1 露出機会 ＝ 1クエリあたりの期待引用数</b>。御殿場が出てくるべき質問に対して「AIがどれだけ回答を作り、どれだけ根拠リンクを引くか」を表す土俵の広さ。<b>回答が返る率 × 回答あたり平均引用数</b>で計算する（例: 90% × 4.1本 = 3.7引用/クエリ）。御殿場自身の成績ではなく、戦う場の大きさを測る指標。</p><p><b>G2 言及率</b>: 同じ質問群で御殿場が回答に登場した率（指名・比較クエリは分母から除外するファネル原則）。<b>G3 第一想起率</b>: 言及があった回答のうち最初に挙がった施設が御殿場だった率。<b>G4 検索需要</b>: Googleトレンド実測の指名検索指数（アンカー連結）。</p>`,
+ query:`<h3>クエリの中身の見方</h3><p>計測ラウンドで実際にAIへ投げた質問（クエリ）と、返ってきた<b>回答全文・引用リンク・検出施設</b>をそのまま閲覧できます。記号は面ごとの結果で、<b>◎=第一想起</b>（回答内で最初に登場）、<b>●=言及あり</b>、<b>○=回答はあるが御殿場が不在</b>、<b>—=回答なし</b>。<b>指名・比較</b>タグ付きクエリはファネル原則によりG2/G3の分母から除外されています。</p><p>回答本文はスナップショット（data/snapshots/）に保存された実データそのもので、<mark>御殿場の言及箇所はハイライト</mark>表示。引用リンクはAIが実際に根拠として提示したURLです（リダイレクタ引用はドメイン復元済み）。</p>`,
  surface:`<h3>AI4面の見方</h3><p>同じ質問群を <b>ChatGPT / Gemini / GoogleのAI Overview / GoogleのAIモード</b> に投げ、面ごとの言及率・第一想起率・引用元を比較します。面によって参照する情報源が異なるため、<b>弱い面＝その面が引用しやすいメディアへの露出が課題</b>と読みます。</p>`,
  battle:`<h3>勝敗マトリクスの読み方</h3><p>AI回答の全文から<b>テーマ×施設の優劣言及</b>を抽出し、御殿場から見た勝ち（緑）・負け（赤）を集計します。セルをクリックすると根拠スニペット（回答からの抜粋）が開きます。◎○強い勝ち〜✕強い負け、–は拮抗、—はデータなし。</p>`,
  region:`<h3>地域イメージ差の測り方</h3><p>①Googleトレンドの<b>都県別 指名検索指数</b>（タイル地図・全国平均=100）②「日本で」「関東で」を明示した<b>聞き分けプロンプト</b>の回答差 ③テーマ言及率の全国/関東差分。関東では実用文脈（アクセス・混雑）、全国では観光文脈（富士山・訪日）に寄る仮説を検証します。</p>`,
@@ -497,6 +499,121 @@ function rV2(){
  </div>`;
  return h+foot();
 }
+
+/* ================= VQ クエリの中身（QUERY EXPLORER） ================= */
+let QF={fam:'all',hit:'all',q:''},QCUR=null,QFACE=0,CELLS=null,CELLS_ST='idle';
+const FAML={A:'カテゴリ型',B:'ペルソナ',F:'観光文脈',G:'季節イベント',E:'英語圏',C:'比較型',D:'指名型',H:'ネガ検証'};
+const FACESQ=[['gpt','ChatGPT','#17A469'],['gem','Gemini','#7A64EE'],['aio','AI Overview','#0C8FA8'],['aim','AIモード','#C8850A']];
+const BUCKL={owned:'自社公式',affiliated:'関連',competitor:'競合公式',ugc:'UGC',travel:'旅行メディア',reference:'百科',press:'プレス',media:'メディア',noise:'ノイズ'};
+const QNAME={gotemba:'御殿場',kisarazu:'木更津',karuizawa:'軽井沢',iruma:'入間',makuhari:'幕張',yokohama_bs:'横浜BS',tama:'多摩南大沢',sano:'佐野',shisui:'酒々井',ami:'あみ',grandberry:'グランベリー',nagashima:'長島',nasu:'那須'};
+const QMARK=/(御殿場プレミアム・アウトレット|御殿場プレミアムアウトレット|御殿場のアウトレット|御殿場アウトレット|gotemba premium outlets|gotemba premium outlet|gotemba outlets|gotemba outlet|御殿場)/gi;
+function loadCells(){
+ if(CELLS||CELLS_ST==='loading')return;
+ if(location.protocol==='file:'){CELLS_ST='offline';return;}
+ CELLS_ST='loading';
+ fetch('cells.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json();})
+  .then(j=>{CELLS=j.cells||{};CELLS_ST='ok';if(QCUR&&$('#mback').classList.contains('on'))openQ(QCUR,QFACE);else if(cur()==='vq')qRefresh();})
+  .catch(()=>{CELLS_ST='err';if(QCUR&&$('#mback').classList.contains('on'))openQ(QCUR,QFACE);});
+}
+function qFiltered(){
+ return (S.qindex||[]).filter(r=>{
+  const men=r[6].filter(x=>x>=2).length,fst=r[6].filter(x=>x===3).length;
+  if(QF.fam!=='all'&&r[2]!==QF.fam)return false;
+  if(QF.hit==='men'&&men===0)return false;
+  if(QF.hit==='fst'&&fst===0)return false;
+  if(QF.hit==='non'&&men>0)return false;
+  if(QF.q&&!(r[1]+' '+r[0]).toLowerCase().includes(QF.q.toLowerCase()))return false;
+  return true;
+ });
+}
+function qRows(){
+ const rows=qFiltered().map(r=>{
+  const [id,txt,fam,nm,cp,lg,codes]=r;
+  const men=codes.filter(x=>x>=2).length;
+  const dots=codes.map((c,i)=>`<span class="qd" style="${c>=2?`color:${FACESQ[i][2]};text-shadow:0 0 8px ${FACESQ[i][2]}66`:'color:#3A4A66'}">${c===3?'◎':c===2?'●':c===1?'○':'—'}</span>`).join('');
+  return `<tr class="qr" onclick="openQ('${id}')">
+   <td class="mono" style="color:var(--tx3)">${id}</td>
+   <td style="min-width:250px"><span class="qtx">${esc(txt)}</span></td>
+   <td style="white-space:nowrap"><span class="pill">${FAML[fam]||fam}</span>${nm?' <span class="pill neg">指名</span>':''}${cp?' <span class="pill neg">比較</span>':''}${lg==='en'?' <span class="pill">EN</span>':''}</td>
+   <td class="mono" style="text-align:center;letter-spacing:5px;white-space:nowrap">${dots}</td>
+   <td class="mono" style="text-align:right;color:${men?'var(--gn)':'var(--tx3)'}">${men}/4</td>
+  </tr>`;
+ }).join('');
+ return rows||`<tr><td colspan="5" style="text-align:center;color:var(--tx3);padding:24px">該当するクエリがありません</td></tr>`;
+}
+function qRefresh(chips){
+ const el=$('#qlist');if(el)el.innerHTML=qRows();
+ const c=$('#qcnt');if(c)c.textContent=qFiltered().length;
+ if(chips){document.querySelectorAll('[data-qf]').forEach(b=>b.classList.toggle('on',b.dataset.qf===QF.fam));
+  document.querySelectorAll('[data-qh]').forEach(b=>b.classList.toggle('on',b.dataset.qh===QF.hit));}
+}
+function rVQ(){
+ loadCells();
+ const qi=S.qindex||[];
+ let h=`<div class="crumb rv"><h2>クエリの中身<small>QUERY EXPLORER</small></h2>
+  <span class="chip">クエリ <b>${qi.length||'—'}</b>本 × 4面</span>
+  ${MEAS?`<span class="chip">R1 ${esc(META.round_date||'')}</span><span class="chip glt">回答全文・引用リンク付き</span>`:''}
+  <button class="hbtn" onclick="help('query')">?</button></div>`;
+ if(!qi.length){
+  return h+`<div class="card rv"><div class="ct">クエリ・ドリルダウン${tagS}</div>
+   <div class="qmiss">計測ラウンド完了後、実際にAIへ投げたクエリと回答全文がここに表示されます。</div></div>`+foot();
+ }
+ const fams=[...new Set(qi.map(r=>r[2]))];
+ h+=`<div class="card rv"><div class="ct">全${qi.length}クエリ — 行クリックで4面の実回答を開く${tagM}</div>
+  <div class="qfbar">
+   <input id="qsearch" class="qsi" type="search" placeholder="クエリ検索…" oninput="QF.q=this.value;qRefresh()">
+   <div class="qchips"><button class="fch ${QF.fam==='all'?'on':''}" data-qf="all" onclick="QF.fam='all';qRefresh(1)">全分類</button>${fams.map(f=>`<button class="fch ${QF.fam===f?'on':''}" data-qf="${f}" onclick="QF.fam='${f}';qRefresh(1)">${FAML[f]||f}</button>`).join('')}</div>
+   <div class="qchips"><button class="fch ${QF.hit==='all'?'on':''}" data-qh="all" onclick="QF.hit='all';qRefresh(1)">全表示</button><button class="fch ${QF.hit==='men'?'on':''}" data-qh="men" onclick="QF.hit='men';qRefresh(1)">言及あり</button><button class="fch ${QF.hit==='fst'?'on':''}" data-qh="fst" onclick="QF.hit='fst';qRefresh(1)">第一想起</button><button class="fch ${QF.hit==='non'?'on':''}" data-qh="non" onclick="QF.hit='non';qRefresh(1)">言及なし</button></div>
+  </div>
+  <div class="sub2" style="margin-bottom:8px"><b id="qcnt">${qFiltered().length}</b>本表示｜面の並びは GPT・Gemini・AIO・AIモード｜◎第一想起 ●言及 ○言及なし —回答なし</div>
+  <div class="tblwrap"><table class="tbl"><thead><tr>
+   <th style="width:46px">ID</th><th>クエリ（実際にAIへ投げた質問文）</th><th>分類</th><th style="text-align:center">4面の結果</th><th style="text-align:right">言及</th>
+  </tr></thead><tbody id="qlist">${qRows()}</tbody></table></div>
+  ${CELLS_ST==='offline'?'<div class="sub2" style="margin-top:9px">※回答全文はオンライン版（GitHub Pages）で読み込まれます。この検証表示では一覧のみ。</div>':CELLS_ST==='err'?'<div class="sub2" style="margin-top:9px">※cells.json の読込に失敗しました。公開ラウンド後に自動生成されます。</div>':''}
+ </div>`;
+ return h+foot();
+}
+function qAnswer(d,F){
+ const a=esc(d.a||'').replace(QMARK,'<mark class="g">$1</mark>').replace(/\n/g,'<br>');
+ const o=(d.o||[]).map(([k,rk])=>`<span class="pill ${k==='gotemba'?'fac':''}">${rk}位 ${QNAME[k]||esc(k)}</span>`).join(' ');
+ const all=d.c||[],cites=all.filter(c=>c[1]!=='noise'),noise=all.length-cites.length;
+ const cl=cites.map((c,i)=>`<a class="qcite" href="${esc(c[2])}" target="_blank" rel="noopener">
+   <span class="mono qn">${String(i+1).padStart(2,'0')}</span>
+   <span class="pill ${c[1]==='owned'?'fac':c[1]==='ugc'?'pos':c[1]==='competitor'?'neg':''}">${BUCKL[c[1]]||esc(c[1])}</span>
+   <span class="qh mono">${esc(c[0])}</span><span class="qt">${esc(c[3]||'')}</span></a>`).join('');
+ return `<div class="qans" style="--fc:${F[2]}">${a}</div>
+  ${o?`<div class="sub2" style="margin:11px 0 5px">検出施設（回答内の登場順）</div><div style="display:flex;gap:6px;flex-wrap:wrap">${o}</div>`:'<div class="sub2" style="margin:11px 0 0">検出施設なし（どのアウトレットも登場せず）</div>'}
+  <div class="sub2" style="margin:13px 0 5px">引用元 ${cites.length}件${noise?`（ほかノイズ引用 ${noise}件は除外）`:''}</div>
+  <div class="qcl">${cl||'<span class="sub2">引用なし</span>'}</div>`;
+}
+function openQ(pid,face){
+ const r=(S.qindex||[]).find(x=>x[0]===pid);if(!r)return;
+ QCUR=pid;QFACE=face==null?(r[6].findIndex(c=>c>=2)>=0?r[6].findIndex(c=>c>=2):0):face;
+ loadCells();
+ const [id,txt,fam,nm,cp,lg,codes]=r;
+ const F=FACESQ[QFACE];
+ let body;
+ if(CELLS_ST==='ok'&&CELLS[id]){
+  const d=CELLS[id][F[0]];
+  body=d?qAnswer(d,F):`<div class="qmiss">この面では回答が生成されませんでした（AIO非表示など）。</div>`;
+ }else if(CELLS_ST==='offline'){body='<div class="qmiss">回答全文はオンライン版（GitHub Pages）で表示されます。</div>';}
+ else if(CELLS_ST==='err'){body='<div class="qmiss">cells.json を読み込めませんでした。計測ラウンド後に自動生成されます。</div>';}
+ else{body='<div class="qmiss">回答データを読込中…</div>';}
+ const fl=qFiltered(),ix=fl.findIndex(x=>x[0]===pid);
+ const pv=ix>0?fl[ix-1][0]:null,nx=ix>=0&&ix<fl.length-1?fl[ix+1][0]:null;
+ openModal(`<h3 style="margin-right:80px;line-height:1.7">${esc(txt)}</h3>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px">
+   <span class="pill">${id}</span><span class="pill">${FAML[fam]||fam}</span>${nm?'<span class="pill neg">指名（G2/G3分母外）</span>':''}${cp?'<span class="pill neg">比較（G2/G3分母外）</span>':''}${lg==='en'?'<span class="pill">EN</span>':''}${MEAS?`<span class="tag real">実測 ${esc(META.round_date||'')}</span>`:''}
+  </div>
+  <div class="qtabs">${FACESQ.map((Fx,i)=>{const c=codes[i];return `<button class="qtab ${i===QFACE?'on':''}" style="--fc:${Fx[2]}" onclick="openQ('${id}',${i})">${Fx[1]}<small>${c===3?'◎ 第一想起':c===2?'● 言及あり':c===1?'○ 言及なし':'— 回答なし'}</small></button>`;}).join('')}</div>
+  ${body}
+  <div class="qnav">
+   <button class="qnv" ${pv?`onclick="openQ('${pv}',${QFACE})"`:'disabled style="opacity:.35;cursor:default"'}>← 前のクエリ</button>
+   <button class="qnv" ${nx?`onclick="openQ('${nx}',${QFACE})"`:'disabled style="opacity:.35;cursor:default"'}>次のクエリ →</button>
+  </div>`);
+ $('#modal').classList.add('qw');
+}
+if(MEAS)setTimeout(loadCells,2500);
 
 /* ================= V3 競合バトル ================= */
 function rV3(){
